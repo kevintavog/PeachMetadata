@@ -41,25 +41,28 @@ extension PeachWindowController
         return thumbnailItems[index]
     }
 
+    func selectedMediaItems() -> [MediaData]
+    {
+        var mediaItems = [MediaData]()
+        for index in imageBrowserView.selectionIndexes() {
+            mediaItems.append(mediaProvider.mediaFiles[index])
+        }
+        return mediaItems
+    }
+
     // MARK: imageBrowserView Delegate
     override func imageBrowserSelectionDidChange(browser: IKImageBrowserView!)
     {
-        selectedMediaData.removeAll()
+        let selectedItems = selectedMediaItems()
+
         var keywordList = [String]()
         switch imageBrowserView.selectionIndexes().count {
         case 0:
             setFolderStatus()
         case 1:
-            let mediaData = mediaProvider.mediaFiles[imageBrowserView.selectionIndexes().firstIndex]
-            keywordList = setSingleItemStatus(mediaData)
-            selectedMediaData.append(mediaData)
+            keywordList = setSingleItemStatus(selectedItems.first!)
         default:
-            var mediaItems = [MediaData]()
-            for index in imageBrowserView.selectionIndexes() {
-                mediaItems.append(mediaProvider.mediaFiles[index])
-            }
-            keywordList = setMultiItemStatus(mediaItems, filesMessage: "files selected")
-            selectedMediaData.appendContentsOf(mediaItems)
+            keywordList = setMultiItemStatus(selectedItems, filesMessage: "files selected")
         }
 
         mediaKeywordsController.selectionChanged(keywordList)

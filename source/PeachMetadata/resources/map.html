@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.2/leaflet.css" />
+	<script src="http://cdn.leafletjs.com/leaflet-0.7.2/leaflet.js"></script>
+</head>
+<body>
+	<div id="map" style="width:99%; height:99%; position:absolute"></div>
+
+	<script>
+		var lat = 47.62201666666667;
+		var lon = -122.335685;
+		var map = L.map('map', { center:[lat, lon], zoom:10, minZoom:3 });
+
+<!--		L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', -->
+<!--		L.tileLayer('http://otile1.mqcdn.com/tiles/1.0.0/sat/{z}/{x}/{y}.png', -->
+		L.tileLayer('http://otile1.mqcdn.com/tiles/1.0.0/map/{z}/{x}/{y}.png', 
+		{
+			maxZoom: 19,
+			attribution: '&copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>'
+		}).addTo(map);
+
+		var popup = L.popup();
+
+        var markerLayer = new L.LayerGroup();
+        markerLayer.addTo(map);
+
+
+		function setCenter(location, zoom)
+		{
+			map.setView(location, zoom);
+		}
+
+		function fitToBounds(bounds)
+		{
+			map.fitBounds(bounds);
+		}
+
+        var activeMarkers = {};
+		function addMarker(id, location, title)
+		{
+			marker = L.marker(location, { draggable:'true', title:title } );
+            setMarkerId(marker, id);
+            activeMarkers[id] = marker;
+
+            marker.on('dragend', function(event)
+            {
+                var marker = event.target;
+                var position = marker.getLatLng();
+                MapThis.updateMarker(markerId(marker), position.lat, position.lng);
+            });
+            markerLayer.addLayer(marker);
+<!--            marker.addTo(map); -->
+		}
+
+        function removeMarker(id)
+        {
+            var marker = activeMarkers[id];
+            if (marker != null)
+            {
+                markerLayer.removeLayer(marker);
+<!--                map.removeLayer(marker); -->
+                activeMarkers[id] = null;
+            }
+        }
+
+        function removeAllMarkers()
+        {
+            markerLayer.clearLayers();
+            activeMarkers.length = 0;
+        }
+
+		function setPopup(location, s)
+		{
+			popup
+				.setLatLng(location)
+				.setContent(s)
+				.openOn(map);
+		}
+
+		function resetPopup()
+		{
+			map.closePopup(popup);
+		}
+
+		function pointToLatLng(p)
+		{
+			var ll = map.containerPointToLatLng(p);
+			return JSON.stringify(ll);
+		}
+
+		function onMapClick(e)
+		{
+			if (e.originalEvent.altKey)
+			{
+				MapThis.clicked(e.latlng.lat, e.latlng.lng);
+			}
+		}
+
+		map.on('click', onMapClick);
+
+
+        function markerId(obj) 
+        {
+            return String(obj.__obj_id);
+        }
+
+        function setMarkerId(obj, id)
+        {
+            obj.__obj_id=id;
+        }
+	</script>
+</body>
+</html>

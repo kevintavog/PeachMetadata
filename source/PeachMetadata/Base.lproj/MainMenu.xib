@@ -24,6 +24,7 @@
                 <outlet property="allKeywordsTableView" destination="7wO-n5-6J0" id="phd-L1-rCK"/>
                 <outlet property="directoryView" destination="hBb-pL-bwS" id="lkm-2k-ZZC"/>
                 <outlet property="imageBrowserView" destination="nit-07-pvN" id="lXt-ca-CDy"/>
+                <outlet property="mapView" destination="Pe3-yg-kIT" id="4ex-CE-vsW"/>
                 <outlet property="mediaKeywordsTableView" destination="oZv-FH-BWg" id="aIY-Nj-V8p"/>
                 <outlet property="statusLabel" destination="mNL-LT-xCL" id="sFY-b9-oF1"/>
                 <outlet property="thumbSizeSlider" destination="EfA-Zz-M69" id="rUX-0W-BRJ"/>
@@ -337,7 +338,11 @@
                             <menuItem title="Keywords" keyEquivalent="k" id="yHm-ue-s4C"/>
                             <menuItem title="Location" keyEquivalent="l" id="ERh-Np-Hju"/>
                             <menuItem isSeparatorItem="YES" id="yYx-hy-d3E"/>
-                            <menuItem title="Show images on map" keyEquivalent="w" id="vcn-Sk-SFZ"/>
+                            <menuItem title="Show images on map" keyEquivalent="w" id="vcn-Sk-SFZ">
+                                <connections>
+                                    <action selector="showImagesOnMap:" target="Qry-nx-iZR" id="C6m-rt-YKZ"/>
+                                </connections>
+                            </menuItem>
                         </items>
                     </menu>
                 </menuItem>
@@ -514,13 +519,44 @@
                                                     <rect key="frame" x="10" y="33" width="381" height="714"/>
                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                     <subviews>
-                                                        <webView id="tam-mB-WE1">
-                                                            <rect key="frame" x="-3" y="203" width="387" height="518"/>
+                                                        <splitView arrangesAllSubviews="NO" autosaveName="mapAndLocation" dividerStyle="paneSplitter" id="B8q-lM-S8Z">
+                                                            <rect key="frame" x="0.0" y="0.0" width="461" height="719"/>
                                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                                            <webPreferences key="preferences" defaultFontSize="12" defaultFixedFontSize="12">
-                                                                <nil key="identifier"/>
-                                                            </webPreferences>
-                                                        </webView>
+                                                            <subviews>
+                                                                <customView id="2Va-p9-F8b">
+                                                                    <rect key="frame" x="0.0" y="0.0" width="461" height="578"/>
+                                                                    <autoresizingMask key="autoresizingMask"/>
+                                                                    <subviews>
+                                                                        <webView id="Pe3-yg-kIT">
+                                                                            <rect key="frame" x="-8" y="0.0" width="452" height="581"/>
+                                                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                                                            <webPreferences key="preferences" defaultFontSize="12" defaultFixedFontSize="12" plugInsEnabled="NO" javaEnabled="NO">
+                                                                                <nil key="identifier"/>
+                                                                            </webPreferences>
+                                                                        </webView>
+                                                                    </subviews>
+                                                                </customView>
+                                                                <customView id="tbq-s4-mdh">
+                                                                    <rect key="frame" x="0.0" y="588" width="461" height="131"/>
+                                                                    <autoresizingMask key="autoresizingMask"/>
+                                                                    <subviews>
+                                                                        <textField verticalHuggingPriority="750" id="bmv-6p-7gy">
+                                                                            <rect key="frame" x="5" y="97" width="420" height="34"/>
+                                                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
+                                                                            <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" drawsBackground="YES" id="Sgk-dj-uxV">
+                                                                                <font key="font" metaFont="system"/>
+                                                                                <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
+                                                                                <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                                                            </textFieldCell>
+                                                                        </textField>
+                                                                    </subviews>
+                                                                </customView>
+                                                            </subviews>
+                                                            <holdingPriorities>
+                                                                <real value="250"/>
+                                                                <real value="250"/>
+                                                            </holdingPriorities>
+                                                        </splitView>
                                                     </subviews>
                                                 </view>
                                             </tabViewItem>

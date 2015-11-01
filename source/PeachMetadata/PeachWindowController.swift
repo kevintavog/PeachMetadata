@@ -4,9 +4,11 @@
 
 import AppKit
 import Quartz
+import WebKit
+
 import RangicCore
 
-class PeachWindowController : NSWindowController, NSTableViewDataSource
+class PeachWindowController : NSWindowController, NSTableViewDataSource, WebFrameLoadDelegate
 {
     @IBOutlet weak var directoryView: NSOutlineView!
     @IBOutlet weak var imageBrowserView: IKImageBrowserView!
@@ -15,6 +17,7 @@ class PeachWindowController : NSWindowController, NSTableViewDataSource
     @IBOutlet weak var mediaKeywordsTableView: NSTableView!
     @IBOutlet weak var allKeywordsTableView: NSTableView!
     @IBOutlet weak var statusLabel: NSTextField!
+    @IBOutlet weak var mapView: WebView!
 
 
     var mediaProvider = MediaProvider()
@@ -22,7 +25,6 @@ class PeachWindowController : NSWindowController, NSTableViewDataSource
     var rootDirectory: DirectoryTree?
     var allKeywordsController = AllKeywordsTableViewController()
     var mediaKeywordsController: MediaKeywordsTableController!
-    var selectedMediaData = [MediaData]()
 
 
     override func awakeFromNib()
@@ -51,5 +53,8 @@ class PeachWindowController : NSWindowController, NSTableViewDataSource
         mediaKeywordsController = MediaKeywordsTableController(tableView: mediaKeywordsTableView)
         mediaKeywordsTableView.setDelegate(mediaKeywordsController)
         mediaKeywordsTableView.setDataSource(mediaKeywordsController)
+
+        mapView.mainFrame.loadRequest(NSURLRequest(URL: NSURL(fileURLWithPath: NSBundle.mainBundle().pathForResource("map", ofType: "html")!)))
+        mapView.frameLoadDelegate = self
     }
 }

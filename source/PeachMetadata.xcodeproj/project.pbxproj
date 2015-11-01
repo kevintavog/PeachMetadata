@@ -24,6 +24,8 @@
 		44BF1D081BE083AA00514392 /* SwiftyJSON.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 44BF1D071BE083AA00514392 /* SwiftyJSON.framework */; };
 		44BF1D091BE083AA00514392 /* SwiftyJSON.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 44BF1D071BE083AA00514392 /* SwiftyJSON.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		44C7F7031BE6627A0064116D /* MediaKeywordsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44C7F7021BE6627A0064116D /* MediaKeywordsController.swift */; settings = {ASSET_TAGS = (); }; };
+		44C7F7061BE693010064116D /* map.html in Resources */ = {isa = PBXBuildFile; fileRef = 44C7F7051BE693010064116D /* map.html */; settings = {ASSET_TAGS = (); }; };
+		44C7F7081BE6B6760064116D /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44C7F7071BE6B6760064116D /* MapViewController.swift */; settings = {ASSET_TAGS = (); }; };
 		44E387841BD9818000CDEF1C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44E387831BD9818000CDEF1C /* AppDelegate.swift */; };
 		44E387861BD9818000CDEF1C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 44E387851BD9818000CDEF1C /* Assets.xcassets */; };
 		44E387891BD9818000CDEF1C /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 44E387871BD9818000CDEF1C /* MainMenu.xib */; };
@@ -73,6 +75,8 @@
 		44BF1D041BE0787600514392 /* AllKeywords.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AllKeywords.swift; sourceTree = "<group>"; };
 		44BF1D071BE083AA00514392 /* SwiftyJSON.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftyJSON.framework; path = Carthage/Build/Mac/SwiftyJSON.framework; sourceTree = "<group>"; };
 		44C7F7021BE6627A0064116D /* MediaKeywordsController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MediaKeywordsController.swift; sourceTree = "<group>"; };
+		44C7F7051BE693010064116D /* map.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; name = map.html; path = resources/map.html; sourceTree = "<group>"; };
+		44C7F7071BE6B6760064116D /* MapViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
 		44E387801BD9818000CDEF1C /* PeachMetadata.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PeachMetadata.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		44E387831BD9818000CDEF1C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		44E387851BD9818000CDEF1C /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -111,11 +115,12 @@
 		444C358A1BE2CA38002BEC2B /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				444C358B1BE2CA9C002BEC2B /* AllKeywordsController.swift */,
 				44048D3D1BDF1444005F3809 /* DirectoryOutline.swift */,
 				44048D3A1BDF1253005F3809 /* ImageBrowser.swift */,
-				44261AF21BDEF66600ACA852 /* PeachWindowController.swift */,
-				444C358B1BE2CA9C002BEC2B /* AllKeywordsController.swift */,
+				44C7F7071BE6B6760064116D /* MapViewController.swift */,
 				44C7F7021BE6627A0064116D /* MediaKeywordsController.swift */,
+				44261AF21BDEF66600ACA852 /* PeachWindowController.swift */,
 			);
 			name = Controllers;
 			sourceTree = "<group>";
@@ -128,10 +133,17 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		44C7F7041BE692F20064116D /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				44C7F7051BE693010064116D /* map.html */,
+			);
+			name = Resources;
+			sourceTree = "<group>";
+		};
 		44E387771BD9818000CDEF1C = {
 			isa = PBXGroup;
 			children = (
-				44BF1D071BE083AA00514392 /* SwiftyJSON.framework */,
 				44E387821BD9818000CDEF1C /* PeachMetadata */,
 				44E387811BD9818000CDEF1C /* Products */,
 				44B8FD281BDF05550090CF76 /* RangicCore.xcodeproj */,
@@ -150,6 +162,7 @@
 		44E387821BD9818000CDEF1C /* PeachMetadata */ = {
 			isa = PBXGroup;
 			children = (
+				44C7F7041BE692F20064116D /* Resources */,
 				44E387871BD9818000CDEF1C /* MainMenu.xib */,
 				44E387851BD9818000CDEF1C /* Assets.xcassets */,
 				44E3878A1BD9818000CDEF1C /* Info.plist */,
@@ -164,6 +177,7 @@
 		44F6699F1BDF033300AF03D0 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				44BF1D071BE083AA00514392 /* SwiftyJSON.framework */,
 				44B8FD1C1BDF05400090CF76 /* Alamofire.framework */,
 				44B8FD1D1BDF05400090CF76 /* Async.framework */,
 				44B8FD1E1BDF05400090CF76 /* CocoaLumberjack.framework */,
@@ -250,6 +264,7 @@
 			files = (
 				44E387861BD9818000CDEF1C /* Assets.xcassets in Resources */,
 				44E387891BD9818000CDEF1C /* MainMenu.xib in Resources */,
+				44C7F7061BE693010064116D /* map.html in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -264,6 +279,7 @@
 				44048D3B1BDF1253005F3809 /* ImageBrowser.swift in Sources */,
 				444C358C1BE2CA9C002BEC2B /* AllKeywordsController.swift in Sources */,
 				44048D401BE05E95005F3809 /* Preferences.swift in Sources */,
+				44C7F7081BE6B6760064116D /* MapViewController.swift in Sources */,
 				44C7F7031BE6627A0064116D /* MediaKeywordsController.swift in Sources */,
 				44048D3E1BDF1444005F3809 /* DirectoryOutline.swift in Sources */,
 				44261AF31BDEF66600ACA852 /* PeachWindowController.swift in Sources */,
