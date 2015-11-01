@@ -15,14 +15,17 @@
         <customObject id="-3" userLabel="Application" customClass="NSObject"/>
         <customObject id="Voe-Tx-rLC" customClass="AppDelegate" customModule="PeachMetadata" customModuleProvider="target">
             <connections>
+                <outlet property="peachWindowController" destination="Qry-nx-iZR" id="JcK-PB-tNV"/>
                 <outlet property="window" destination="QvC-M9-y7g" id="gIp-Ho-8D9"/>
             </connections>
         </customObject>
         <customObject id="Qry-nx-iZR" customClass="PeachWindowController" customModule="PeachMetadata" customModuleProvider="target">
             <connections>
+                <outlet property="allKeywordsTableView" destination="7wO-n5-6J0" id="phd-L1-rCK"/>
                 <outlet property="directoryView" destination="hBb-pL-bwS" id="lkm-2k-ZZC"/>
-                <outlet property="fileTypeFilter" destination="jIN-eJ-kRk" id="4eo-bO-muB"/>
                 <outlet property="imageBrowserView" destination="nit-07-pvN" id="lXt-ca-CDy"/>
+                <outlet property="mediaKeywordsTableView" destination="oZv-FH-BWg" id="aIY-Nj-V8p"/>
+                <outlet property="statusLabel" destination="mNL-LT-xCL" id="sFY-b9-oF1"/>
                 <outlet property="thumbSizeSlider" destination="EfA-Zz-M69" id="rUX-0W-BRJ"/>
             </connections>
         </customObject>
@@ -386,11 +389,11 @@
                 <rect key="frame" x="0.0" y="0.0" width="936" height="743"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <splitView dividerStyle="paneSplitter" vertical="YES" id="LOm-eq-IGj">
+                    <splitView autosaveName="mainHorizontalSplitter" dividerStyle="paneSplitter" vertical="YES" id="LOm-eq-IGj">
                         <rect key="frame" x="-1" y="-6" width="947" height="750"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <splitView dividerStyle="paneSplitter" id="u5e-fN-fhZ">
+                            <splitView autosaveName="FileImageSplitter" dividerStyle="paneSplitter" id="u5e-fN-fhZ">
                                 <rect key="frame" x="0.0" y="0.0" width="462.5" height="750"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <subviews>
@@ -444,14 +447,14 @@
                                         <autoresizingMask key="autoresizingMask"/>
                                         <subviews>
                                             <scrollView horizontalLineScroll="59" horizontalPageScroll="10" verticalLineScroll="59" verticalPageScroll="10" usesPredominantAxisScrolling="NO" id="QSO-Ce-kyz">
-                                                <rect key="frame" x="-1" y="25" width="465.5" height="412"/>
+                                                <rect key="frame" x="-1" y="38" width="466" height="425"/>
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <clipView key="contentView" copiesOnScroll="NO" id="EcX-6Z-cDU">
-                                                    <rect key="frame" x="1" y="1" width="463.5" height="410"/>
+                                                    <rect key="frame" x="1" y="1" width="464" height="423"/>
                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                     <subviews>
                                                         <ikImageBrowserView autoresizesSubviews="NO" zoomValue="nan" animates="YES" id="nit-07-pvN">
-                                                            <rect key="frame" x="0.0" y="0.0" width="462.5" height="410"/>
+                                                            <rect key="frame" x="0.0" y="0.0" width="462.5" height="423"/>
                                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                             <ikCellsStyle key="cellsStyleMask" shadowed="YES" outlined="YES" titled="YES" subtitled="YES"/>
                                                             <autoresizingMask key="contentResizingMask" heightSizable="YES"/>
@@ -464,35 +467,31 @@
                                                     </subviews>
                                                 </clipView>
                                                 <scroller key="horizontalScroller" wantsLayer="YES" verticalHuggingPriority="750" horizontal="YES" id="xeg-OM-olC">
-                                                    <rect key="frame" x="1" y="395" width="463.5" height="16"/>
+                                                    <rect key="frame" x="1" y="408" width="464" height="16"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                 </scroller>
                                                 <scroller key="verticalScroller" wantsLayer="YES" verticalHuggingPriority="750" doubleValue="1" horizontal="NO" id="wfz-n6-wZx">
-                                                    <rect key="frame" x="448.5" y="1" width="16" height="410"/>
+                                                    <rect key="frame" x="449" y="1" width="16" height="423"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                 </scroller>
                                             </scrollView>
-                                            <comboBox verticalHuggingPriority="750" id="jIN-eJ-kRk">
-                                                <rect key="frame" x="20" y="441" width="193" height="26"/>
-                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                                <comboBoxCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" borderStyle="bezel" drawsBackground="YES" completes="NO" numberOfVisibleItems="5" id="plo-gN-hhb">
-                                                    <font key="font" metaFont="system"/>
-                                                    <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
-                                                    <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
-                                                    <objectValues>
-                                                        <string>JPEG &amp; MP4</string>
-                                                        <string>Everything</string>
-                                                    </objectValues>
-                                                </comboBoxCell>
-                                            </comboBox>
                                             <slider verticalHuggingPriority="750" id="EfA-Zz-M69">
-                                                <rect key="frame" x="267" y="440" width="178" height="25"/>
-                                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
+                                                <rect key="frame" x="354.5" y="7" width="101.5" height="25"/>
+                                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
                                                 <sliderCell key="cell" continuous="YES" state="on" alignment="left" maxValue="2" doubleValue="1" tickMarkPosition="above" numberOfTickMarks="10" sliderType="linear" id="wO6-tv-YyU"/>
                                                 <connections>
                                                     <action selector="updateThumbnailsize:" target="Qry-nx-iZR" id="ihf-dU-Ngd"/>
                                                 </connections>
                                             </slider>
+                                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="mNL-LT-xCL">
+                                                <rect key="frame" x="5" y="11" width="345.5" height="23"/>
+                                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                                                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" allowsUndo="NO" sendsActionOnEndEditing="YES" alignment="left" title="Status MWF pqyg 1234" usesSingleLineMode="YES" id="DVe-70-QJm">
+                                                    <font key="font" metaFont="system"/>
+                                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                                    <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                                </textFieldCell>
+                                            </textField>
                                         </subviews>
                                     </customView>
                                 </subviews>
@@ -555,7 +554,7 @@
                                                                 <rect key="frame" x="1" y="1" width="438" height="143"/>
                                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                                 <subviews>
-                                                                    <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" selectionHighlightStyle="none" columnReordering="NO" columnSelection="YES" columnResizing="NO" multipleSelection="NO" autosaveColumns="NO" id="oZv-FH-BWg">
+                                                                    <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" selectionHighlightStyle="none" columnReordering="NO" columnSelection="YES" columnResizing="NO" multipleSelection="NO" autosaveColumns="NO" autosaveName="MediaKeywordsTable" id="oZv-FH-BWg">
                                                                         <rect key="frame" x="0.0" y="0.0" width="438" height="19"/>
                                                                         <autoresizingMask key="autoresizingMask"/>
                                                                         <size key="intercellSpacing" width="3" height="2"/>
@@ -640,7 +639,7 @@
                                                                 <rect key="frame" x="1" y="1" width="438" height="456"/>
                                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                                 <subviews>
-                                                                    <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" selectionHighlightStyle="none" columnReordering="NO" columnSelection="YES" columnResizing="NO" multipleSelection="NO" autosaveColumns="NO" id="7wO-n5-6J0">
+                                                                    <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" selectionHighlightStyle="none" columnReordering="NO" columnSelection="YES" columnResizing="NO" multipleSelection="NO" autosaveColumns="NO" autosaveName="AllKeywordsTableView" id="7wO-n5-6J0">
                                                                         <rect key="frame" x="0.0" y="0.0" width="438" height="19"/>
                                                                         <autoresizingMask key="autoresizingMask"/>
                                                                         <size key="intercellSpacing" width="3" height="2"/>

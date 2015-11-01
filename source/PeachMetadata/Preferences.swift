@@ -9,6 +9,8 @@ class Preferences : BasePreferences
     static private let BaseLocationLookupKey = "BaseLocationLookup"
     static private let ThumbnailZoomKey = "ThumbnailZoom"
     static private let PlacenameLevelKey = "PlacenameLevel"
+    static private let LastOpenedFolderKey = "LastOpenedFolder"
+    static private let LastSelectedFolderKey = "LastSelectedFolder"
 
 
     enum PlacenameLevel: Int
@@ -19,7 +21,7 @@ class Preferences : BasePreferences
 
     static func setMissingDefaults()
     {
-        setDefaultValue("http://open.mapquestapi.com", key: BaseLocationLookupKey)
+        setDefaultValue("http://geo.local:2000", key: BaseLocationLookupKey)
         setDefaultValue(PlacenameLevel.Medium.rawValue, key: PlacenameLevelKey)
         setDefaultValue(Float(0.43), key: ThumbnailZoomKey)
     }
@@ -52,5 +54,22 @@ class Preferences : BasePreferences
     {
         get { return floatForKey(ThumbnailZoomKey) }
         set { super.setValue(newValue, key: ThumbnailZoomKey) }
+    }
+
+    static var lastOpenedFolder : String
+    {
+        get { return stringForKey(LastOpenedFolderKey) }
+        set { super.setValue(newValue, key: LastOpenedFolderKey) }
+    }
+    
+    static var lastSelectedFolder : String
+    {
+        get { return stringForKey(LastSelectedFolderKey) }
+        set { super.setValue(newValue, key: LastSelectedFolderKey) }
+    }
+
+    static var preferencesFolder: String
+    {
+        return NSFileManager.defaultManager().URLsForDirectory(.LibraryDirectory, inDomains: .UserDomainMask)[0].path!.stringByAppendingPath("Preferences")
     }
 }

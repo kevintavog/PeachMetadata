@@ -1,0 +1,30 @@
+{
+  "DVTSourceControlWorkspaceBlueprintPrimaryRemoteRepositoryKey" : "C6EB6C3DF5B4420C5163ED66D5AE444960EA15FB",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyRepositoryLocationsKey" : {
+
+  },
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyStatesKey" : {
+    "C6EB6C3DF5B4420C5163ED66D5AE444960EA15FB" : 0,
+    "28F8C943F443126B04B10387DE2D199B1F8FC9D4" : 0
+  },
+  "DVTSourceControlWorkspaceBlueprintIdentifierKey" : "00247B9A-3561-4A94-A815-B10398DA6C66",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyPathsKey" : {
+    "C6EB6C3DF5B4420C5163ED66D5AE444960EA15FB" : "Peach\/",
+    "28F8C943F443126B04B10387DE2D199B1F8FC9D4" : "RangicCore\/"
+  },
+  "DVTSourceControlWorkspaceBlueprintNameKey" : "PeachMetadata",
+  "DVTSourceControlWorkspaceBlueprintVersion" : 204,
+  "DVTSourceControlWorkspaceBlueprintRelativePathToProjectKey" : "source\/PeachMetadata.xcodeproj",
+  "DVTSourceControlWorkspaceBlueprintRemoteRepositoriesKey" : [
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/kevintavog\/RangicCocoa.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "28F8C943F443126B04B10387DE2D199B1F8FC9D4"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/kevintavog\/PeachMetadata.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "C6EB6C3DF5B4420C5163ED66D5AE444960EA15FB"
+    }
+  ]
+}

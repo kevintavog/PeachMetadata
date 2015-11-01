@@ -7,10 +7,47 @@ import RangicCore
 
 extension PeachWindowController
 {
+    @IBAction func openFolder(sender: AnyObject)
+    {
+        let dialog = NSOpenPanel()
+
+        dialog.canChooseFiles = false
+        dialog.canChooseDirectories = true
+        if 1 != dialog.runModal() || dialog.URLs.count < 1 {
+            return
+        }
+
+        NSDocumentController.sharedDocumentController().noteNewRecentDocumentURL(dialog.URLs[0])
+
+        let folderName = dialog.URLs[0].path!
+        Preferences.lastOpenedFolder = folderName
+        populateDirectoryView(folderName)
+    }
+
     func populateDirectoryView(folderName: String)
     {
         rootDirectory = DirectoryTree(parent: nil, folder: folderName)
         directoryView.reloadData()
+    }
+
+    func selectDirectoryViewRow(folderName: String)
+    {
+        var bestRow = -1
+        for row in 0..<directoryView.numberOfRows {
+            let dt = directoryView.itemAtRow(row) as! DirectoryTree
+            if dt.folder == folderName {
+                bestRow = row
+                break
+            }
+
+            if folderName.lowercaseString.hasPrefix(dt.folder.lowercaseString) {
+                bestRow = row
+            }
+        }
+
+        if bestRow >= 0 {
+            directoryView.selectRowIndexes(NSIndexSet(index: bestRow), byExtendingSelection: false)
+        }
     }
 
     func outlineViewSelectionDidChange(notification: NSNotification)
@@ -18,6 +55,7 @@ extension PeachWindowController
         let selectedItem = toTree(directoryView.itemAtRow(directoryView.selectedRow))
         Logger.info("Folder selection changed: \(selectedItem.folder)")
         populateImageView(selectedItem.folder)
+        Preferences.lastSelectedFolder = selectedItem.folder
     }
 
     func outlineView(outlineView: NSOutlineView, numberOfChildrenOfItem item: AnyObject?) -> Int
