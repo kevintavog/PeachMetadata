@@ -13,6 +13,21 @@ extension PeachWindowController
         invokeMapScript("removeAllMarkers()")
     }
 
+    @IBAction func viewNormalMap(sender: AnyObject)
+    {
+        invokeMapScript("setMapLayer()")
+    }
+
+    @IBAction func viewSatelliteMap(sender: AnyObject)
+    {
+        invokeMapScript("setSatelliteLayer()")
+    }
+
+    @IBAction func viewDarkMap(sender: AnyObject)
+    {
+        invokeMapScript("setDarkLayer()")
+    }
+
     @IBAction func showImagesOnMap(sender: AnyObject)
     {
         Logger.info("Show images on map")

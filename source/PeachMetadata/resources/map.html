@@ -3,29 +3,52 @@
 <head>
 	<meta charset="utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.2/leaflet.css" />
-	<script src="http://cdn.leafletjs.com/leaflet-0.7.2/leaflet.js"></script>
+	<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.5/leaflet.css" />
+	<script src="http://cdn.leafletjs.com/leaflet-0.7.5/leaflet.js"></script>
+    <script src="https://www.mapquestapi.com/sdk/leaflet/v2.s/mq-map.js?key=e8KE3frcmrcs4PB7qEZq51Ztnh2ftGC3"></script>
 </head>
 <body>
-	<div id="map" style="width:99%; height:99%; position:absolute"></div>
+    <div id="map" style="width:92%; height:99%; position:absolute"></div>
 
 	<script>
-		var lat = 47.62201666666667;
-		var lon = -122.335685;
-		var map = L.map('map', { center:[lat, lon], zoom:10, minZoom:3 });
+        var lat = 47.62201666666667;
+        var lon = -122.335685;
 
-<!--		L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', -->
-<!--		L.tileLayer('http://otile1.mqcdn.com/tiles/1.0.0/sat/{z}/{x}/{y}.png', -->
-		L.tileLayer('http://otile1.mqcdn.com/tiles/1.0.0/map/{z}/{x}/{y}.png', 
-		{
-			maxZoom: 19,
-			attribution: '&copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>'
-		}).addTo(map);
+        var mapLayer = MQ.mapLayer(), map;
+        var darkLayer = MQ.darkLayer();
+        var satelliteLayer = MQ.satelliteLayer();
 
-		var popup = L.popup();
+        map = L.map('map', {
+            layers: mapLayer,
+            center: [lat, lon],
+            zoom: 10
+            });
 
+        var popup = L.popup();
         var markerLayer = new L.LayerGroup();
         markerLayer.addTo(map);
+
+
+        function setMapLayer()
+        {
+            map.removeLayer(darkLayer);
+            map.removeLayer(satelliteLayer);
+            map.addLayer(mapLayer);
+        }
+
+        function setSatelliteLayer()
+        {
+            map.removeLayer(mapLayer);
+            map.removeLayer(darkLayer);
+            map.addLayer(satelliteLayer);
+        }
+
+        function setDarkLayer()
+        {
+            map.removeLayer(mapLayer);
+            map.removeLayer(satelliteLayer);
+            map.addLayer(darkLayer);
+        }
 
 
 		function setCenter(location, zoom)
@@ -52,7 +75,6 @@
                 MapThis.updateMarker(markerId(marker), position.lat, position.lng);
             });
             markerLayer.addLayer(marker);
-<!--            marker.addTo(map); -->
 		}
 
         function removeMarker(id)
@@ -61,7 +83,6 @@
             if (marker != null)
             {
                 markerLayer.removeLayer(marker);
-<!--                map.removeLayer(marker); -->
                 activeMarkers[id] = null;
             }
         }

@@ -343,6 +343,25 @@
                                     <action selector="showImagesOnMap:" target="Qry-nx-iZR" id="C6m-rt-YKZ"/>
                                 </connections>
                             </menuItem>
+                            <menuItem isSeparatorItem="YES" id="wmk-as-zqN"/>
+                            <menuItem title="Map" id="en4-FU-XW8">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="viewNormalMap:" target="-1" id="0m2-x8-QNY"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Dark map" id="F91-NL-1VW">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="viewDarkMap:" target="Qry-nx-iZR" id="Df4-0x-IGb"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Satellite map" id="fro-1z-lJI">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="viewSatelliteMap:" target="Qry-nx-iZR" id="Hv5-Ps-0g4"/>
+                                </connections>
+                            </menuItem>
                         </items>
                     </menu>
                 </menuItem>
