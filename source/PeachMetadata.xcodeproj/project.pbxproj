@@ -31,6 +31,8 @@
 		44E387891BD9818000CDEF1C /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 44E387871BD9818000CDEF1C /* MainMenu.xib */; };
 		44E387911BD989BE00CDEF1C /* Quartz.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 44E387901BD989BE00CDEF1C /* Quartz.framework */; };
 		44E387931BD989DE00CDEF1C /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 44E387921BD989DE00CDEF1C /* WebKit.framework */; };
+		44E99A781BE99A4B004090C5 /* ImageBrowserView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44E99A771BE99A4B004090C5 /* ImageBrowserView.swift */; settings = {ASSET_TAGS = (); }; };
+		44E99A7B1BE99A94004090C5 /* ImageBrowserCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44E99A7A1BE99A94004090C5 /* ImageBrowserCell.swift */; settings = {ASSET_TAGS = (); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -84,6 +86,8 @@
 		44E3878A1BD9818000CDEF1C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		44E387901BD989BE00CDEF1C /* Quartz.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Quartz.framework; path = System/Library/Frameworks/Quartz.framework; sourceTree = SDKROOT; };
 		44E387921BD989DE00CDEF1C /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = System/Library/Frameworks/WebKit.framework; sourceTree = SDKROOT; };
+		44E99A771BE99A4B004090C5 /* ImageBrowserView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageBrowserView.swift; sourceTree = "<group>"; };
+		44E99A7A1BE99A94004090C5 /* ImageBrowserCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageBrowserCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -121,6 +125,8 @@
 				44C7F7071BE6B6760064116D /* MapViewController.swift */,
 				44C7F7021BE6627A0064116D /* MediaKeywordsController.swift */,
 				44261AF21BDEF66600ACA852 /* PeachWindowController.swift */,
+				44E99A771BE99A4B004090C5 /* ImageBrowserView.swift */,
+				44E99A7A1BE99A94004090C5 /* ImageBrowserCell.swift */,
 			);
 			name = Controllers;
 			sourceTree = "<group>";
@@ -277,7 +283,9 @@
 			files = (
 				44E387841BD9818000CDEF1C /* AppDelegate.swift in Sources */,
 				44048D3B1BDF1253005F3809 /* ImageBrowser.swift in Sources */,
+				44E99A7B1BE99A94004090C5 /* ImageBrowserCell.swift in Sources */,
 				444C358C1BE2CA9C002BEC2B /* AllKeywordsController.swift in Sources */,
+				44E99A781BE99A4B004090C5 /* ImageBrowserView.swift in Sources */,
 				44048D401BE05E95005F3809 /* Preferences.swift in Sources */,
 				44C7F7081BE6B6760064116D /* MapViewController.swift in Sources */,
 				44C7F7031BE6627A0064116D /* MediaKeywordsController.swift in Sources */,
