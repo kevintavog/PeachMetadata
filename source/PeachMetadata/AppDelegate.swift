@@ -28,7 +28,7 @@ class AppDelegate: NSObject, NSApplicationDelegate
 
         Preferences.setMissingDefaults()
         OpenMapLookupProvider.BaseLocationLookup = Preferences.baseLocationLookup
-        Logger.info("Placename lookups via \(OpenMapLookupProvider.BaseLocationLookup), using level \(Preferences.placenameLevel) and filter \(Preferences.placenameFilter)")
+        Logger.info("Placename lookups via \(OpenMapLookupProvider.BaseLocationLookup)")
     }
 
     func applicationDidFinishLaunching(aNotification: NSNotification)

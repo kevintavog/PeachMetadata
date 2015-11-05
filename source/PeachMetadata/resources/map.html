@@ -24,6 +24,14 @@
             zoom: 10
             });
 
+        map.on('click', function(e)
+        {
+            if (e.originalEvent.altKey)
+            {
+                MapThis.mapClicked(e.latlng.lat, e.latlng.lng);
+            }
+        });
+
         var popup = L.popup();
         var markerLayer = new L.LayerGroup();
         markerLayer.addTo(map);
@@ -50,7 +58,6 @@
             map.addLayer(darkLayer);
         }
 
-
 		function setCenter(location, zoom)
 		{
 			map.setView(location, zoom);
@@ -62,7 +69,7 @@
 		}
 
         var activeMarkers = {};
-		function addMarker(id, location, title)
+		function addMarker(name, id, location, title)
 		{
 			marker = L.marker(location, { draggable:'true', title:title } );
             setMarkerId(marker, id);
@@ -73,6 +80,10 @@
                 var marker = event.target;
                 var position = marker.getLatLng();
                 MapThis.updateMarker(markerId(marker), position.lat, position.lng);
+            });
+            marker.on('click', function(event)
+            {
+                MapThis.markerClicked(name);
             });
             markerLayer.addLayer(marker);
 		}
@@ -112,18 +123,7 @@
 			return JSON.stringify(ll);
 		}
 
-		function onMapClick(e)
-		{
-			if (e.originalEvent.altKey)
-			{
-				MapThis.clicked(e.latlng.lat, e.latlng.lng);
-			}
-		}
-
-		map.on('click', onMapClick);
-
-
-        function markerId(obj) 
+        function markerId(obj)
         {
             return String(obj.__obj_id);
         }

@@ -4,6 +4,7 @@
 
 import WebKit
 
+import Async
 import RangicCore
 
 extension PeachWindowController
@@ -63,7 +64,7 @@ extension PeachWindowController
         for m in mediaItems {
             if let location = m.location {
                 let tooltip = "\(m.name)\\n\(m.keywordsString())"
-                invokeMapScript("addMarker(\(setId), [\(location.latitude), \(location.longitude)], \"\(tooltip)\")")
+                invokeMapScript("addMarker(\"\(m.url!.path!)\", \(setId), [\(location.latitude), \(location.longitude)], \"\(tooltip)\")")
             }
         }
     }
@@ -84,5 +85,61 @@ extension PeachWindowController
     {
         Logger.info("Script: \(script)")
         return mapView.windowScriptObject.evaluateWebScript(script)
+    }
+
+    // A marker on the map was clicked - select the associated media item
+    func markerClicked(path: String)
+    {
+        for (index,m) in mediaProvider.mediaFiles.enumerate() {
+            if m.url!.path! == path {
+                imageBrowserView.setSelectionIndexes(NSIndexSet(index: index), byExtendingSelection: false)
+                imageBrowserView.scrollIndexToVisible(index)
+                break
+            }
+        }
+    }
+
+    // The map was clicked, show the full placename
+    func mapClicked(lat: NSNumber, lon: NSNumber)
+    {
+        Logger.info("mapClicked: \(lat.doubleValue), \(lon.doubleValue)")
+        let location = Location(latitude: lat.doubleValue, longitude: lon.doubleValue)
+        let locationJsonStr = location.toDms().stringByReplacingOccurrencesOfString("\"", withString: "\\\"")
+        let message = "Looking up \(locationJsonStr)"
+        invokeMapScript("setPopup([\(lat), \(lon)], \"\(message)\")")
+
+        Async.background {
+            let placename = location.placenameAsString(.Minimal)
+            Async.main {
+                self.invokeMapScript("setPopup([\(lat), \(lon)], \"\(placename)\")")
+            }
+        }
+    }
+
+    func logMessage(message: String)
+    {
+        Logger.info("js log: \(message)")
+    }
+
+    override class func webScriptNameForSelector(sel: Selector) -> String?
+    {
+        switch sel {
+        case "logMessage:":
+            return "logMessage"
+
+        case "mapClicked:lon:":
+            return "mapClicked"
+
+        case "markerClicked:":
+            return "markerClicked"
+
+        default:
+            return nil
+        }
+    }
+
+    override class func isSelectorExcludedFromWebScript(sel: Selector) -> Bool
+    {
+        return false
     }
 }
