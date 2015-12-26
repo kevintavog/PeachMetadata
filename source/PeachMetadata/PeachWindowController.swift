@@ -6,6 +6,7 @@ import AppKit
 import Quartz
 import WebKit
 
+import Async
 import RangicCore
 
 class PeachWindowController : NSWindowController, NSTableViewDataSource, WebFrameLoadDelegate
@@ -17,7 +18,7 @@ class PeachWindowController : NSWindowController, NSTableViewDataSource, WebFram
     @IBOutlet weak var mediaKeywordsTableView: NSTableView!
     @IBOutlet weak var allKeywordsTableView: NSTableView!
     @IBOutlet weak var statusLabel: NSTextField!
-    @IBOutlet weak var mapView: WebView!
+    @IBOutlet weak var mapView: MapWebView!
 
 
     var mediaProvider = MediaProvider()
@@ -56,5 +57,64 @@ class PeachWindowController : NSWindowController, NSTableViewDataSource, WebFram
 
         mapView.mainFrame.loadRequest(NSURLRequest(URL: NSURL(fileURLWithPath: NSBundle.mainBundle().pathForResource("map", ofType: "html")!)))
         mapView.frameLoadDelegate = self
+        mapView.enableDragAndDrop(updateLocations)
+    }
+
+    @IBAction func clearLocations(sender: AnyObject)
+    {
+        let mediaItems = selectedMediaItems()
+        if mediaItems.count < 1 {
+            return
+        }
+
+        clearLocations(mediaItems)
+    }
+
+    @IBAction func fixBadExif(sender: AnyObject)
+    {
+        Logger.info("fixBadExif")
+    }
+    
+    @IBAction func viewFile(sender: AnyObject)
+    {
+        Logger.info("viewFile")
+    }
+
+    @IBAction func showDetails(sender: AnyObject)
+    {
+        Logger.info("showDetails")
+    }
+    
+    @IBAction func validateFiles(sender: AnyObject)
+    {
+        Logger.info("validateFiles")
+        var mediaItems = selectedMediaItems()
+        if mediaItems.count < 1 {
+            mediaItems = mediaProvider.mediaFiles
+        }
+
+        for media in mediaItems {
+            Logger.info("Check \(media.name)")
+            if !media.doesExist() {
+                Logger.info("  file missing")
+                continue
+            }
+
+            if let loc = media.location {
+                // Is it a disallowed location?
+            }
+            else {
+                Logger.info("  No location")
+            }
+
+
+            if media.keywords == nil {
+                Logger.info("  No keywords")
+            }
+
+            if !media.doFileAndExifTimestampsMatch() {
+                Logger.info("  Mismatched dates")
+            }
+        }
     }
 }

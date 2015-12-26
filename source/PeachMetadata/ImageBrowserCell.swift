@@ -116,7 +116,7 @@ public class ImageBrowserCell : IKImageBrowserCell
         if let location = item.mediaData.location {
             drawString(location.toDecimalDegrees(true), x: 4, y: y, attributes: ImageBrowserCell.textAttrs)
         } else {
-            drawString("no location", x: 4, y: y, attributes: ImageBrowserCell.textAttrs)
+            drawString("[ no location ]", x: 4, y: y, attributes: ImageBrowserCell.textAttrs)
         }
 
         NSGraphicsContext.restoreGraphicsState()

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="8191" systemVersion="14F27" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" customObjectInstantitationMethod="direct">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="9531" systemVersion="15C50" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" customObjectInstantitationMethod="direct">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="8191"/>
-        <plugIn identifier="com.apple.WebKitIBPlugin" version="8191"/>
-        <plugIn identifier="com.apple.imagekit.ibplugin" version="8191"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="9531"/>
+        <plugIn identifier="com.apple.WebKitIBPlugin" version="9531"/>
+        <plugIn identifier="com.apple.imagekit.ibplugin" version="9531"/>
     </dependencies>
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="NSApplication">
@@ -102,12 +102,33 @@
                             <menuItem isSeparatorItem="YES" id="m54-Is-iLE"/>
                             <menuItem title="Clear location" id="YXV-hN-2C2">
                                 <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="clearLocations:" target="Qry-nx-iZR" id="oyM-0u-lhA"/>
+                                </connections>
                             </menuItem>
                             <menuItem title="Fix bad EXIF" id="8XU-eh-lff">
                                 <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="fixBadExif:" target="Qry-nx-iZR" id="TXF-Yw-USP"/>
+                                </connections>
                             </menuItem>
                             <menuItem isSeparatorItem="YES" id="aJh-i4-bef"/>
-                            <menuItem title="View…" keyEquivalent="i" id="ybV-2E-gPp"/>
+                            <menuItem title="Show details..." keyEquivalent="i" id="ybV-2E-gPp">
+                                <connections>
+                                    <action selector="showDetails:" target="Qry-nx-iZR" id="ID9-9e-7kq"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="View…" id="Ad1-MC-pft">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="viewFile:" target="Qry-nx-iZR" id="H7R-r8-ZK2"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Validate…" keyEquivalent="x" id="eTr-7u-aJ1">
+                                <connections>
+                                    <action selector="validateFiles:" target="Qry-nx-iZR" id="0LZ-xh-vaV"/>
+                                </connections>
+                            </menuItem>
                         </items>
                     </menu>
                 </menuItem>
@@ -429,7 +450,7 @@
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                             <subviews>
                                                 <outlineView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" alternatingRowBackgroundColors="YES" multipleSelection="NO" autosaveColumns="NO" indentationPerLevel="16" autosaveExpandedItems="YES" outlineTableColumn="wKk-dm-8kh" id="hBb-pL-bwS">
-                                                    <rect key="frame" x="0.0" y="0.0" width="460.5" height="19"/>
+                                                    <rect key="frame" x="0.0" y="0.0" width="460.5" height="266"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <size key="intercellSpacing" width="3" height="2"/>
                                                     <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -457,11 +478,11 @@
                                             </subviews>
                                             <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                         </clipView>
-                                        <scroller key="horizontalScroller" hidden="YES" wantsLayer="YES" verticalHuggingPriority="750" horizontal="YES" id="NAS-kv-laf">
+                                        <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="YES" id="NAS-kv-laf">
                                             <rect key="frame" x="1" y="119" width="223" height="15"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                         </scroller>
-                                        <scroller key="verticalScroller" hidden="YES" wantsLayer="YES" verticalHuggingPriority="750" horizontal="NO" id="vlw-lj-jdM">
+                                        <scroller key="verticalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="NO" id="vlw-lj-jdM">
                                             <rect key="frame" x="224" y="17" width="15" height="102"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                         </scroller>
@@ -478,7 +499,7 @@
                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                     <subviews>
                                                         <ikImageBrowserView autoresizesSubviews="NO" zoomValue="nan" animates="YES" id="nit-07-pvN" customClass="ImageBrowserView" customModule="PeachMetadata" customModuleProvider="target">
-                                                            <rect key="frame" x="0.0" y="0.0" width="462.5" height="423"/>
+                                                            <rect key="frame" x="0.0" y="0.0" width="491" height="455"/>
                                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                             <ikCellsStyle key="cellsStyleMask" shadowed="YES" outlined="YES" titled="YES" subtitled="YES"/>
                                                             <autoresizingMask key="contentResizingMask" heightSizable="YES"/>
@@ -490,17 +511,17 @@
                                                         </ikImageBrowserView>
                                                     </subviews>
                                                 </clipView>
-                                                <scroller key="horizontalScroller" wantsLayer="YES" verticalHuggingPriority="750" horizontal="YES" id="xeg-OM-olC">
+                                                <scroller key="horizontalScroller" verticalHuggingPriority="750" horizontal="YES" id="xeg-OM-olC">
                                                     <rect key="frame" x="1" y="408" width="464" height="16"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                 </scroller>
-                                                <scroller key="verticalScroller" wantsLayer="YES" verticalHuggingPriority="750" doubleValue="1" horizontal="NO" id="wfz-n6-wZx">
+                                                <scroller key="verticalScroller" verticalHuggingPriority="750" doubleValue="1" horizontal="NO" id="wfz-n6-wZx">
                                                     <rect key="frame" x="449" y="1" width="16" height="423"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                 </scroller>
                                             </scrollView>
                                             <slider verticalHuggingPriority="750" id="EfA-Zz-M69">
-                                                <rect key="frame" x="354.5" y="7" width="101.5" height="25"/>
+                                                <rect key="frame" x="355" y="7" width="101" height="25"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
                                                 <sliderCell key="cell" continuous="YES" state="on" alignment="left" maxValue="2" doubleValue="1" tickMarkPosition="above" numberOfTickMarks="10" sliderType="linear" id="wO6-tv-YyU"/>
                                                 <connections>
@@ -529,25 +550,25 @@
                                 <autoresizingMask key="autoresizingMask"/>
                                 <subviews>
                                     <tabView id="iwy-qz-yaO">
-                                        <rect key="frame" x="-7" y="-4" width="478.5" height="760"/>
+                                        <rect key="frame" x="-7" y="-4" width="479" height="760"/>
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                         <font key="font" metaFont="system"/>
                                         <tabViewItems>
                                             <tabViewItem label="Location" identifier="1" id="cdb-TY-Ng5">
                                                 <view key="view" id="n5s-7Y-uhP">
-                                                    <rect key="frame" x="10" y="33" width="381" height="714"/>
+                                                    <rect key="frame" x="10" y="33" width="459" height="714"/>
                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                     <subviews>
                                                         <splitView arrangesAllSubviews="NO" autosaveName="mapAndLocation" dividerStyle="paneSplitter" id="B8q-lM-S8Z">
-                                                            <rect key="frame" x="0.0" y="0.0" width="461" height="719"/>
+                                                            <rect key="frame" x="0.0" y="0.0" width="539" height="719"/>
                                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                             <subviews>
                                                                 <customView id="2Va-p9-F8b">
-                                                                    <rect key="frame" x="0.0" y="0.0" width="461" height="578"/>
+                                                                    <rect key="frame" x="0.0" y="0.0" width="539" height="578"/>
                                                                     <autoresizingMask key="autoresizingMask"/>
                                                                     <subviews>
-                                                                        <webView id="Pe3-yg-kIT">
-                                                                            <rect key="frame" x="-8" y="0.0" width="452" height="581"/>
+                                                                        <webView maintainsBackForwardList="NO" id="Pe3-yg-kIT" customClass="MapWebView" customModule="PeachMetadata" customModuleProvider="target">
+                                                                            <rect key="frame" x="-8" y="0.0" width="530" height="581"/>
                                                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                                             <webPreferences key="preferences" defaultFontSize="12" defaultFixedFontSize="12" plugInsEnabled="NO" javaEnabled="NO">
                                                                                 <nil key="identifier"/>
@@ -556,11 +577,11 @@
                                                                     </subviews>
                                                                 </customView>
                                                                 <customView id="tbq-s4-mdh">
-                                                                    <rect key="frame" x="0.0" y="588" width="461" height="131"/>
+                                                                    <rect key="frame" x="0.0" y="588" width="539" height="131"/>
                                                                     <autoresizingMask key="autoresizingMask"/>
                                                                     <subviews>
                                                                         <textField verticalHuggingPriority="750" id="bmv-6p-7gy">
-                                                                            <rect key="frame" x="5" y="97" width="420" height="34"/>
+                                                                            <rect key="frame" x="5" y="97" width="498" height="34"/>
                                                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                                                                             <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" drawsBackground="YES" id="Sgk-dj-uxV">
                                                                                 <font key="font" metaFont="system"/>
@@ -669,11 +690,11 @@
                                                                 </subviews>
                                                                 <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                                             </clipView>
-                                                            <scroller key="horizontalScroller" hidden="YES" wantsLayer="YES" verticalHuggingPriority="750" horizontal="YES" id="CV0-zT-fol">
+                                                            <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="YES" id="CV0-zT-fol">
                                                                 <rect key="frame" x="1" y="128" width="438" height="16"/>
                                                                 <autoresizingMask key="autoresizingMask"/>
                                                             </scroller>
-                                                            <scroller key="verticalScroller" hidden="YES" wantsLayer="YES" verticalHuggingPriority="750" horizontal="NO" id="Rhp-St-7An">
+                                                            <scroller key="verticalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="NO" id="Rhp-St-7An">
                                                                 <rect key="frame" x="224" y="17" width="15" height="102"/>
                                                                 <autoresizingMask key="autoresizingMask"/>
                                                             </scroller>
@@ -754,11 +775,11 @@
                                                                 </subviews>
                                                                 <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                                             </clipView>
-                                                            <scroller key="horizontalScroller" hidden="YES" wantsLayer="YES" verticalHuggingPriority="750" horizontal="YES" id="aML-HK-kdv">
+                                                            <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="YES" id="aML-HK-kdv">
                                                                 <rect key="frame" x="1" y="441" width="438" height="16"/>
                                                                 <autoresizingMask key="autoresizingMask"/>
                                                             </scroller>
-                                                            <scroller key="verticalScroller" hidden="YES" wantsLayer="YES" verticalHuggingPriority="750" horizontal="NO" id="G2R-WW-j8R">
+                                                            <scroller key="verticalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="NO" id="G2R-WW-j8R">
                                                                 <rect key="frame" x="224" y="17" width="15" height="102"/>
                                                                 <autoresizingMask key="autoresizingMask"/>
                                                             </scroller>

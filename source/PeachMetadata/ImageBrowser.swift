@@ -70,6 +70,7 @@ extension PeachWindowController
 
     func setStatus(message: String)
     {
+        Logger.info("Status message changed: '\(message)'")
         statusLabel.stringValue = message
     }
 

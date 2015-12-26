@@ -11,22 +11,22 @@ extension PeachWindowController
 {
     func clearAllMarkers()
     {
-        invokeMapScript("removeAllMarkers()")
+        mapView.invokeMapScript("removeAllMarkers()")
     }
 
     @IBAction func viewNormalMap(sender: AnyObject)
     {
-        invokeMapScript("setMapLayer()")
+        mapView.invokeMapScript("setMapLayer()")
     }
 
     @IBAction func viewSatelliteMap(sender: AnyObject)
     {
-        invokeMapScript("setSatelliteLayer()")
+        mapView.invokeMapScript("setSatelliteLayer()")
     }
 
     @IBAction func viewDarkMap(sender: AnyObject)
     {
-        invokeMapScript("setDarkLayer()")
+        mapView.invokeMapScript("setDarkLayer()")
     }
 
     @IBAction func showImagesOnMap(sender: AnyObject)
@@ -58,13 +58,13 @@ extension PeachWindowController
             return
         }
 
-        invokeMapScript("fitToBounds([[\(minLat), \(minLon)],[\(maxLat), \(maxLon)]])")
+        mapView.invokeMapScript("fitToBounds([[\(minLat), \(minLon)],[\(maxLat), \(maxLon)]])")
 
         let setId = "3"
         for m in mediaItems {
             if let location = m.location {
                 let tooltip = "\(m.name)\\n\(m.keywordsString())"
-                invokeMapScript("addMarker(\"\(m.url!.path!)\", \(setId), [\(location.latitude), \(location.longitude)], \"\(tooltip)\")")
+                mapView.invokeMapScript("addMarker(\"\(m.url!.path!)\", \(setId), [\(location.latitude), \(location.longitude)], \"\(tooltip)\")")
             }
         }
     }
@@ -73,18 +73,12 @@ extension PeachWindowController
     {
         let lat = 47.6220
         let lon = -122.335
-        invokeMapScript("setCenter([\(lat), \(lon)], 12)")
+        mapView.invokeMapScript("setCenter([\(lat), \(lon)], 12)")
     }
 
     func webView(webView: WebView!, didClearWindowObject windowObject: WebScriptObject!, forFrame frame: WebFrame!)
     {
         mapView.windowScriptObject.setValue(self, forKey: "MapThis")
-    }
-
-    func invokeMapScript(script: String) -> AnyObject?
-    {
-        Logger.info("Script: \(script)")
-        return mapView.windowScriptObject.evaluateWebScript(script)
     }
 
     // A marker on the map was clicked - select the associated media item
@@ -106,12 +100,12 @@ extension PeachWindowController
         let location = Location(latitude: lat.doubleValue, longitude: lon.doubleValue)
         let locationJsonStr = location.toDms().stringByReplacingOccurrencesOfString("\"", withString: "\\\"")
         let message = "Looking up \(locationJsonStr)"
-        invokeMapScript("setPopup([\(lat), \(lon)], \"\(message)\")")
+        mapView.invokeMapScript("setPopup([\(lat), \(lon)], \"\(message)\")")
 
         Async.background {
             let placename = location.placenameAsString(.Minimal)
             Async.main {
-                self.invokeMapScript("setPopup([\(lat), \(lon)], \"\(placename)\")")
+                self.mapView.invokeMapScript("setPopup([\(lat), \(lon)], \"\(placename)\")")
             }
         }
     }
@@ -142,4 +136,140 @@ extension PeachWindowController
     {
         return false
     }
+
+    func clearLocations(mediaItems: [MediaData])
+    {
+        setStatus("Clearing locations from \(mediaItems.count) file(s)")
+        let (imagePathList, videoPathList) = separateVideoList(mediaItems)
+
+        Async.background {
+            do {
+                try ExifToolRunner.clearFileLocations(imagePathList, videoFilePaths: videoPathList)
+
+                for mediaData in mediaItems {
+                    mediaData.location = nil
+                }
+
+                Async.main {
+                    self.imageBrowserView.reloadData()
+                    self.setStatus("Finished clearing location from \(mediaItems.count) file(s)")
+                }
+            } catch let error {
+                Async.main {
+                    self.setStatus("Clearing file locations failed: \(error)")
+                }
+            }
+        }
+        
+    }
+
+    // Callback invoked from MapWebView
+    func updateLocations(location: Location, filePaths: [String])
+    {
+        var updateList = [String]()
+        var skipList = [String]()
+        for file in filePaths {
+            if let mediaItem = mediaProvider.itemFromFilePath(file) {
+                if mediaItem.location != nil { // && filePaths.count > 1 {
+                    Logger.info("Not setting location on \(file), it has a location already")
+                    skipList.append(file)
+                } else {
+                    updateList.append(file)
+                }
+            } else {
+                Logger.warn("Unable to find entry for \(file)")
+            }
+        }
+
+        // Update file locations...
+        setFileLocation(updateList, location: location, updateStatusText: skipList.count < 1)
+
+        if skipList.count > 0 {
+            Async.main {
+                self.setStatus("Some files were not updated due to existing locations: \(skipList.joinWithSeparator(", "))")
+            }
+        }
+    }
+
+    func setFileLocation(filePaths: [String], location: Location, updateStatusText: Bool)
+    {
+        if filePaths.count < 1 {
+            Logger.warn("no files to update, no locations being updated")
+            return
+        }
+
+        if updateStatusText {
+            setStatus("Updating \(filePaths.count) file(s) to \(location.toDms())")
+        }
+
+        let (imagePathList, videoPathList) = separateVideoList(filePaths)
+
+        Async.background {
+            do {
+                try ExifToolRunner.updateFileLocations(imagePathList, videoFilePaths: videoPathList, location: location)
+
+                for file in filePaths {
+                    if let mediaData = self.mediaProvider.itemFromFilePath(file) {
+                        mediaData.location = location
+                    }
+                }
+
+                Async.main {
+                    self.imageBrowserView.reloadData()
+                }
+
+            } catch let error {
+                Logger.error("Setting file location failed: \(error)")
+
+                Async.main {
+                    self.setStatus("Setting file location failed: \(error)")
+                }
+            }
+        }
+    }
+
+    func separateVideoList(filePaths: [String]) -> (imagePathList:[String], videoPathList:[String])
+    {
+        var imagePathList = [String]()
+        var videoPathList = [String]()
+
+        for path in filePaths {
+            if let mediaData = mediaProvider.itemFromFilePath(path) {
+                if let mediaType = mediaData.type {
+                    switch mediaType {
+                    case SupportedMediaTypes.MediaType.Image:
+                        imagePathList.append(path)
+                    case SupportedMediaTypes.MediaType.Video:
+                        videoPathList.append(path)
+                    default:
+                        Logger.warn("Ignoring unknown file type: \(path)")
+                    }
+                }
+            }
+        }
+
+        return (imagePathList, videoPathList)
+    }
+
+    func separateVideoList(mediaItems: [MediaData]) -> (imagePathList:[String], videoPathList:[String])
+    {
+        var imagePathList = [String]()
+        var videoPathList = [String]()
+
+        for mediaData in mediaItems {
+            if let mediaType = mediaData.type {
+                switch mediaType {
+                case SupportedMediaTypes.MediaType.Image:
+                    imagePathList.append(mediaData.url.path!)
+                case SupportedMediaTypes.MediaType.Video:
+                    videoPathList.append(mediaData.url.path!)
+                default:
+                    Logger.warn("Ignoring unknown file type: \(mediaData.url.path)")
+                }
+            }
+        }
+
+        return (imagePathList, videoPathList)
+    }
+
 }
