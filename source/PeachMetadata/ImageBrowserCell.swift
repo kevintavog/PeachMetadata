@@ -27,22 +27,22 @@ public class ImageBrowserCell : IKImageBrowserCell
             let layer = CALayer()
             layer.frame = CGRectMake(0, 0, frame().width, frame().height)
 
-            let photoBackgroundLayer = CALayer()
-            photoBackgroundLayer.frame = layer.frame
+            let mediaBackgroundLayer = CALayer()
+            mediaBackgroundLayer.frame = layer.frame
 
             let strokeComponents: [CGFloat] = [0.2, 0.2, 0.2, 0.5]
             let colorSpace = CGColorSpaceCreateDeviceRGB()
 
-            photoBackgroundLayer.backgroundColor = NSColor.darkGrayColor().CGColor
+            mediaBackgroundLayer.backgroundColor = NSColor.darkGrayColor().CGColor
 
             let borderColor = CGColorCreate(colorSpace, strokeComponents)
-            photoBackgroundLayer.borderColor = borderColor
+            mediaBackgroundLayer.borderColor = borderColor
 
-            photoBackgroundLayer.borderWidth = 1
-            photoBackgroundLayer.shadowOpacity = 0.1
-            photoBackgroundLayer.cornerRadius = 3
+            mediaBackgroundLayer.borderWidth = 1
+            mediaBackgroundLayer.shadowOpacity = 0.1
+            mediaBackgroundLayer.cornerRadius = 3
 
-            layer.addSublayer(photoBackgroundLayer)
+            layer.addSublayer(mediaBackgroundLayer)
 
             return layer;
 
@@ -184,9 +184,23 @@ public class ImageBrowserCell : IKImageBrowserCell
 
     public override func imageContainerFrame() -> NSRect
     {
+        let portraitAdjustment: CGFloat = 9
+        let videoAdjustment: CGFloat = 9
+
         let extraForText = 2 + ImageBrowserCell.getLineHeight() * 2
         let superRect = super.frame()
-        let imageFrame = NSRect(x: superRect.origin.x, y: superRect.origin.y + extraForText, width: superRect.width, height: superRect.height - extraForText)
+        var imageFrame = NSRect(x: superRect.origin.x, y: superRect.origin.y + extraForText, width: superRect.width, height: superRect.height - extraForText)
+
+        let mediaData = (representedItem() as? ThumbnailViewItem)?.mediaData
+        if let mediaSize = mediaData?.mediaSize {
+            if mediaSize.height > mediaSize.width {
+                imageFrame = NSRect(x: imageFrame.origin.x, y: imageFrame.origin.y + portraitAdjustment, width: imageFrame.width, height: imageFrame.height - portraitAdjustment)
+            }
+        }
+
+        if mediaData?.type == SupportedMediaTypes.MediaType.Video {
+            imageFrame = NSRect(x: imageFrame.origin.x, y: imageFrame.origin.y + videoAdjustment, width: imageFrame.width, height: imageFrame.height - videoAdjustment)
+        }
 
         return imageFrame
     }
