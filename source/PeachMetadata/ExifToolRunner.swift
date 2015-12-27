@@ -59,12 +59,12 @@ public class ExifToolRunner
             let latRef = location.latitude < 0 ? "S" : "N"
             let absLat = abs(location.latitude)
             let latDegrees = Int(absLat)
-            let latMinutesAndSeconds = (location.latitude - Double(latDegrees)) * 60.0
+            let latMinutesAndSeconds = (absLat - Double(latDegrees)) * 60.0
 
             let lonRef = location.longitude < 0 ? "W" : "E"
             let absLong = abs(location.longitude)
             let lonDegrees = Int(absLong)
-            let lonMinutesAndSeconds = (location.longitude - Double(lonDegrees)) * 60.0
+            let lonMinutesAndSeconds = (absLong - Double(lonDegrees)) * 60.0
 
 
             try runExifTool(
