@@ -12,6 +12,7 @@ class AppDelegate: NSObject, NSApplicationDelegate
     @IBOutlet weak var window: NSWindow!
     @IBOutlet weak var peachWindowController: PeachWindowController!
 
+
     private var hasInitialized = false
 
 

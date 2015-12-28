@@ -59,13 +59,27 @@ extension PeachWindowController
         switch imageBrowserView.selectionIndexes().count {
         case 0:
             setFolderStatus()
+            postNoSelection()
         case 1:
             keywordList = setSingleItemStatus(selectedItems.first!)
+            postSelectedItem(selectedItems.first!)
         default:
             keywordList = setMultiItemStatus(selectedItems, filesMessage: "files selected")
+            postSelectedItem(selectedItems.first!)
         }
 
         mediaKeywordsController.selectionChanged(keywordList)
+    }
+
+    func postSelectedItem(mediaData: MediaData)
+    {
+        let userInfo: [String: MediaData] = ["MediaData": mediaData]
+        Notifications.postNotification(Notifications.Selection.MediaData, object: self, userInfo: userInfo)
+    }
+
+    func postNoSelection()
+    {
+        Notifications.postNotification(Notifications.Selection.MediaData, object: self, userInfo: nil)
     }
 
     func setStatus(message: String)

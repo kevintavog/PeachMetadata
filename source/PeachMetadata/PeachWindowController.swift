@@ -19,6 +19,7 @@ class PeachWindowController : NSWindowController, NSTableViewDataSource, WebFram
     @IBOutlet weak var allKeywordsTableView: NSTableView!
     @IBOutlet weak var statusLabel: NSTextField!
     @IBOutlet weak var mapView: MapWebView!
+    @IBOutlet weak var fileInformationController: FileInformationController!
 
 
     var mediaProvider = MediaProvider()
@@ -83,6 +84,7 @@ class PeachWindowController : NSWindowController, NSTableViewDataSource, WebFram
     @IBAction func showDetails(sender: AnyObject)
     {
         Logger.info("showDetails")
+        fileInformationController.toggleVisibility()
     }
     
     @IBAction func validateFiles(sender: AnyObject)
