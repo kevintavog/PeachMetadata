@@ -119,6 +119,15 @@
                                     <action selector="fixBadExif:" target="Qry-nx-iZR" id="TXF-Yw-USP"/>
                                 </connections>
                             </menuItem>
+                            <menuItem title="Set file date from metadata" id="AF1-pv-Svy">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                            </menuItem>
+                            <menuItem title="Set ALL metadata dates..." id="SgM-A4-Ybf">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="setAllMetadataDates:" target="Qry-nx-iZR" id="INH-QI-pTh"/>
+                                </connections>
+                            </menuItem>
                             <menuItem isSeparatorItem="YES" id="aJh-i4-bef"/>
                             <menuItem title="Show details..." keyEquivalent="i" id="ybV-2E-gPp">
                                 <connections>
@@ -506,7 +515,7 @@
                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                     <subviews>
                                                         <ikImageBrowserView autoresizesSubviews="NO" zoomValue="nan" animates="YES" id="nit-07-pvN" customClass="ImageBrowserView" customModule="PeachMetadata" customModuleProvider="target">
-                                                            <rect key="frame" x="0.0" y="0.0" width="504.5" height="471"/>
+                                                            <rect key="frame" x="0.0" y="0.0" width="519" height="487"/>
                                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                             <ikCellsStyle key="cellsStyleMask" shadowed="YES" outlined="YES" titled="YES" subtitled="YES"/>
                                                             <autoresizingMask key="contentResizingMask" heightSizable="YES"/>
@@ -523,7 +532,7 @@
                                                     <autoresizingMask key="autoresizingMask"/>
                                                 </scroller>
                                                 <scroller key="verticalScroller" verticalHuggingPriority="750" doubleValue="1" horizontal="NO" id="wfz-n6-wZx">
-                                                    <rect key="frame" x="450" y="1" width="15" height="423"/>
+                                                    <rect key="frame" x="449" y="1" width="16" height="423"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                 </scroller>
                                             </scrollView>

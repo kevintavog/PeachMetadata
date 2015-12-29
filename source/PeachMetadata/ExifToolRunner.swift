@@ -75,6 +75,33 @@ public class ExifToolRunner
         }
     }
 
+    static public func setMetadataDates(videoFilePaths: [String], newDate: NSDate) throws
+    {
+        // Some dates in Canon videos aren't updatable via exiftool (due to Canon silliness). Bummer
+        // http://u88.n24.queensu.ca/exiftool/forum/index.php?topic=6563.0
+        if videoFilePaths.count > 0 {
+
+            let dateFormatter = NSDateFormatter()
+            dateFormatter.dateFormat = "yyyy:MM:dd HH:mm:ss"
+            let localDateString = dateFormatter.stringFromDate(newDate)
+            dateFormatter.timeZone = NSTimeZone(name: "UTC")
+            let utcDateString = dateFormatter.stringFromDate(newDate)
+
+            try runExifTool(
+                ["-overwrite_original",
+                     "-AllDates='\(utcDateString)'",
+                     "-quicktime:TrackCreateDate='\(utcDateString)'",
+                     "-quicktime:TrackCreateDate='\(utcDateString)'",
+                     "-quicktime:TrackModifyDate='\(utcDateString)'",
+                     "-quicktime:MediaCreateDate='\(utcDateString)'",
+                     "-quicktime:MediaModifyDate='\(utcDateString)'",
+                     "-ExifIFD:CreateDate='\(localDateString)'",
+                     "-ExifIFD:DateTimeOriginal='\(localDateString)'",
+                     "-IFD0:ModifyDate='\(localDateString)'"]
+                     + videoFilePaths)
+        }
+    }
+
     static public var exifToolPath: String { return "/usr/local/bin/exiftool" }
 
     static private func checkFiles(filePaths: [String]) throws
@@ -86,7 +113,7 @@ public class ExifToolRunner
         }
     }
 
-    static public func runExifTool(arguments: [String]) throws -> String
+    static private func runExifTool(arguments: [String]) throws -> String
     {
         let process = ProcessInvoker.run(exifToolPath, arguments: arguments)
         if process.exitCode == 0 {

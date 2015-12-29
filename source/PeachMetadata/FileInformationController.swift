@@ -14,6 +14,7 @@ class FileInformationController : NSViewController
 
     private var currentMediaData: MediaData?
 
+
     override func awakeFromNib()
     {
         tableView.backgroundColor = NSColor.clearColor()
@@ -38,7 +39,6 @@ class FileInformationController : NSViewController
     // MARK: Notification handlers
     func fileSelected(notification: NSNotification)
     {
-        Logger.error("received file selection")
         currentMediaData = nil
         if let userInfo = notification.userInfo as? Dictionary<String,MediaData> {
             if let mediaData = userInfo["MediaData"] {

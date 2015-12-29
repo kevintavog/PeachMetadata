@@ -87,6 +87,60 @@ class PeachWindowController : NSWindowController, NSTableViewDataSource, WebFram
         fileInformationController.toggleVisibility()
     }
     
+    @IBAction func setAllMetadataDates(sender: AnyObject)
+    {
+        Logger.info("setAllMetadataDates")
+        let mediaItems = selectedMediaItems()
+        if mediaItems.count < 1 {
+            return
+        }
+
+
+        var filePaths = [String]()
+        for mediaData in mediaItems {
+            filePaths.append(mediaData.url!.path!)
+        }
+
+        let (_, videoPathList) = separateVideoList(filePaths)
+        if videoPathList.count < 1 {
+            return
+        }
+
+        let firstMediaData = mediaItems.first!
+        let dateAdjustmentController = DateAdjustmentWindowController(windowNibName: "DateAdjustmentWindow")
+        dateAdjustmentController.setDateValues(firstMediaData.fileTimestamp, metadataDate: firstMediaData.timestamp)
+        let result = NSApplication.sharedApplication().runModalForWindow(dateAdjustmentController.window!)
+
+        if result == 1 {
+            Async.background {
+                do {
+                    if let newDate = dateAdjustmentController.newDate() {
+                        try ExifToolRunner.setMetadataDates(videoPathList, newDate: newDate)
+
+                        for file in filePaths {
+                            if let mediaData = self.mediaProvider.itemFromFilePath(file) {
+                                mediaData.timestamp = newDate
+                                mediaData.fileTimestamp = newDate
+                            }
+                        }
+
+                        self.mediaProvider.setFileDatesToExifDates(mediaItems)
+                        Async.main {
+                            self.imageBrowserView.reloadData()
+                        }
+                    }
+                } catch let error {
+                    Logger.error("Setting metadata dates failed: \(error)")
+
+                    Async.main {
+                        self.setStatus("Setting metadata dates failed: \(error)")
+                    }
+                }
+            }
+        }
+
+    }
+
     @IBAction func validateFiles(sender: AnyObject)
     {
         Logger.info("validateFiles")
