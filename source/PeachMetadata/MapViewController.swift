@@ -170,7 +170,7 @@ extension PeachWindowController
         var skipList = [String]()
         for file in filePaths {
             if let mediaItem = mediaProvider.itemFromFilePath(file) {
-                if mediaItem.location != nil { // && filePaths.count > 1 {
+                if mediaItem.location != nil && filePaths.count > 1 {
                     Logger.info("Not setting location on \(file), it has a location already")
                     skipList.append(file)
                 } else {
