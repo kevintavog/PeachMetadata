@@ -9,6 +9,11 @@ import RangicCore
 
 extension PeachWindowController
 {
+    func webView(sender: WebView!, contextMenuItemsForElement element: [NSObject : AnyObject]!, defaultMenuItems: [AnyObject]!) -> [AnyObject]!
+    {
+        return nil
+    }
+
     func clearAllMarkers()
     {
         mapView.invokeMapScript("removeAllMarkers()")
@@ -74,6 +79,7 @@ extension PeachWindowController
         let lat = 47.6220
         let lon = -122.335
         mapView.invokeMapScript("setCenter([\(lat), \(lon)], 12)")
+        setSensitiveLocationsOnMap()
     }
 
     func webView(webView: WebView!, didClearWindowObject windowObject: WebScriptObject!, forFrame frame: WebFrame!)
@@ -99,13 +105,19 @@ extension PeachWindowController
         Logger.info("mapClicked: \(lat.doubleValue), \(lon.doubleValue)")
         let location = Location(latitude: lat.doubleValue, longitude: lon.doubleValue)
         let locationJsonStr = location.toDms().stringByReplacingOccurrencesOfString("\"", withString: "\\\"")
-        let message = "Looking up \(locationJsonStr)"
+
+        let setSensitiveLocationMessage =
+            "<br><br>"
+            + "<a onclick='toggleSensitiveLocation(\(lat.doubleValue), \(lon.doubleValue));return false' href='javascript:void(0);'>"
+            + "Toggle sensitive location" +
+            "</a>"
+        let message = "Looking up \(locationJsonStr)" + setSensitiveLocationMessage
         mapView.invokeMapScript("setPopup([\(lat), \(lon)], \"\(message)\")")
 
         Async.background {
-            let placename = location.placenameAsString(.Minimal)
+            let placename = location.placenameAsString(.None)
             Async.main {
-                self.mapView.invokeMapScript("setPopup([\(lat), \(lon)], \"\(placename)\")")
+                self.mapView.invokeMapScript("setPopup([\(lat), \(lon)], \"\(placename+setSensitiveLocationMessage)\")")
             }
         }
     }
@@ -113,6 +125,29 @@ extension PeachWindowController
     func logMessage(message: String)
     {
         Logger.info("js log: \(message)")
+    }
+
+    func toggleSensitiveLocation(lat: NSNumber, lon: NSNumber)
+    {
+        Logger.info("toggleSensitiveLocation: \(lat.doubleValue), \(lon.doubleValue)")
+
+        let location = Location(latitude: lat.doubleValue, longitude: lon.doubleValue)
+        if SensitiveLocations.sharedInstance.isSensitive(location) {
+            SensitiveLocations.sharedInstance.remove(location)
+        } else {
+            SensitiveLocations.sharedInstance.add(location)
+        }
+
+        setSensitiveLocationsOnMap()
+    }
+
+    func setSensitiveLocationsOnMap()
+    {
+        mapView.invokeMapScript("removeAllSensitiveLocations()")
+
+        for loc in SensitiveLocations.sharedInstance.locations {
+            mapView.invokeMapScript("addSensitiveLocation([\(loc.latitude), \(loc.longitude)], \(Int(SensitiveLocations.sharedInstance.SensitiveDistanceInMeters)))")
+        }
     }
 
     override class func webScriptNameForSelector(sel: Selector) -> String?
@@ -126,6 +161,9 @@ extension PeachWindowController
 
         case "markerClicked:":
             return "markerClicked"
+
+        case "toggleSensitiveLocation:lon:":
+            return "toggleSensitiveLocation"
 
         default:
             return nil

@@ -6,7 +6,7 @@ import RangicCore
 
 class SensitiveLocations
 {
-    private let SensitiveDistanceInMeters: Double = 50
+    let SensitiveDistanceInMeters: Double = 50
 
 
     static var sharedInstance: SensitiveLocations
@@ -17,17 +17,18 @@ class SensitiveLocations
         return _Singleton.instance
     }
 
-    private var locations = [Location]()
+    private(set) var locations = [Location]()
 
 
     func isSensitive(location: Location) -> Bool
     {
         for loc in locations {
-            return loc.metersFrom(location) < SensitiveDistanceInMeters
+            if loc.metersFrom(location) < SensitiveDistanceInMeters {
+                return true
+            }
         }
         return false
     }
-
 
     func add(location: Location)
     {
@@ -41,6 +42,17 @@ class SensitiveLocations
         save()
     }
 
+    func remove(location: Location)
+    {
+        for loc in locations {
+            if loc.metersFrom(location) <= SensitiveDistanceInMeters {
+                locations.removeAtIndex(locations.indexOf({ $0 === loc })!)
+                save()
+                return
+            }
+        }
+    }
+    
     private func save()
     {
         var asDictionary = [Dictionary<String, AnyObject>]()

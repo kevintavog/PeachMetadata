@@ -128,12 +128,6 @@
                                     <action selector="setAllMetadataDates:" target="Qry-nx-iZR" id="INH-QI-pTh"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Add sensitive location" id="NYg-9E-ePL">
-                                <modifierMask key="keyEquivalentModifierMask"/>
-                                <connections>
-                                    <action selector="addSensitiveLocation:" target="Qry-nx-iZR" id="QVi-tw-qud"/>
-                                </connections>
-                            </menuItem>
                             <menuItem isSeparatorItem="YES" id="aJh-i4-bef"/>
                             <menuItem title="Show details..." keyEquivalent="i" id="ybV-2E-gPp">
                                 <connections>
@@ -461,18 +455,18 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <splitView autosaveName="FileImageSplitter" dividerStyle="paneSplitter" id="u5e-fN-fhZ">
-                                <rect key="frame" x="0.0" y="0.0" width="462.5" height="750"/>
+                                <rect key="frame" x="0.0" y="0.0" width="463" height="750"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <subviews>
                                     <scrollView autohidesScrollers="YES" horizontalLineScroll="19" horizontalPageScroll="10" verticalLineScroll="19" verticalPageScroll="10" usesPredominantAxisScrolling="NO" id="qwa-N3-Pfn">
-                                        <rect key="frame" x="0.0" y="0.0" width="462.5" height="268"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="463" height="268"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <clipView key="contentView" id="s2j-EG-4Xw">
-                                            <rect key="frame" x="1" y="1" width="460.5" height="266"/>
+                                            <rect key="frame" x="1" y="1" width="461" height="266"/>
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                             <subviews>
                                                 <outlineView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" alternatingRowBackgroundColors="YES" multipleSelection="NO" autosaveColumns="NO" indentationPerLevel="16" autosaveExpandedItems="YES" outlineTableColumn="wKk-dm-8kh" id="hBb-pL-bwS">
-                                                    <rect key="frame" x="0.0" y="0.0" width="460.5" height="266"/>
+                                                    <rect key="frame" x="0.0" y="0.0" width="461" height="266"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <size key="intercellSpacing" width="3" height="2"/>
                                                     <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -501,7 +495,7 @@
                                             <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                         </clipView>
                                         <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="YES" id="NAS-kv-laf">
-                                            <rect key="frame" x="1" y="119" width="223" height="15"/>
+                                            <rect key="frame" x="1" y="251" width="460.5" height="16"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                         </scroller>
                                         <scroller key="verticalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="NO" id="vlw-lj-jdM">
@@ -510,7 +504,7 @@
                                         </scroller>
                                     </scrollView>
                                     <customView id="h5f-EO-Fvx">
-                                        <rect key="frame" x="0.0" y="278" width="462.5" height="472"/>
+                                        <rect key="frame" x="0.0" y="278" width="463" height="472"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <subviews>
                                             <scrollView horizontalLineScroll="59" horizontalPageScroll="10" verticalLineScroll="59" verticalPageScroll="10" usesPredominantAxisScrolling="NO" id="QSO-Ce-kyz">
@@ -521,7 +515,7 @@
                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                     <subviews>
                                                         <ikImageBrowserView autoresizesSubviews="NO" zoomValue="nan" animates="YES" id="nit-07-pvN" customClass="ImageBrowserView" customModule="PeachMetadata" customModuleProvider="target">
-                                                            <rect key="frame" x="0.0" y="0.0" width="519" height="487"/>
+                                                            <rect key="frame" x="0.0" y="0.0" width="533" height="503"/>
                                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                             <ikCellsStyle key="cellsStyleMask" shadowed="YES" outlined="YES" titled="YES" subtitled="YES"/>
                                                             <autoresizingMask key="contentResizingMask" heightSizable="YES"/>
@@ -551,7 +545,7 @@
                                                 </connections>
                                             </slider>
                                             <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="mNL-LT-xCL">
-                                                <rect key="frame" x="5" y="11" width="345.5" height="23"/>
+                                                <rect key="frame" x="5" y="11" width="346" height="23"/>
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                                                 <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" allowsUndo="NO" sendsActionOnEndEditing="YES" alignment="left" title="Status MWF pqyg 1234" usesSingleLineMode="YES" id="DVe-70-QJm">
                                                     <font key="font" metaFont="system"/>
@@ -568,7 +562,7 @@
                                 </holdingPriorities>
                             </splitView>
                             <customView id="Vb5-lu-RDk">
-                                <rect key="frame" x="472.5" y="0.0" width="474.5" height="750"/>
+                                <rect key="frame" x="473" y="0.0" width="474" height="750"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <subviews>
                                     <tabView id="iwy-qz-yaO">
@@ -595,6 +589,9 @@
                                                                             <webPreferences key="preferences" defaultFontSize="12" defaultFixedFontSize="12" plugInsEnabled="NO" javaEnabled="NO">
                                                                                 <nil key="identifier"/>
                                                                             </webPreferences>
+                                                                            <connections>
+                                                                                <outlet property="UIDelegate" destination="Qry-nx-iZR" id="c0D-0L-lGe"/>
+                                                                            </connections>
                                                                         </webView>
                                                                     </subviews>
                                                                 </customView>

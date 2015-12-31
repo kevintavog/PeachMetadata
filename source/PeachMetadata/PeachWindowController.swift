@@ -9,7 +9,7 @@ import WebKit
 import Async
 import RangicCore
 
-class PeachWindowController : NSWindowController, NSTableViewDataSource, WebFrameLoadDelegate
+class PeachWindowController : NSWindowController, NSTableViewDataSource, WebFrameLoadDelegate, WebUIDelegate
 {
     @IBOutlet weak var directoryView: NSOutlineView!
     @IBOutlet weak var imageBrowserView: IKImageBrowserView!
@@ -59,6 +59,7 @@ class PeachWindowController : NSWindowController, NSTableViewDataSource, WebFram
         mapView.mainFrame.loadRequest(NSURLRequest(URL: NSURL(fileURLWithPath: NSBundle.mainBundle().pathForResource("map", ofType: "html")!)))
         mapView.frameLoadDelegate = self
         mapView.enableDragAndDrop(updateLocations)
+
     }
 
     @IBAction func clearLocations(sender: AnyObject)
@@ -87,11 +88,6 @@ class PeachWindowController : NSWindowController, NSTableViewDataSource, WebFram
         fileInformationController.toggleVisibility()
     }
     
-    @IBAction func addSensitiveLocation(sender: AnyObject)
-    {
-        SensitiveLocations.sharedInstance.add(Location(latitude: 47.55599550189337, longitude: -122.289711534977))
-    }
-
     @IBAction func setAllMetadataDates(sender: AnyObject)
     {
         Logger.info("setAllMetadataDates")

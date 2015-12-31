@@ -104,6 +104,26 @@
             activeMarkers.length = 0;
         }
 
+        var allSensitiveLocations = [];
+        function addSensitiveLocation(location, radius)
+        {
+            circle = L.circle(location, radius, {
+                                  stroke: false,
+                                  fillColor: '#f03',
+                                  fillOpacity: 0.5
+                              });
+            circle.addTo(map);
+            allSensitiveLocations.push(circle)
+        }
+
+        function removeAllSensitiveLocations()
+        {
+            for (idx = 0; idx < allSensitiveLocations.length; ++idx) {
+                map.removeLayer(allSensitiveLocations[idx]);
+            }
+            allSensitiveLocations.length = 0;
+        }
+
 		function setPopup(location, s)
 		{
 			popup
@@ -116,6 +136,11 @@
 		{
 			map.closePopup(popup);
 		}
+
+        function toggleSensitiveLocation(lat, lon)
+        {
+            MapThis.toggleSensitiveLocation(lat, lon)
+        }
 
 		function pointToLatLng(p)
 		{
@@ -130,7 +155,7 @@
 
         function setMarkerId(obj, id)
         {
-            obj.__obj_id=id;
+            obj.__obj_id = id;
         }
 	</script>
 </body>
