@@ -128,6 +128,12 @@
                                     <action selector="setAllMetadataDates:" target="Qry-nx-iZR" id="INH-QI-pTh"/>
                                 </connections>
                             </menuItem>
+                            <menuItem title="Add sensitive location" id="NYg-9E-ePL">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="addSensitiveLocation:" target="Qry-nx-iZR" id="QVi-tw-qud"/>
+                                </connections>
+                            </menuItem>
                             <menuItem isSeparatorItem="YES" id="aJh-i4-bef"/>
                             <menuItem title="Show details..." keyEquivalent="i" id="ybV-2E-gPp">
                                 <connections>

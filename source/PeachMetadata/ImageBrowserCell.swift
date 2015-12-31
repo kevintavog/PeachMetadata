@@ -14,6 +14,11 @@ public class ImageBrowserCell : IKImageBrowserCell
         NSFontAttributeName : NSFont.labelFontOfSize(14),
         NSUnderlineStyleAttributeName: NSUnderlineStyle.StyleSingle.rawValue
     ]
+    static private let sensitiveLocationAttrs = [
+        NSForegroundColorAttributeName : NSColor.greenColor(),
+        NSFontAttributeName : NSFont.labelFontOfSize(14),
+        NSUnderlineStyleAttributeName: NSUnderlineStyle.StyleSingle.rawValue
+    ]
 
 
     // MARK: layer for type
@@ -114,7 +119,11 @@ public class ImageBrowserCell : IKImageBrowserCell
 
         y = lineHeight * 3
         if let location = item.mediaData.location {
-            drawString(location.toDecimalDegrees(true), x: 4, y: y, attributes: ImageBrowserCell.textAttrs)
+            if SensitiveLocations.sharedInstance.isSensitive(location) {
+                drawString(location.toDecimalDegrees(true), x: 4, y: y, attributes: ImageBrowserCell.sensitiveLocationAttrs)
+            } else {
+                drawString(location.toDecimalDegrees(true), x: 4, y: y, attributes: ImageBrowserCell.textAttrs)
+            }
         } else {
             drawString("[ no location ]", x: 4, y: y, attributes: ImageBrowserCell.textAttrs)
         }

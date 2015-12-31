@@ -87,6 +87,11 @@ class PeachWindowController : NSWindowController, NSTableViewDataSource, WebFram
         fileInformationController.toggleVisibility()
     }
     
+    @IBAction func addSensitiveLocation(sender: AnyObject)
+    {
+        SensitiveLocations.sharedInstance.add(Location(latitude: 47.55599550189337, longitude: -122.289711534977))
+    }
+
     @IBAction func setAllMetadataDates(sender: AnyObject)
     {
         Logger.info("setAllMetadataDates")
@@ -157,7 +162,9 @@ class PeachWindowController : NSWindowController, NSTableViewDataSource, WebFram
             }
 
             if let loc = media.location {
-                // Is it a disallowed location?
+                if SensitiveLocations.sharedInstance.isSensitive(loc) {
+                    Logger.info("  Is in a sensitive location")
+                }
             }
             else {
                 Logger.info("  No location")
