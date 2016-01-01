@@ -33,8 +33,6 @@
         });
 
         var popup = L.popup();
-        var markerLayer = new L.LayerGroup();
-        markerLayer.addTo(map);
 
 
         function setMapLayer()
@@ -68,39 +66,32 @@
 			map.fitBounds(bounds);
 		}
 
-        var activeMarkers = {};
+        var activeMarkers = [];
 		function addMarker(name, id, location, title)
 		{
 			marker = L.marker(location, { draggable:'true', title:title } );
             setMarkerId(marker, id);
-            activeMarkers[id] = marker;
+            activeMarkers.push(marker);
 
-            marker.on('dragend', function(event)
-            {
+            marker.on('dragend', function(event) {
                 var marker = event.target;
                 var position = marker.getLatLng();
-                MapThis.updateMarker(markerId(marker), position.lat, position.lng);
+                var id = markerId(marker);
+                MapThis.updateMarker(id, position.lat, position.lng);
             });
-            marker.on('click', function(event)
-            {
+
+            marker.on('click', function(event) {
                 MapThis.markerClicked(name);
             });
-            markerLayer.addLayer(marker);
-		}
 
-        function removeMarker(id)
-        {
-            var marker = activeMarkers[id];
-            if (marker != null)
-            {
-                markerLayer.removeLayer(marker);
-                activeMarkers[id] = null;
-            }
-        }
+            marker.addTo(map);
+		}
 
         function removeAllMarkers()
         {
-            markerLayer.clearLayers();
+            for (idx = 0; idx < activeMarkers.length; ++idx) {
+                map.removeLayer(activeMarkers[idx]);
+            }
             activeMarkers.length = 0;
         }
 

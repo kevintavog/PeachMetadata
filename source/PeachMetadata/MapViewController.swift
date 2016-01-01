@@ -65,11 +65,10 @@ extension PeachWindowController
 
         mapView.invokeMapScript("fitToBounds([[\(minLat), \(minLon)],[\(maxLat), \(maxLon)]])")
 
-        let setId = "3"
         for m in mediaItems {
             if let location = m.location {
                 let tooltip = "\(m.name)\\n\(m.keywordsString())"
-                mapView.invokeMapScript("addMarker(\"\(m.url!.path!)\", \(setId), [\(location.latitude), \(location.longitude)], \"\(tooltip)\")")
+                mapView.invokeMapScript("addMarker(\"\(m.url!.path!)\", '\(getId(m))', [\(location.latitude), \(location.longitude)], \"\(tooltip)\")")
             }
         }
     }
@@ -100,15 +99,15 @@ extension PeachWindowController
     }
 
     // The map was clicked, show the full placename
-    func mapClicked(lat: NSNumber, lon: NSNumber)
+    func mapClicked(lat: Double, lon: Double)
     {
-        Logger.info("mapClicked: \(lat.doubleValue), \(lon.doubleValue)")
-        let location = Location(latitude: lat.doubleValue, longitude: lon.doubleValue)
+        Logger.info("mapClicked: \(lat), \(lon)")
+        let location = Location(latitude: lat, longitude: lon)
         let locationJsonStr = location.toDms().stringByReplacingOccurrencesOfString("\"", withString: "\\\"")
 
         let setSensitiveLocationMessage =
             "<br><br>"
-            + "<a onclick='toggleSensitiveLocation(\(lat.doubleValue), \(lon.doubleValue));return false' href='javascript:void(0);'>"
+            + "<a onclick='toggleSensitiveLocation(\(lat), \(lon));return false' href='javascript:void(0);'>"
             + "Toggle sensitive location" +
             "</a>"
         let message = "Looking up \(locationJsonStr)" + setSensitiveLocationMessage
@@ -127,11 +126,11 @@ extension PeachWindowController
         Logger.info("js log: \(message)")
     }
 
-    func toggleSensitiveLocation(lat: NSNumber, lon: NSNumber)
+    func toggleSensitiveLocation(lat: Double, lon: Double)
     {
-        Logger.info("toggleSensitiveLocation: \(lat.doubleValue), \(lon.doubleValue)")
+        Logger.info("toggleSensitiveLocation: \(lat), \(lon)")
 
-        let location = Location(latitude: lat.doubleValue, longitude: lon.doubleValue)
+        let location = Location(latitude: lat, longitude: lon)
         if SensitiveLocations.sharedInstance.isSensitive(location) {
             SensitiveLocations.sharedInstance.remove(location)
         } else {
@@ -150,6 +149,20 @@ extension PeachWindowController
         }
     }
 
+    func updateMarker(id: String, lat: Double, lon: Double)
+    {
+        Logger.info("updateMarker [\(id)] to \(lat), \(lon)")
+        for mediaData in mediaProvider.mediaFiles {
+            if String(getId(mediaData)) == id {
+                let filePaths = [(mediaData.url?.path)!]
+                updateLocations(Location(latitude: lat, longitude: lon), filePaths: filePaths)
+                return
+            }
+        }
+
+        Logger.info("Unable to find media associated with marker '\(id)', nothing updated")
+    }
+
     override class func webScriptNameForSelector(sel: Selector) -> String?
     {
         switch sel {
@@ -161,6 +174,9 @@ extension PeachWindowController
 
         case "markerClicked:":
             return "markerClicked"
+
+        case "updateMarker:lat:lon:":
+            return "updateMarker"
 
         case "toggleSensitiveLocation:lon:":
             return "toggleSensitiveLocation"
@@ -310,4 +326,8 @@ extension PeachWindowController
         return (imagePathList, videoPathList)
     }
 
+    func getId(mediaData: MediaData) -> Int
+    {
+        return mediaData.url!.hashValue
+    }
 }
