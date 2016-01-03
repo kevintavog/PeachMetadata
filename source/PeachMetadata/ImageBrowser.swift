@@ -37,19 +37,63 @@ extension PeachWindowController
             thumbnailItems.append(ThumbnailViewItem(mediaData: m))
         }
 
-        imageBrowserView.reloadData()
+        filterItems()
+
         setFolderStatus()
+    }
+
+    func isFilterActive() -> Bool
+    {
+        return statusLocationLabel.state != 0 || statusDateLabel.state != 0 || statusKeywordLabel.state != 0
+    }
+
+    func filterItems()
+    {
+        if isFilterActive() == false {
+            filteredThumbnailItems = thumbnailItems
+        } else {
+            filteredThumbnailItems.removeAll()
+            for thumb in thumbnailItems {
+
+                if statusLocationLabel.state != 0 {
+                    if let location = thumb.mediaData.location {
+                        if SensitiveLocations.sharedInstance.isSensitive(location) {
+                            filteredThumbnailItems.append(thumb)
+                            continue
+                        }
+                    } else {
+                        filteredThumbnailItems.append(thumb)
+                        continue
+                    }
+                }
+
+                if statusDateLabel.state != 0 {
+                    if thumb.mediaData.doFileAndExifTimestampsMatch() == false {
+                        filteredThumbnailItems.append(thumb)
+                        continue
+                    }
+                }
+
+                if statusKeywordLabel.state != 0 {
+                    if thumb.mediaData.keywords == nil || thumb.mediaData.keywords?.count == 0 {
+                        filteredThumbnailItems.append(thumb)
+                    }
+                }
+            }
+        }
+
+        imageBrowserView.reloadData()
     }
 
     // MARK: imageBrowserView data provider
     override func numberOfItemsInImageBrowser(browser: IKImageBrowserView!) -> Int
     {
-        return thumbnailItems.count
+        return filteredThumbnailItems.count
     }
 
     override func imageBrowser(browser: IKImageBrowserView!, itemAtIndex index: Int) -> AnyObject!
     {
-        return thumbnailItems[index]
+        return filteredThumbnailItems[index]
     }
 
     func selectedMediaItems() -> [MediaData]
@@ -101,7 +145,7 @@ extension PeachWindowController
 
     func setStatusMediaNumber(fileNumber: Int)
     {
-        statusFileLabel.title  = String(fileNumber)
+        statusFileLabel.stringValue  = String(fileNumber)
     }
 
     func setStatusLocationInfo(count: Int, status: LocationStatus)
@@ -200,7 +244,11 @@ extension PeachWindowController
     func setFolderStatus()
     {
         setMultiItemStatus(mediaProvider.mediaFiles, filesMessage: "files")
+        setStatusMediaInfo()
+    }
 
+    func setStatusMediaInfo()
+    {
         var numberMissingLocation = 0
         var numberWithSensitiveLocation = 0
         var numberWithMismatchedDate = 0

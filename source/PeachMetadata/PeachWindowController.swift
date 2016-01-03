@@ -20,7 +20,7 @@ class PeachWindowController : NSWindowController, NSTableViewDataSource, WebFram
     @IBOutlet weak var statusLabel: NSTextField!
     @IBOutlet weak var mapView: MapWebView!
     @IBOutlet weak var fileInformationController: FileInformationController!
-    @IBOutlet weak var statusFileLabel: NSButton!
+    @IBOutlet weak var statusFileLabel: NSTextField!
     @IBOutlet weak var statusLocationLabel: NSButton!
     @IBOutlet weak var statusDateLabel: NSButton!
     @IBOutlet weak var statusKeywordLabel: NSButton!
@@ -28,6 +28,7 @@ class PeachWindowController : NSWindowController, NSTableViewDataSource, WebFram
     
     var mediaProvider = MediaProvider()
     var thumbnailItems = [ThumbnailViewItem]()
+    var filteredThumbnailItems = [ThumbnailViewItem]()
     var rootDirectory: DirectoryTree?
     var allKeywordsController = AllKeywordsTableViewController()
     var mediaKeywordsController: MediaKeywordsTableController!
@@ -146,38 +147,27 @@ class PeachWindowController : NSWindowController, NSTableViewDataSource, WebFram
 
     }
 
+    @IBAction func toggleLocationIssues(sender: AnyObject)
+    {
+        Logger.info("toggleLocationIssues")
+        filterItems()
+    }
+
+    @IBAction func toggleDateIssues(sender: AnyObject)
+    {
+        Logger.info("toggleDateIssues")
+        filterItems()
+    }
+
+    @IBAction func toggleKeywordIssues(sender: AnyObject)
+    {
+        Logger.info("toggleKeywordIssues")
+        filterItems()
+    }
+
     @IBAction func validateFiles(sender: AnyObject)
     {
         Logger.info("validateFiles")
-        var mediaItems = selectedMediaItems()
-        if mediaItems.count < 1 {
-            mediaItems = mediaProvider.mediaFiles
-        }
-
-        for media in mediaItems {
-            Logger.info("Check \(media.name)")
-            if !media.doesExist() {
-                Logger.info("  file missing")
-                continue
-            }
-
-            if let loc = media.location {
-                if SensitiveLocations.sharedInstance.isSensitive(loc) {
-                    Logger.info("  Is in a sensitive location")
-                }
-            }
-            else {
-                Logger.info("  No location")
-            }
-
-
-            if media.keywords == nil {
-                Logger.info("  No keywords")
-            }
-
-            if !media.doFileAndExifTimestampsMatch() {
-                Logger.info("  Mismatched dates")
-            }
-        }
+        setStatusMediaInfo()
     }
 }

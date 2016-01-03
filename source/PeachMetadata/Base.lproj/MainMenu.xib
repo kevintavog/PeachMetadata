@@ -28,7 +28,7 @@
                 <outlet property="mapView" destination="Pe3-yg-kIT" id="4ex-CE-vsW"/>
                 <outlet property="mediaKeywordsTableView" destination="oZv-FH-BWg" id="aIY-Nj-V8p"/>
                 <outlet property="statusDateLabel" destination="yUb-bg-5gZ" id="AxE-zq-cn7"/>
-                <outlet property="statusFileLabel" destination="DfL-Kc-9s3" id="hFq-Bg-eVx"/>
+                <outlet property="statusFileLabel" destination="ipg-PZ-8uF" id="0cP-Ss-ZiC"/>
                 <outlet property="statusKeywordLabel" destination="ku6-3K-DU8" id="cBr-0H-hpv"/>
                 <outlet property="statusLabel" destination="mNL-LT-xCL" id="sFY-b9-oF1"/>
                 <outlet property="statusLocationLabel" destination="tN2-fq-dBa" id="Oo7-Zu-O7v"/>
@@ -557,6 +557,15 @@
                                                     <autoresizingMask key="autoresizingMask"/>
                                                 </scroller>
                                             </scrollView>
+                                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="ipg-PZ-8uF">
+                                                <rect key="frame" x="198" y="11" width="37" height="24"/>
+                                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
+                                                <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" borderStyle="bezel" alignment="center" title="299" usesSingleLineMode="YES" id="DB9-5S-lSR">
+                                                    <font key="font" metaFont="system"/>
+                                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                                    <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                                </textFieldCell>
+                                            </textField>
                                             <button verticalHuggingPriority="750" id="tN2-fq-dBa">
                                                 <rect key="frame" x="234" y="11" width="49" height="24"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
@@ -564,6 +573,9 @@
                                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES" changeBackground="YES" changeGray="YES"/>
                                                     <font key="font" metaFont="system"/>
                                                 </buttonCell>
+                                                <connections>
+                                                    <action selector="toggleLocationIssues:" target="Qry-nx-iZR" id="0lD-tf-tGy"/>
+                                                </connections>
                                             </button>
                                             <button verticalHuggingPriority="750" id="yUb-bg-5gZ">
                                                 <rect key="frame" x="282" y="11" width="49" height="24"/>
@@ -572,14 +584,9 @@
                                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES" changeBackground="YES" changeGray="YES"/>
                                                     <font key="font" metaFont="system"/>
                                                 </buttonCell>
-                                            </button>
-                                            <button verticalHuggingPriority="750" id="DfL-Kc-9s3">
-                                                <rect key="frame" x="200" y="11" width="35" height="24"/>
-                                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
-                                                <buttonCell key="cell" type="square" title="299" bezelStyle="shadowlessSquare" alignment="center" scrollable="YES" lineBreakMode="clipping" truncatesLastVisibleLine="YES" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="hpc-i6-TV4">
-                                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES" changeBackground="YES" changeGray="YES"/>
-                                                    <font key="font" metaFont="system"/>
-                                                </buttonCell>
+                                                <connections>
+                                                    <action selector="toggleDateIssues:" target="Qry-nx-iZR" id="g0Y-04-W5V"/>
+                                                </connections>
                                             </button>
                                             <button verticalHuggingPriority="750" id="ku6-3K-DU8">
                                                 <rect key="frame" x="330" y="11" width="49" height="24"/>
@@ -588,6 +595,9 @@
                                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES" changeBackground="YES" changeGray="YES"/>
                                                     <font key="font" metaFont="system"/>
                                                 </buttonCell>
+                                                <connections>
+                                                    <action selector="toggleKeywordIssues:" target="Qry-nx-iZR" id="xwB-Fu-M1l"/>
+                                                </connections>
                                             </button>
                                         </subviews>
                                     </customView>
