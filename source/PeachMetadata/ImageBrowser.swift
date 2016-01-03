@@ -32,13 +32,23 @@ extension PeachWindowController
         mediaProvider.clear()
         mediaProvider.addFolder(folder)
 
+        loadThumbnails()
+    }
+
+    func reloadExistingMedia()
+    {
+        mediaProvider.refresh()
+        loadThumbnails()
+    }
+
+    func loadThumbnails()
+    {
         thumbnailItems = [ThumbnailViewItem]()
         for m in mediaProvider.mediaFiles {
             thumbnailItems.append(ThumbnailViewItem(mediaData: m))
         }
 
         filterItems()
-
         setFolderStatus()
     }
 

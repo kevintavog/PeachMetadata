@@ -138,6 +138,7 @@ extension PeachWindowController
         }
 
         setSensitiveLocationsOnMap()
+        loadThumbnails()
     }
 
     func setSensitiveLocationsOnMap()
@@ -205,11 +206,12 @@ extension PeachWindowController
                 }
 
                 Async.main {
-                    self.imageBrowserView.reloadData()
+                    self.reloadExistingMedia()
                     self.setStatus("Finished clearing location from \(mediaItems.count) file(s)")
                 }
             } catch let error {
                 Async.main {
+                    self.reloadExistingMedia()
                     self.setStatus("Clearing file locations failed: \(error)")
                 }
             }
@@ -269,13 +271,14 @@ extension PeachWindowController
                 }
 
                 Async.main {
-                    self.imageBrowserView.reloadData()
+                    self.reloadExistingMedia()
                 }
 
             } catch let error {
                 Logger.error("Setting file location failed: \(error)")
 
                 Async.main {
+                    self.reloadExistingMedia()
                     self.setStatus("Setting file location failed: \(error)")
                 }
             }
