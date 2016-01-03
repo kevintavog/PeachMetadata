@@ -20,8 +20,12 @@ class PeachWindowController : NSWindowController, NSTableViewDataSource, WebFram
     @IBOutlet weak var statusLabel: NSTextField!
     @IBOutlet weak var mapView: MapWebView!
     @IBOutlet weak var fileInformationController: FileInformationController!
+    @IBOutlet weak var statusFileLabel: NSButton!
+    @IBOutlet weak var statusLocationLabel: NSButton!
+    @IBOutlet weak var statusDateLabel: NSButton!
+    @IBOutlet weak var statusKeywordLabel: NSButton!
 
-
+    
     var mediaProvider = MediaProvider()
     var thumbnailItems = [ThumbnailViewItem]()
     var rootDirectory: DirectoryTree?

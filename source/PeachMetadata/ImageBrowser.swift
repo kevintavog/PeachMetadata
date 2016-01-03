@@ -10,6 +10,17 @@ import RangicCore
 
 extension PeachWindowController
 {
+    static private let missingAttrs = [
+        NSForegroundColorAttributeName : NSColor(deviceRed: 0.0, green: 0.7, blue: 0.7, alpha: 1.0),
+        NSFontAttributeName : NSFont.labelFontOfSize(14)
+
+    ]
+    static private let badDataAttrs = [
+        NSForegroundColorAttributeName : NSColor.orangeColor(),
+        NSFontAttributeName : NSFont.labelFontOfSize(14)
+    ]
+
+
     @IBAction func updateThumbnailsize(sender: AnyObject)
     {
         Preferences.thumbnailZoom = thumbSizeSlider.floatValue
@@ -88,6 +99,56 @@ extension PeachWindowController
         statusLabel.stringValue = message
     }
 
+    func setStatusMediaNumber(fileNumber: Int)
+    {
+        statusFileLabel.title  = String(fileNumber)
+    }
+
+    func setStatusLocationInfo(count: Int, status: LocationStatus)
+    {
+        let message = String(count)
+        var imageName = "location"
+        if status == .SensitiveLocation {
+            statusLocationLabel.attributedTitle = NSMutableAttributedString(string: message, attributes: PeachWindowController.badDataAttrs)
+            imageName = "locationBad"
+        } else if status == .MissingLocation {
+            statusLocationLabel.attributedTitle = NSMutableAttributedString(string: message, attributes: PeachWindowController.missingAttrs)
+            imageName = "locationMissing"
+        } else {
+            statusLocationLabel.title = message
+        }
+
+        statusLocationLabel.image = NSImage(imageLiteral: imageName)
+    }
+
+    func setStatusDateInfo(count: Int, status: DateStatus)
+    {
+        let message = String(count)
+        var imageName = "timestamp"
+        if status == .MismatchedDate {
+            statusDateLabel.attributedTitle = NSMutableAttributedString(string: message, attributes: PeachWindowController.badDataAttrs)
+            imageName = "timestampBad"
+        } else {
+            statusDateLabel.title = message
+        }
+
+        statusDateLabel.image = NSImage(imageLiteral: imageName)
+    }
+
+    func setStatusKeywordInfo(count: Int, status: KeywordStatus)
+    {
+        let message = String(count)
+        var imageName = "keyword"
+        if status == .NoKeyword {
+            statusKeywordLabel.attributedTitle = NSMutableAttributedString(string: message, attributes: PeachWindowController.missingAttrs)
+            imageName = "keywordMissing"
+        } else {
+            statusKeywordLabel.title = message
+        }
+
+        statusKeywordLabel.image = NSImage(imageLiteral: imageName)
+    }
+
     func setSingleItemStatus(media: MediaData) -> [String]
     {
         var locationString = media.locationString()
@@ -122,16 +183,8 @@ extension PeachWindowController
     func setMultiItemStatus(mediaItems: [MediaData], filesMessage: String) -> [String]
     {
         var folderKeywords = Set<String>()
-        var numberWithLocation = 0
-        var numberWithKeyword = 0
-
         for media in mediaItems {
-            if media.location != nil {
-                ++numberWithLocation
-            }
-
             if let mediaKeywords = media.keywords {
-                ++numberWithKeyword
                 for k in mediaKeywords {
                     folderKeywords.insert(k)
                 }
@@ -139,7 +192,7 @@ extension PeachWindowController
         }
 
         let keywordsString = folderKeywords.joinWithSeparator(", ")
-        setStatus("\(mediaItems.count) \(filesMessage); \(numberWithLocation) with locations; \(numberWithKeyword) with keywords; '\(keywordsString)'")
+        setStatus("keywords: \(keywordsString)")
 
         return folderKeywords.map({$0})
     }
@@ -147,6 +200,54 @@ extension PeachWindowController
     func setFolderStatus()
     {
         setMultiItemStatus(mediaProvider.mediaFiles, filesMessage: "files")
+
+        var numberMissingLocation = 0
+        var numberWithSensitiveLocation = 0
+        var numberWithMismatchedDate = 0
+        var numberMissingKeyword = 0
+
+        for media in mediaProvider.mediaFiles {
+            if let location = media.location {
+                if SensitiveLocations.sharedInstance.isSensitive(location) {
+                    ++numberWithSensitiveLocation
+                }
+
+            } else {
+                ++numberMissingLocation
+            }
+
+            if media.keywords == nil {
+                ++numberMissingKeyword
+            }
+
+            if media.doFileAndExifTimestampsMatch() == false {
+                ++numberWithMismatchedDate
+            }
+        }
+
+        let mediaCount = mediaProvider.mediaFiles.count
+        setStatusMediaNumber(mediaCount)
+
+        if numberWithSensitiveLocation > 0 {
+            setStatusLocationInfo(numberWithSensitiveLocation, status: .SensitiveLocation)
+        }
+        else if numberMissingLocation > 0 {
+            setStatusLocationInfo(numberMissingLocation, status: .MissingLocation)
+        } else {
+            setStatusLocationInfo(mediaCount, status: .GoodLocation)
+        }
+
+        if numberWithMismatchedDate > 0 {
+            setStatusDateInfo(numberWithMismatchedDate, status: .MismatchedDate)
+        } else {
+            setStatusDateInfo(mediaCount, status: .GoodDate)
+        }
+
+        if numberMissingKeyword > 0 {
+            setStatusKeywordInfo(numberMissingKeyword, status: .NoKeyword)
+        } else {
+            setStatusKeywordInfo(mediaCount, status: .HasKeyword)
+        }
     }
 }
 
@@ -184,4 +285,23 @@ public class ThumbnailViewItem : NSObject
             return mediaData.url
         }
     }
+}
+
+public enum LocationStatus
+{
+    case MissingLocation
+    case SensitiveLocation
+    case GoodLocation
+}
+
+public enum DateStatus
+{
+    case GoodDate
+    case MismatchedDate
+}
+
+public enum KeywordStatus
+{
+    case NoKeyword
+    case HasKeyword
 }

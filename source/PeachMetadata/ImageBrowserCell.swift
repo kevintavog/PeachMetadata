@@ -9,15 +9,24 @@ public class ImageBrowserCell : IKImageBrowserCell
 {
     static private var lineHeight: CGFloat?
     static private let textAttrs = [NSForegroundColorAttributeName : NSColor.whiteColor(), NSFontAttributeName : NSFont.labelFontOfSize(14)]
+
     static private let badDateAttrs = [
-        NSForegroundColorAttributeName : NSColor.yellowColor(),
-        NSFontAttributeName : NSFont.labelFontOfSize(14),
-        NSUnderlineStyleAttributeName: NSUnderlineStyle.StyleSingle.rawValue
+        NSForegroundColorAttributeName : NSColor.orangeColor(),
+        NSFontAttributeName : NSFont.labelFontOfSize(14)
+    ]
+
+    static private let missingKeywordAttrs = [
+        NSForegroundColorAttributeName : NSColor.cyanColor(),
+        NSFontAttributeName : NSFont.labelFontOfSize(14)
+    ]
+
+    static private let missingLocationAttrs = [
+        NSForegroundColorAttributeName : NSColor.cyanColor(),
+        NSFontAttributeName : NSFont.labelFontOfSize(14)
     ]
     static private let sensitiveLocationAttrs = [
-        NSForegroundColorAttributeName : NSColor.greenColor(),
-        NSFontAttributeName : NSFont.labelFontOfSize(14),
-        NSUnderlineStyleAttributeName: NSUnderlineStyle.StyleSingle.rawValue
+        NSForegroundColorAttributeName : NSColor.orangeColor(),
+        NSFontAttributeName : NSFont.labelFontOfSize(14)
     ]
 
 
@@ -114,7 +123,7 @@ public class ImageBrowserCell : IKImageBrowserCell
         if item.mediaData.keywordsString().characters.count > 0 {
             drawString(item.mediaData.keywordsString(), x: 4, y: y, attributes: ImageBrowserCell.textAttrs)
         } else {
-            drawString("< -- >", x: 4, y: y, attributes: ImageBrowserCell.textAttrs)
+            drawString(" < >", x: 4, y: y, attributes: ImageBrowserCell.missingKeywordAttrs)
         }
 
         y = lineHeight * 3
@@ -125,7 +134,7 @@ public class ImageBrowserCell : IKImageBrowserCell
                 drawString(location.toDecimalDegrees(true), x: 4, y: y, attributes: ImageBrowserCell.textAttrs)
             }
         } else {
-            drawString("[ no location ]", x: 4, y: y, attributes: ImageBrowserCell.textAttrs)
+            drawString(" ##", x: 4, y: y, attributes: ImageBrowserCell.missingLocationAttrs)
         }
 
         NSGraphicsContext.restoreGraphicsState()

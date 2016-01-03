@@ -126,6 +126,7 @@
 			isa = PBXGroup;
 			children = (
 				44BF1D041BE0787600514392 /* AllKeywords.swift */,
+				44F6FC211C2CA73C000874C6 /* ExifToolRunner.swift */,
 				4463CD131C336F7000B6C01D /* SensitiveLocations.swift */,
 			);
 			name = Models;
@@ -204,15 +205,14 @@
 			children = (
 				4463CD0B1C30824000B6C01D /* Application */,
 				445187E11C2C949E008B2DE6 /* Views */,
+				444C358A1BE2CA38002BEC2B /* Controllers */,
+				444C35891BE2CA31002BEC2B /* Models */,
 				44C7F7041BE692F20064116D /* Resources */,
 				44E387871BD9818000CDEF1C /* MainMenu.xib */,
 				4463CD111C32434900B6C01D /* DateAdjustmentWindow.xib */,
 				44E387851BD9818000CDEF1C /* Assets.xcassets */,
 				44E3878A1BD9818000CDEF1C /* Info.plist */,
 				44048D3F1BE05E95005F3809 /* Preferences.swift */,
-				444C358A1BE2CA38002BEC2B /* Controllers */,
-				444C35891BE2CA31002BEC2B /* Models */,
-				44F6FC211C2CA73C000874C6 /* ExifToolRunner.swift */,
 			);
 			path = PeachMetadata;
 			sourceTree = "<group>";

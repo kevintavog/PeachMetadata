@@ -27,7 +27,11 @@
                 <outlet property="imageBrowserView" destination="nit-07-pvN" id="lXt-ca-CDy"/>
                 <outlet property="mapView" destination="Pe3-yg-kIT" id="4ex-CE-vsW"/>
                 <outlet property="mediaKeywordsTableView" destination="oZv-FH-BWg" id="aIY-Nj-V8p"/>
+                <outlet property="statusDateLabel" destination="yUb-bg-5gZ" id="AxE-zq-cn7"/>
+                <outlet property="statusFileLabel" destination="DfL-Kc-9s3" id="hFq-Bg-eVx"/>
+                <outlet property="statusKeywordLabel" destination="ku6-3K-DU8" id="cBr-0H-hpv"/>
                 <outlet property="statusLabel" destination="mNL-LT-xCL" id="sFY-b9-oF1"/>
+                <outlet property="statusLocationLabel" destination="tN2-fq-dBa" id="Oo7-Zu-O7v"/>
                 <outlet property="thumbSizeSlider" destination="EfA-Zz-M69" id="rUX-0W-BRJ"/>
             </connections>
         </customObject>
@@ -455,18 +459,18 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <splitView autosaveName="FileImageSplitter" dividerStyle="paneSplitter" id="u5e-fN-fhZ">
-                                <rect key="frame" x="0.0" y="0.0" width="463" height="750"/>
+                                <rect key="frame" x="0.0" y="0.0" width="462.5" height="750"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <subviews>
                                     <scrollView autohidesScrollers="YES" horizontalLineScroll="19" horizontalPageScroll="10" verticalLineScroll="19" verticalPageScroll="10" usesPredominantAxisScrolling="NO" id="qwa-N3-Pfn">
-                                        <rect key="frame" x="0.0" y="0.0" width="463" height="268"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="462.5" height="268"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <clipView key="contentView" id="s2j-EG-4Xw">
-                                            <rect key="frame" x="1" y="1" width="461" height="266"/>
+                                            <rect key="frame" x="1" y="1" width="460.5" height="266"/>
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                             <subviews>
                                                 <outlineView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" alternatingRowBackgroundColors="YES" multipleSelection="NO" autosaveColumns="NO" indentationPerLevel="16" autosaveExpandedItems="YES" outlineTableColumn="wKk-dm-8kh" id="hBb-pL-bwS">
-                                                    <rect key="frame" x="0.0" y="0.0" width="461" height="266"/>
+                                                    <rect key="frame" x="0.0" y="0.0" width="460.5" height="266"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <size key="intercellSpacing" width="3" height="2"/>
                                                     <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -504,18 +508,35 @@
                                         </scroller>
                                     </scrollView>
                                     <customView id="h5f-EO-Fvx">
-                                        <rect key="frame" x="0.0" y="278" width="463" height="472"/>
+                                        <rect key="frame" x="0.0" y="278" width="462.5" height="472"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <subviews>
+                                            <slider verticalHuggingPriority="750" id="EfA-Zz-M69">
+                                                <rect key="frame" x="381" y="7" width="75" height="25"/>
+                                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
+                                                <sliderCell key="cell" continuous="YES" state="on" alignment="left" maxValue="2" doubleValue="1" tickMarkPosition="above" numberOfTickMarks="10" sliderType="linear" id="wO6-tv-YyU"/>
+                                                <connections>
+                                                    <action selector="updateThumbnailsize:" target="Qry-nx-iZR" id="ihf-dU-Ngd"/>
+                                                </connections>
+                                            </slider>
+                                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="mNL-LT-xCL">
+                                                <rect key="frame" x="5" y="11" width="189" height="23"/>
+                                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                                                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" allowsUndo="NO" sendsActionOnEndEditing="YES" alignment="left" title="Status MWF pqyg 1234" usesSingleLineMode="YES" id="DVe-70-QJm">
+                                                    <font key="font" metaFont="system"/>
+                                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                                    <color key="backgroundColor" name="controlShadowColor" catalog="System" colorSpace="catalog"/>
+                                                </textFieldCell>
+                                            </textField>
                                             <scrollView horizontalLineScroll="59" horizontalPageScroll="10" verticalLineScroll="59" verticalPageScroll="10" usesPredominantAxisScrolling="NO" id="QSO-Ce-kyz">
-                                                <rect key="frame" x="-1" y="38" width="466" height="425"/>
+                                                <rect key="frame" x="-2" y="40" width="466" height="425"/>
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <clipView key="contentView" copiesOnScroll="NO" id="EcX-6Z-cDU">
                                                     <rect key="frame" x="1" y="1" width="464" height="423"/>
                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                     <subviews>
                                                         <ikImageBrowserView autoresizesSubviews="NO" zoomValue="nan" animates="YES" id="nit-07-pvN" customClass="ImageBrowserView" customModule="PeachMetadata" customModuleProvider="target">
-                                                            <rect key="frame" x="0.0" y="0.0" width="533" height="503"/>
+                                                            <rect key="frame" x="0.0" y="0.0" width="547" height="519"/>
                                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                             <ikCellsStyle key="cellsStyleMask" shadowed="YES" outlined="YES" titled="YES" subtitled="YES"/>
                                                             <autoresizingMask key="contentResizingMask" heightSizable="YES"/>
@@ -536,23 +557,38 @@
                                                     <autoresizingMask key="autoresizingMask"/>
                                                 </scroller>
                                             </scrollView>
-                                            <slider verticalHuggingPriority="750" id="EfA-Zz-M69">
-                                                <rect key="frame" x="355" y="7" width="101" height="25"/>
+                                            <button verticalHuggingPriority="750" id="tN2-fq-dBa">
+                                                <rect key="frame" x="234" y="11" width="49" height="24"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
-                                                <sliderCell key="cell" continuous="YES" state="on" alignment="left" maxValue="2" doubleValue="1" tickMarkPosition="above" numberOfTickMarks="10" sliderType="linear" id="wO6-tv-YyU"/>
-                                                <connections>
-                                                    <action selector="updateThumbnailsize:" target="Qry-nx-iZR" id="ihf-dU-Ngd"/>
-                                                </connections>
-                                            </slider>
-                                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="mNL-LT-xCL">
-                                                <rect key="frame" x="5" y="11" width="346" height="23"/>
-                                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
-                                                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" allowsUndo="NO" sendsActionOnEndEditing="YES" alignment="left" title="Status MWF pqyg 1234" usesSingleLineMode="YES" id="DVe-70-QJm">
+                                                <buttonCell key="cell" type="square" title="99" bezelStyle="shadowlessSquare" image="location" imagePosition="left" alignment="right" scrollable="YES" lineBreakMode="clipping" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="X9o-A6-NdV">
+                                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES" changeBackground="YES" changeGray="YES"/>
                                                     <font key="font" metaFont="system"/>
-                                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
-                                                    <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                                                </textFieldCell>
-                                            </textField>
+                                                </buttonCell>
+                                            </button>
+                                            <button verticalHuggingPriority="750" id="yUb-bg-5gZ">
+                                                <rect key="frame" x="282" y="11" width="49" height="24"/>
+                                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
+                                                <buttonCell key="cell" type="square" title="99" bezelStyle="shadowlessSquare" image="timestamp" imagePosition="left" alignment="center" scrollable="YES" lineBreakMode="clipping" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="3zl-R9-iZl">
+                                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES" changeBackground="YES" changeGray="YES"/>
+                                                    <font key="font" metaFont="system"/>
+                                                </buttonCell>
+                                            </button>
+                                            <button verticalHuggingPriority="750" id="DfL-Kc-9s3">
+                                                <rect key="frame" x="200" y="11" width="35" height="24"/>
+                                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
+                                                <buttonCell key="cell" type="square" title="299" bezelStyle="shadowlessSquare" alignment="center" scrollable="YES" lineBreakMode="clipping" truncatesLastVisibleLine="YES" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="hpc-i6-TV4">
+                                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES" changeBackground="YES" changeGray="YES"/>
+                                                    <font key="font" metaFont="system"/>
+                                                </buttonCell>
+                                            </button>
+                                            <button verticalHuggingPriority="750" id="ku6-3K-DU8">
+                                                <rect key="frame" x="330" y="11" width="49" height="24"/>
+                                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
+                                                <buttonCell key="cell" type="square" title="99" bezelStyle="shadowlessSquare" image="keyword" imagePosition="left" alignment="center" scrollable="YES" lineBreakMode="clipping" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="Ep7-dZ-2jW">
+                                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES" changeBackground="YES" changeGray="YES"/>
+                                                    <font key="font" metaFont="system"/>
+                                                </buttonCell>
+                                            </button>
                                         </subviews>
                                     </customView>
                                 </subviews>
@@ -562,7 +598,7 @@
                                 </holdingPriorities>
                             </splitView>
                             <customView id="Vb5-lu-RDk">
-                                <rect key="frame" x="473" y="0.0" width="474" height="750"/>
+                                <rect key="frame" x="472.5" y="0.0" width="474.5" height="750"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <subviews>
                                     <tabView id="iwy-qz-yaO">
@@ -818,6 +854,11 @@
                     </splitView>
                 </subviews>
             </view>
+            <userDefinedRuntimeAttributes>
+                <userDefinedRuntimeAttribute type="color" keyPath="backgroundColor">
+                    <color key="value" name="controlShadowColor" catalog="System" colorSpace="catalog"/>
+                </userDefinedRuntimeAttribute>
+            </userDefinedRuntimeAttributes>
             <connections>
                 <outlet property="delegate" destination="Qry-nx-iZR" id="C7K-hm-ElC"/>
             </connections>
@@ -915,4 +956,9 @@
             <point key="canvasLocation" x="-100.5" y="1764"/>
         </window>
     </objects>
+    <resources>
+        <image name="keyword" width="512" height="512"/>
+        <image name="location" width="512" height="512"/>
+        <image name="timestamp" width="512" height="512"/>
+    </resources>
 </document>
