@@ -85,6 +85,19 @@ class PeachWindowController : NSWindowController, NSTableViewDataSource, WebFram
     @IBAction func viewFile(sender: AnyObject)
     {
         Logger.info("viewFile")
+        let mediaItems = selectedMediaItems()
+        if mediaItems.count != 1 {
+            Logger.info("Only 1 file can be opened, there are \(mediaItems.count) selected")
+            return
+        }
+
+        if NSWorkspace.sharedWorkspace().openURL(mediaItems.first!.url!) == false {
+            let alert = NSAlert()
+            alert.messageText = "Failed opening file: '\(mediaItems.first!.url!.path)'"
+            alert.alertStyle = NSAlertStyle.WarningAlertStyle
+            alert.addButtonWithTitle("Close")
+            alert.runModal()
+        }
     }
 
     @IBAction func showDetails(sender: AnyObject)
@@ -163,11 +176,5 @@ class PeachWindowController : NSWindowController, NSTableViewDataSource, WebFram
     {
         Logger.info("toggleKeywordIssues")
         filterItems()
-    }
-
-    @IBAction func validateFiles(sender: AnyObject)
-    {
-        Logger.info("validateFiles")
-        setStatusMediaInfo()
     }
 }

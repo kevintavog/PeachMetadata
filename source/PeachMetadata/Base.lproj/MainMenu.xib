@@ -144,11 +144,6 @@
                                     <action selector="viewFile:" target="Qry-nx-iZR" id="H7R-r8-ZK2"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Validate…" keyEquivalent="x" id="eTr-7u-aJ1">
-                                <connections>
-                                    <action selector="validateFiles:" target="Qry-nx-iZR" id="0LZ-xh-vaV"/>
-                                </connections>
-                            </menuItem>
                         </items>
                     </menu>
                 </menuItem>
