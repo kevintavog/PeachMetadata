@@ -75,6 +75,30 @@ public class ExifToolRunner
         }
     }
 
+    static public func updateKeywords(filePaths: [String], addedKeywords: [String], removedKeywords: [String]) throws -> Bool
+    {
+        if addedKeywords.count == 0 && removedKeywords.count == 0 {
+            return false
+        }
+
+        var keywordCommands = [String]()
+        for s in addedKeywords {
+            keywordCommands.append("-IPTC:Keywords+=\(s)")
+            keywordCommands.append("-XMP:Subject+=\(s)")
+        }
+        for s in removedKeywords {
+            keywordCommands.append("-IPTC:Keywords-=\(s)")
+            keywordCommands.append("-XMP:Subject-=\(s)")
+        }
+
+        try runExifTool(
+            [ "-P", "-overwrite_original"]
+                + keywordCommands
+                + filePaths)
+
+        return true
+    }
+
     static public func setMetadataDates(videoFilePaths: [String], newDate: NSDate) throws
     {
         // Some dates in Canon videos aren't updatable via exiftool (due to Canon silliness). Bummer

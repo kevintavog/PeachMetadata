@@ -531,7 +531,7 @@
                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                     <subviews>
                                                         <ikImageBrowserView autoresizesSubviews="NO" zoomValue="nan" animates="YES" id="nit-07-pvN" customClass="ImageBrowserView" customModule="PeachMetadata" customModuleProvider="target">
-                                                            <rect key="frame" x="0.0" y="0.0" width="547" height="519"/>
+                                                            <rect key="frame" x="0.0" y="0.0" width="561" height="535"/>
                                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                             <ikCellsStyle key="cellsStyleMask" shadowed="YES" outlined="YES" titled="YES" subtitled="YES"/>
                                                             <autoresizingMask key="contentResizingMask" heightSizable="YES"/>
@@ -662,7 +662,7 @@
                                             </tabViewItem>
                                             <tabViewItem label="Keywords" identifier="2" id="iPB-9w-xhk">
                                                 <view key="view" id="3aI-KD-YBx">
-                                                    <rect key="frame" x="10" y="33" width="458" height="714"/>
+                                                    <rect key="frame" x="10" y="33" width="459" height="714"/>
                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                     <subviews>
                                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="dwY-7h-gnC">
@@ -684,14 +684,14 @@
                                                             </textFieldCell>
                                                         </textField>
                                                         <scrollView autohidesScrollers="YES" horizontalLineScroll="19" horizontalPageScroll="10" verticalLineScroll="19" verticalPageScroll="10" usesPredominantAxisScrolling="NO" id="sAc-YU-ZYh">
-                                                            <rect key="frame" x="7" y="545" width="440" height="145"/>
+                                                            <rect key="frame" x="7" y="545" width="441" height="145"/>
                                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                                                             <clipView key="contentView" id="Ael-Tz-x6Y">
-                                                                <rect key="frame" x="1" y="1" width="438" height="143"/>
+                                                                <rect key="frame" x="1" y="1" width="439" height="143"/>
                                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                                 <subviews>
                                                                     <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" selectionHighlightStyle="none" columnReordering="NO" columnSelection="YES" columnResizing="NO" multipleSelection="NO" autosaveColumns="NO" autosaveName="MediaKeywordsTable" id="oZv-FH-BWg">
-                                                                        <rect key="frame" x="0.0" y="0.0" width="438" height="19"/>
+                                                                        <rect key="frame" x="0.0" y="0.0" width="439" height="19"/>
                                                                         <autoresizingMask key="autoresizingMask"/>
                                                                         <size key="intercellSpacing" width="3" height="2"/>
                                                                         <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -706,6 +706,9 @@
                                                                                 <buttonCell key="dataCell" type="push" title="Check" bezelStyle="rounded" alignment="center" borderStyle="border" inset="2" id="KQt-Os-gLJ">
                                                                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                                                                     <font key="font" metaFont="system"/>
+                                                                                    <connections>
+                                                                                        <action selector="mediaItemKeywordClick:" target="Qry-nx-iZR" id="qzY-IX-YGD"/>
+                                                                                    </connections>
                                                                                 </buttonCell>
                                                                                 <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                                                             </tableColumn>
@@ -718,6 +721,9 @@
                                                                                 <buttonCell key="dataCell" type="push" title="Check" bezelStyle="rounded" alignment="center" borderStyle="border" inset="2" id="3pv-pK-RCa">
                                                                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                                                                     <font key="font" metaFont="system"/>
+                                                                                    <connections>
+                                                                                        <action selector="mediaItemKeywordClick:" target="Qry-nx-iZR" id="4xB-wZ-xYT"/>
+                                                                                    </connections>
                                                                                 </buttonCell>
                                                                                 <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                                                             </tableColumn>
@@ -730,10 +736,13 @@
                                                                                 <buttonCell key="dataCell" type="push" title="Check" bezelStyle="rounded" alignment="center" borderStyle="border" inset="2" id="y3V-li-Mau">
                                                                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                                                                     <font key="font" metaFont="system"/>
+                                                                                    <connections>
+                                                                                        <action selector="mediaItemKeywordClick:" target="Qry-nx-iZR" id="UTv-vW-vml"/>
+                                                                                    </connections>
                                                                                 </buttonCell>
                                                                                 <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                                                             </tableColumn>
-                                                                            <tableColumn identifier="" width="126" minWidth="10" maxWidth="3.4028234663852886e+38" id="qaG-Aa-5fz">
+                                                                            <tableColumn identifier="" width="127" minWidth="10" maxWidth="3.4028234663852886e+38" id="qaG-Aa-5fz">
                                                                                 <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left">
                                                                                     <font key="font" metaFont="smallSystem"/>
                                                                                     <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
@@ -742,6 +751,9 @@
                                                                                 <buttonCell key="dataCell" type="push" title="Check" bezelStyle="rounded" alignment="center" borderStyle="border" inset="2" id="yle-uG-Djq">
                                                                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                                                                     <font key="font" metaFont="system"/>
+                                                                                    <connections>
+                                                                                        <action selector="mediaItemKeywordClick:" target="Qry-nx-iZR" id="C03-Gc-UKd"/>
+                                                                                    </connections>
                                                                                 </buttonCell>
                                                                                 <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                                                             </tableColumn>
@@ -760,7 +772,7 @@
                                                             </scroller>
                                                         </scrollView>
                                                         <textField verticalHuggingPriority="750" id="A2a-1C-3Qw">
-                                                            <rect key="frame" x="7" y="515" width="440" height="22"/>
+                                                            <rect key="frame" x="7" y="515" width="441" height="22"/>
                                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                                                             <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" placeholderString="Enter a keyword and hit enter" drawsBackground="YES" id="TWS-M3-euH">
                                                                 <font key="font" metaFont="system"/>
@@ -769,14 +781,14 @@
                                                             </textFieldCell>
                                                         </textField>
                                                         <scrollView autohidesScrollers="YES" horizontalLineScroll="19" horizontalPageScroll="10" verticalLineScroll="19" verticalPageScroll="10" usesPredominantAxisScrolling="NO" id="N71-2q-Net">
-                                                            <rect key="frame" x="6" y="14" width="440" height="458"/>
+                                                            <rect key="frame" x="6" y="14" width="441" height="458"/>
                                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                             <clipView key="contentView" id="cUT-6q-oYD">
-                                                                <rect key="frame" x="1" y="1" width="438" height="456"/>
+                                                                <rect key="frame" x="1" y="1" width="439" height="456"/>
                                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                                 <subviews>
                                                                     <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" selectionHighlightStyle="none" columnReordering="NO" columnSelection="YES" columnResizing="NO" multipleSelection="NO" autosaveColumns="NO" autosaveName="AllKeywordsTableView" id="7wO-n5-6J0">
-                                                                        <rect key="frame" x="0.0" y="0.0" width="438" height="19"/>
+                                                                        <rect key="frame" x="0.0" y="0.0" width="439" height="19"/>
                                                                         <autoresizingMask key="autoresizingMask"/>
                                                                         <size key="intercellSpacing" width="3" height="2"/>
                                                                         <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -789,8 +801,11 @@
                                                                                     <color key="backgroundColor" name="headerColor" catalog="System" colorSpace="catalog"/>
                                                                                 </tableHeaderCell>
                                                                                 <buttonCell key="dataCell" type="push" title="Check" bezelStyle="rounded" alignment="center" borderStyle="border" inset="2" id="Us2-1s-VWh">
-                                                                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                                                                    <behavior key="behavior" lightByBackground="YES" lightByGray="YES" changeBackground="YES" changeGray="YES"/>
                                                                                     <font key="font" metaFont="system"/>
+                                                                                    <connections>
+                                                                                        <action selector="allKeywordClick:" target="Qry-nx-iZR" id="hmq-bS-pBN"/>
+                                                                                    </connections>
                                                                                 </buttonCell>
                                                                                 <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                                                             </tableColumn>
@@ -801,8 +816,11 @@
                                                                                     <color key="backgroundColor" name="headerColor" catalog="System" colorSpace="catalog"/>
                                                                                 </tableHeaderCell>
                                                                                 <buttonCell key="dataCell" type="push" title="Check" bezelStyle="rounded" alignment="center" borderStyle="border" inset="2" id="Tyn-Td-UI3">
-                                                                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                                                                    <behavior key="behavior" lightByBackground="YES" lightByGray="YES" changeBackground="YES" changeGray="YES"/>
                                                                                     <font key="font" metaFont="system"/>
+                                                                                    <connections>
+                                                                                        <action selector="allKeywordClick:" target="Qry-nx-iZR" id="GZ8-AQ-5Fe"/>
+                                                                                    </connections>
                                                                                 </buttonCell>
                                                                                 <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                                                             </tableColumn>
@@ -813,20 +831,26 @@
                                                                                     <color key="backgroundColor" name="headerColor" catalog="System" colorSpace="catalog"/>
                                                                                 </tableHeaderCell>
                                                                                 <buttonCell key="dataCell" type="push" title="Check" bezelStyle="rounded" alignment="center" borderStyle="border" inset="2" id="Q32-x5-F8I">
-                                                                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                                                                    <behavior key="behavior" lightByBackground="YES" lightByGray="YES" changeBackground="YES" changeGray="YES"/>
                                                                                     <font key="font" metaFont="system"/>
+                                                                                    <connections>
+                                                                                        <action selector="allKeywordClick:" target="Qry-nx-iZR" id="HpC-6Z-TPG"/>
+                                                                                    </connections>
                                                                                 </buttonCell>
                                                                                 <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                                                             </tableColumn>
-                                                                            <tableColumn width="126" minWidth="10" maxWidth="3.4028234663852886e+38" id="39J-pG-SAI">
+                                                                            <tableColumn width="127" minWidth="10" maxWidth="3.4028234663852886e+38" id="39J-pG-SAI">
                                                                                 <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left">
                                                                                     <font key="font" metaFont="smallSystem"/>
                                                                                     <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
                                                                                     <color key="backgroundColor" name="headerColor" catalog="System" colorSpace="catalog"/>
                                                                                 </tableHeaderCell>
                                                                                 <buttonCell key="dataCell" type="push" title="Check" bezelStyle="rounded" alignment="center" borderStyle="border" inset="2" id="jpN-oV-szl">
-                                                                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                                                                    <behavior key="behavior" lightByBackground="YES" lightByGray="YES" changeBackground="YES" changeGray="YES"/>
                                                                                     <font key="font" metaFont="system"/>
+                                                                                    <connections>
+                                                                                        <action selector="allKeywordClick:" target="Qry-nx-iZR" id="dGR-4X-975"/>
+                                                                                    </connections>
                                                                                 </buttonCell>
                                                                                 <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                                                             </tableColumn>

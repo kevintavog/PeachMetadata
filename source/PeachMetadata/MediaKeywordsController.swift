@@ -8,30 +8,42 @@ import RangicCore
 class MediaKeywordsTableController : NSObject, NSTableViewDelegate, NSTableViewDataSource
 {
     let tableView: NSTableView
-    var selectedKeywords = [String]()
+    var filesAndKeywords: FilesAndKeywords
 
 
     init(tableView: NSTableView)
     {
         self.tableView = tableView
+        filesAndKeywords = FilesAndKeywords()
     }
 
-    func selectionChanged(keywords: [String])
+    func keywordToggled()
     {
-        selectedKeywords = keywords.sort()
+        let index = tableView.tableColumns.count * tableView.clickedRow + tableView.clickedColumn
+        let keyword = filesAndKeywords.uniqueKeywords[index]
+        filesAndKeywords.removeKeyword(keyword)
+    }
+
+    func updateTable()
+    {
+        tableView.reloadData()
+    }
+
+    func selectionChanged(selectedItems: FilesAndKeywords)
+    {
+        filesAndKeywords = selectedItems
         tableView.reloadData()
     }
 
     func numberOfRowsInTableView(tableView: NSTableView) -> Int
     {
-        let keywordCount = selectedKeywords.count;
+        let keywordCount = filesAndKeywords.uniqueKeywords.count;
         return keywordCount / tableView.numberOfColumns + ((keywordCount % tableView.numberOfColumns) == 0 ? 0 : 1)
     }
 
     func tableView(tableView: NSTableView, objectValueForTableColumn tableColumn: NSTableColumn?, row: Int) -> AnyObject?
     {
-        let keywords = selectedKeywords
-        if keywords.count == 0 {
+        if filesAndKeywords.uniqueKeywords.count == 0 {
             return nil
         }
 
@@ -39,10 +51,11 @@ class MediaKeywordsTableController : NSObject, NSTableViewDelegate, NSTableViewD
         let cell = tableColumn?.dataCell as! NSButtonCell
         let keywordIndex = (row * tableView.numberOfColumns) + columnIndex
 
-        if keywordIndex >= keywords.count {
+        if keywordIndex >= filesAndKeywords.uniqueKeywords.count {
             cell.transparent = true
         } else {
-            cell.title = keywords[keywordIndex]
+            let keyword = filesAndKeywords.uniqueKeywords[keywordIndex]
+            cell.title = keyword
             cell.transparent = false
         }
 

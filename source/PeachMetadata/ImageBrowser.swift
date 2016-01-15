@@ -120,20 +120,31 @@ extension PeachWindowController
     {
         let selectedItems = selectedMediaItems()
 
-        var keywordList = [String]()
         switch imageBrowserView.selectionIndexes().count {
         case 0:
             setFolderStatus()
             postNoSelection()
         case 1:
-            keywordList = setSingleItemStatus(selectedItems.first!)
+            setSingleItemStatus(selectedItems.first!)
             postSelectedItem(selectedItems.first!)
         default:
-            keywordList = setMultiItemStatus(selectedItems, filesMessage: "files selected")
+            setMultiItemStatus(selectedItems, filesMessage: "files selected")
             postSelectedItem(selectedItems.first!)
         }
 
-        mediaKeywordsController.selectionChanged(keywordList)
+        
+        do {
+            if try selectedKeywords.save() {
+                imageBrowserView.reloadData()
+            }
+        } catch let error {
+            Logger.error("Failed saving keywords: \(error)")
+            PeachWindowController.showWarning("Failed saving keywords: \(error)")
+        }
+
+        selectedKeywords = FilesAndKeywords(mediaItems: selectedItems)
+        mediaKeywordsController.selectionChanged(selectedKeywords)
+        allKeywordsController.selectionChanged(selectedKeywords)
     }
 
     func postSelectedItem(mediaData: MediaData)
@@ -203,15 +214,14 @@ extension PeachWindowController
         statusKeywordLabel.image = NSImage(imageLiteral: imageName)
     }
 
-    func setSingleItemStatus(media: MediaData) -> [String]
+    func setSingleItemStatus(media: MediaData)
     {
         var locationString = media.locationString()
         var keywordsString = media.keywordsString()
-        var keywordsList = [String]()
         if media.keywords == nil || media.keywords.count == 0 {
             keywordsString = "< no keywords >"
         } else {
-            keywordsList = media.keywords
+            keywordsString = media.keywords.joinWithSeparator(", ")
         }
 
         if media.location != nil && media.location.hasPlacename() {
@@ -219,22 +229,20 @@ extension PeachWindowController
         }
         setStatus("\(media.name); \(locationString); \(keywordsString)")
 
-        if media.location == nil || media.location!.hasPlacename() {
-            return keywordsList
-        }
-
-        // There's a location, but the placename hasn't been resolved yet
-        Async.background {
-            let placename = media.location.placenameAsString(Preferences.placenameFilter)
-            Async.main {
-                self.setStatus("\(media.name); \(placename); \(keywordsString)")
+        if let location = media.location {
+            if !location.hasPlacename() {
+                // There's a location, but the placename hasn't been resolved yet
+                Async.background {
+                    let placename = media.location.placenameAsString(Preferences.placenameFilter)
+                    Async.main {
+                        self.setStatus("\(media.name); \(placename); \(keywordsString)")
+                    }
+                }
             }
         }
-
-        return keywordsList
     }
 
-    func setMultiItemStatus(mediaItems: [MediaData], filesMessage: String) -> [String]
+    func setMultiItemStatus(mediaItems: [MediaData], filesMessage: String)
     {
         var folderKeywords = Set<String>()
         for media in mediaItems {
@@ -247,8 +255,6 @@ extension PeachWindowController
 
         let keywordsString = folderKeywords.joinWithSeparator(", ")
         setStatus("keywords: \(keywordsString)")
-
-        return folderKeywords.map({$0})
     }
 
     func setFolderStatus()

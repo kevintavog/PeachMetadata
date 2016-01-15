@@ -7,6 +7,39 @@ import RangicCore
 
 class AllKeywordsTableViewController : NSObject, NSTableViewDelegate, NSTableViewDataSource
 {
+    let tableView: NSTableView
+    var filesAndKeywords: FilesAndKeywords
+
+
+    init(tableView: NSTableView)
+    {
+        self.tableView = tableView
+        filesAndKeywords = FilesAndKeywords()
+    }
+
+    func keywordToggled()
+    {
+        let index = tableView.tableColumns.count * tableView.clickedRow + tableView.clickedColumn
+        let keyword = AllKeywords.sharedInstance.keywords[index]
+
+        if filesAndKeywords.uniqueKeywords.contains(keyword) {
+            filesAndKeywords.removeKeyword(keyword)
+        } else {
+            filesAndKeywords.addKeyword(keyword)
+        }
+    }
+
+    func updateTable()
+    {
+        tableView.reloadData()
+    }
+
+    func selectionChanged(selectedItems: FilesAndKeywords)
+    {
+        filesAndKeywords = selectedItems
+        tableView.reloadData()
+    }
+
     func numberOfRowsInTableView(tableView: NSTableView) -> Int
     {
         let keywordCount = AllKeywords.sharedInstance.keywords.count;
@@ -15,8 +48,7 @@ class AllKeywordsTableViewController : NSObject, NSTableViewDelegate, NSTableVie
 
     func tableView(tableView: NSTableView, objectValueForTableColumn tableColumn: NSTableColumn?, row: Int) -> AnyObject?
     {
-        let keywords = AllKeywords.sharedInstance.keywords
-        if keywords.count == 0 {
+        if AllKeywords.sharedInstance.keywords.count == 0 {
             return nil
         }
 
@@ -24,11 +56,13 @@ class AllKeywordsTableViewController : NSObject, NSTableViewDelegate, NSTableVie
         let cell = tableColumn?.dataCell as! NSButtonCell
         let keywordIndex = (row * tableView.numberOfColumns) + columnIndex
 
-        if keywordIndex >= keywords.count {
+        if keywordIndex >= AllKeywords.sharedInstance.keywords.count {
             cell.transparent = true
         } else {
-            cell.title = keywords[keywordIndex]
+            let keyword = AllKeywords.sharedInstance.keywords[keywordIndex]
+            cell.title = keyword
             cell.transparent = false
+            cell.state = filesAndKeywords.uniqueKeywords.contains(keyword) ? NSOnState : NSOffState
         }
 
         return cell

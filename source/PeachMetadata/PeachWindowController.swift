@@ -30,8 +30,9 @@ class PeachWindowController : NSWindowController, NSTableViewDataSource, WebFram
     var thumbnailItems = [ThumbnailViewItem]()
     var filteredThumbnailItems = [ThumbnailViewItem]()
     var rootDirectory: DirectoryTree?
-    var allKeywordsController = AllKeywordsTableViewController()
+    var allKeywordsController: AllKeywordsTableViewController!
     var mediaKeywordsController: MediaKeywordsTableController!
+    var selectedKeywords = FilesAndKeywords()
 
 
     override func awakeFromNib()
@@ -54,6 +55,7 @@ class PeachWindowController : NSWindowController, NSTableViewDataSource, WebFram
         }
 
 
+        allKeywordsController = AllKeywordsTableViewController(tableView: allKeywordsTableView)
         allKeywordsTableView.setDelegate(allKeywordsController)
         allKeywordsTableView.setDataSource(allKeywordsController)
 
@@ -80,6 +82,7 @@ class PeachWindowController : NSWindowController, NSTableViewDataSource, WebFram
     @IBAction func fixBadExif(sender: AnyObject)
     {
         Logger.info("fixBadExif")
+        PeachWindowController.showWarning("Not implemented")
     }
     
     @IBAction func viewFile(sender: AnyObject)
@@ -92,11 +95,7 @@ class PeachWindowController : NSWindowController, NSTableViewDataSource, WebFram
         }
 
         if NSWorkspace.sharedWorkspace().openURL(mediaItems.first!.url!) == false {
-            let alert = NSAlert()
-            alert.messageText = "Failed opening file: '\(mediaItems.first!.url!.path)'"
-            alert.alertStyle = NSAlertStyle.WarningAlertStyle
-            alert.addButtonWithTitle("Close")
-            alert.runModal()
+            PeachWindowController.showWarning("Failed opening file: '\(mediaItems.first!.url!.path)'")
         }
     }
 
@@ -153,6 +152,7 @@ class PeachWindowController : NSWindowController, NSTableViewDataSource, WebFram
 
                     Async.main {
                         self.setStatus("Setting metadata dates failed: \(error)")
+                        PeachWindowController.showWarning("Setting metadata dates failed: \(error)")
                     }
                 }
             }
@@ -176,5 +176,28 @@ class PeachWindowController : NSWindowController, NSTableViewDataSource, WebFram
     {
         Logger.info("toggleKeywordIssues")
         filterItems()
+    }
+
+    @IBAction func allKeywordClick(sender: AnyObject)
+    {
+        allKeywordsController.keywordToggled()
+        allKeywordsController.updateTable()
+        mediaKeywordsController.updateTable()
+    }
+
+    @IBAction func mediaItemKeywordClick(sender: AnyObject)
+    {
+        mediaKeywordsController.keywordToggled()
+        mediaKeywordsController.updateTable()
+        allKeywordsController.updateTable()
+    }
+
+    static func showWarning(message: String)
+    {
+        let alert = NSAlert()
+        alert.messageText = message
+        alert.alertStyle = NSAlertStyle.WarningAlertStyle
+        alert.addButtonWithTitle("Close")
+        alert.runModal()
     }
 }

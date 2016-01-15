@@ -39,5 +39,4 @@ class AllKeywords
     {
         keywords = rawList.sort()
     }
-
 }

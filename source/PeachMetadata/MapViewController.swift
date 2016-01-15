@@ -213,6 +213,7 @@ extension PeachWindowController
                 Async.main {
                     self.reloadExistingMedia()
                     self.setStatus("Clearing file locations failed: \(error)")
+                    PeachWindowController.showWarning("Clearing file locations failed: \(error)")
                 }
             }
         }
@@ -243,6 +244,7 @@ extension PeachWindowController
         if skipList.count > 0 {
             Async.main {
                 self.setStatus("Some files were not updated due to existing locations: \(skipList.joinWithSeparator(", "))")
+                PeachWindowController.showWarning("Some files were not updated due to existing locations: \(skipList.joinWithSeparator(", "))")
             }
         }
     }
@@ -280,6 +282,7 @@ extension PeachWindowController
                 Async.main {
                     self.reloadExistingMedia()
                     self.setStatus("Setting file location failed: \(error)")
+                    PeachWindowController.showWarning("Setting file location failed: \(error)")
                 }
             }
         }
