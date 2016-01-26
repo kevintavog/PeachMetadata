@@ -66,7 +66,25 @@ class PeachWindowController : NSWindowController, NSTableViewDataSource, WebFram
         mapView.mainFrame.loadRequest(NSURLRequest(URL: NSURL(fileURLWithPath: NSBundle.mainBundle().pathForResource("map", ofType: "html")!)))
         mapView.frameLoadDelegate = self
         mapView.enableDragAndDrop(updateLocations)
+    }
 
+    @IBAction func importMedia(sender: AnyObject)
+    {
+        let dialog = NSOpenPanel()
+
+        dialog.canChooseFiles = false
+        dialog.canChooseDirectories = true
+        if 1 != dialog.runModal() || dialog.URLs.count < 1 {
+            return
+        }
+
+        let importMediaController = ImportMediaWindowsController(windowNibName: "ImportMediaWindow")
+        if importMediaController.setImportFolder(dialog.URLs[0].path!) {
+            let result = NSApplication.sharedApplication().runModalForWindow(importMediaController.window!)
+            if result == 1 {
+                Logger.error("Select imported folder...")
+            }
+        }
     }
 
     @IBAction func clearLocations(sender: AnyObject)
@@ -194,10 +212,22 @@ class PeachWindowController : NSWindowController, NSTableViewDataSource, WebFram
 
     static func showWarning(message: String)
     {
+        Logger.error(message)
         let alert = NSAlert()
         alert.messageText = message
         alert.alertStyle = NSAlertStyle.WarningAlertStyle
         alert.addButtonWithTitle("Close")
         alert.runModal()
+    }
+
+    static func askQuestion(message: String) -> Bool
+    {
+        Logger.warn(message)
+        let alert = NSAlert()
+        alert.messageText = message
+        alert.alertStyle = NSAlertStyle.WarningAlertStyle
+        alert.addButtonWithTitle("Yes")
+        alert.addButtonWithTitle("No")
+        return alert.runModal() == NSAlertFirstButtonReturn
     }
 }

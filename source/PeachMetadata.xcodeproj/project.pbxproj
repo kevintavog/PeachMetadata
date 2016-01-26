@@ -11,6 +11,9 @@
 		44048D3E1BDF1444005F3809 /* DirectoryOutline.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44048D3D1BDF1444005F3809 /* DirectoryOutline.swift */; };
 		44048D401BE05E95005F3809 /* Preferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44048D3F1BE05E95005F3809 /* Preferences.swift */; };
 		44261AF31BDEF66600ACA852 /* PeachWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44261AF21BDEF66600ACA852 /* PeachWindowController.swift */; };
+		442CE30A1C4D455B00A326C2 /* ImportMediaWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 442CE3091C4D455B00A326C2 /* ImportMediaWindow.xib */; };
+		442CE30D1C4D47CF00A326C2 /* ImportMediaWindowsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 442CE30C1C4D47CF00A326C2 /* ImportMediaWindowsController.swift */; };
+		442CE30F1C4F1A9000A326C2 /* ImportLightroomExport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 442CE30E1C4F1A9000A326C2 /* ImportLightroomExport.swift */; };
 		444AD6651C431CFB002979B0 /* FilesAndKeywords.swift in Sources */ = {isa = PBXBuildFile; fileRef = 444AD6641C431CFB002979B0 /* FilesAndKeywords.swift */; };
 		444C358C1BE2CA9C002BEC2B /* AllKeywordsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 444C358B1BE2CA9C002BEC2B /* AllKeywordsController.swift */; };
 		445187E41C2C94CD008B2DE6 /* MapWebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 445187E31C2C94CD008B2DE6 /* MapWebView.swift */; };
@@ -19,6 +22,7 @@
 		4463CD101C3241B700B6C01D /* DateAdjustmentWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4463CD0F1C3241B700B6C01D /* DateAdjustmentWindowController.swift */; };
 		4463CD121C32434900B6C01D /* DateAdjustmentWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4463CD111C32434900B6C01D /* DateAdjustmentWindow.xib */; };
 		4463CD141C336F7000B6C01D /* SensitiveLocations.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4463CD131C336F7000B6C01D /* SensitiveLocations.swift */; };
+		446845301C55A5A9009A2891 /* ImportProgressWindowsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4468452F1C55A5A9009A2891 /* ImportProgressWindowsController.swift */; };
 		44B8FD201BDF05400090CF76 /* Alamofire.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 44B8FD1C1BDF05400090CF76 /* Alamofire.framework */; };
 		44B8FD211BDF05400090CF76 /* Alamofire.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 44B8FD1C1BDF05400090CF76 /* Alamofire.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		44B8FD221BDF05400090CF76 /* Async.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 44B8FD1D1BDF05400090CF76 /* Async.framework */; };
@@ -76,6 +80,9 @@
 		44048D3D1BDF1444005F3809 /* DirectoryOutline.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DirectoryOutline.swift; sourceTree = "<group>"; };
 		44048D3F1BE05E95005F3809 /* Preferences.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Preferences.swift; sourceTree = "<group>"; };
 		44261AF21BDEF66600ACA852 /* PeachWindowController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PeachWindowController.swift; sourceTree = "<group>"; };
+		442CE3091C4D455B00A326C2 /* ImportMediaWindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = ImportMediaWindow.xib; path = ../ImportMediaWindow.xib; sourceTree = "<group>"; };
+		442CE30C1C4D47CF00A326C2 /* ImportMediaWindowsController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImportMediaWindowsController.swift; sourceTree = "<group>"; };
+		442CE30E1C4F1A9000A326C2 /* ImportLightroomExport.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImportLightroomExport.swift; sourceTree = "<group>"; };
 		444AD6641C431CFB002979B0 /* FilesAndKeywords.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FilesAndKeywords.swift; sourceTree = "<group>"; };
 		444C358B1BE2CA9C002BEC2B /* AllKeywordsController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AllKeywordsController.swift; sourceTree = "<group>"; };
 		445187E31C2C94CD008B2DE6 /* MapWebView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapWebView.swift; sourceTree = "<group>"; };
@@ -84,6 +91,7 @@
 		4463CD0F1C3241B700B6C01D /* DateAdjustmentWindowController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DateAdjustmentWindowController.swift; sourceTree = "<group>"; };
 		4463CD111C32434900B6C01D /* DateAdjustmentWindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DateAdjustmentWindow.xib; sourceTree = "<group>"; };
 		4463CD131C336F7000B6C01D /* SensitiveLocations.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SensitiveLocations.swift; sourceTree = "<group>"; };
+		4468452F1C55A5A9009A2891 /* ImportProgressWindowsController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImportProgressWindowsController.swift; sourceTree = "<group>"; };
 		44B8FD1C1BDF05400090CF76 /* Alamofire.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Alamofire.framework; path = Carthage/Build/Mac/Alamofire.framework; sourceTree = "<group>"; };
 		44B8FD1D1BDF05400090CF76 /* Async.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Async.framework; path = Carthage/Build/Mac/Async.framework; sourceTree = "<group>"; };
 		44B8FD1E1BDF05400090CF76 /* CocoaLumberjack.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CocoaLumberjack.framework; path = Carthage/Build/Mac/CocoaLumberjack.framework; sourceTree = "<group>"; };
@@ -130,6 +138,7 @@
 				44BF1D041BE0787600514392 /* AllKeywords.swift */,
 				44F6FC211C2CA73C000874C6 /* ExifToolRunner.swift */,
 				444AD6641C431CFB002979B0 /* FilesAndKeywords.swift */,
+				442CE30E1C4F1A9000A326C2 /* ImportLightroomExport.swift */,
 				4463CD131C336F7000B6C01D /* SensitiveLocations.swift */,
 			);
 			name = Models;
@@ -143,6 +152,8 @@
 				44048D3D1BDF1444005F3809 /* DirectoryOutline.swift */,
 				4463CD081C30820700B6C01D /* FileInformationController.swift */,
 				44048D3A1BDF1253005F3809 /* ImageBrowser.swift */,
+				442CE30C1C4D47CF00A326C2 /* ImportMediaWindowsController.swift */,
+				4468452F1C55A5A9009A2891 /* ImportProgressWindowsController.swift */,
 				44C7F7071BE6B6760064116D /* MapViewController.swift */,
 				44C7F7021BE6627A0064116D /* MediaKeywordsController.swift */,
 				44261AF21BDEF66600ACA852 /* PeachWindowController.swift */,
@@ -211,8 +222,9 @@
 				444C358A1BE2CA38002BEC2B /* Controllers */,
 				444C35891BE2CA31002BEC2B /* Models */,
 				44C7F7041BE692F20064116D /* Resources */,
-				44E387871BD9818000CDEF1C /* MainMenu.xib */,
 				4463CD111C32434900B6C01D /* DateAdjustmentWindow.xib */,
+				442CE3091C4D455B00A326C2 /* ImportMediaWindow.xib */,
+				44E387871BD9818000CDEF1C /* MainMenu.xib */,
 				44E387851BD9818000CDEF1C /* Assets.xcassets */,
 				44E3878A1BD9818000CDEF1C /* Info.plist */,
 				44048D3F1BE05E95005F3809 /* Preferences.swift */,
@@ -308,6 +320,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				442CE30A1C4D455B00A326C2 /* ImportMediaWindow.xib in Resources */,
 				44E387861BD9818000CDEF1C /* Assets.xcassets in Resources */,
 				44E387891BD9818000CDEF1C /* MainMenu.xib in Resources */,
 				4463CD121C32434900B6C01D /* DateAdjustmentWindow.xib in Resources */,
@@ -326,10 +339,13 @@
 				444AD6651C431CFB002979B0 /* FilesAndKeywords.swift in Sources */,
 				4463CD091C30820700B6C01D /* FileInformationController.swift in Sources */,
 				44E387841BD9818000CDEF1C /* AppDelegate.swift in Sources */,
+				442CE30F1C4F1A9000A326C2 /* ImportLightroomExport.swift in Sources */,
 				44048D3B1BDF1253005F3809 /* ImageBrowser.swift in Sources */,
+				446845301C55A5A9009A2891 /* ImportProgressWindowsController.swift in Sources */,
 				4463CD141C336F7000B6C01D /* SensitiveLocations.swift in Sources */,
 				445187E41C2C94CD008B2DE6 /* MapWebView.swift in Sources */,
 				44E99A7B1BE99A94004090C5 /* ImageBrowserCell.swift in Sources */,
+				442CE30D1C4D47CF00A326C2 /* ImportMediaWindowsController.swift in Sources */,
 				444C358C1BE2CA9C002BEC2B /* AllKeywordsController.swift in Sources */,
 				44E99A781BE99A4B004090C5 /* ImageBrowserView.swift in Sources */,
 				4463CD101C3241B700B6C01D /* DateAdjustmentWindowController.swift in Sources */,

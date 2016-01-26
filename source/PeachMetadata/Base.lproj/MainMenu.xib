@@ -111,10 +111,17 @@
                                 </menu>
                             </menuItem>
                             <menuItem isSeparatorItem="YES" id="m54-Is-iLE"/>
-                            <menuItem title="Clear location" id="YXV-hN-2C2">
+                            <menuItem title="Import..." id="YXV-hN-2C2">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
-                                    <action selector="clearLocations:" target="Qry-nx-iZR" id="oyM-0u-lhA"/>
+                                    <action selector="importMedia:" target="Qry-nx-iZR" id="rjh-VW-DSi"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem isSeparatorItem="YES" id="GpJ-yq-pgf"/>
+                            <menuItem title="Clear location" id="jcq-QU-Brm">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="clearLocations:" target="Qry-nx-iZR" id="A7W-Y6-ULg"/>
                                 </connections>
                             </menuItem>
                             <menuItem title="Fix bad EXIF" id="8XU-eh-lff">
@@ -531,7 +538,7 @@
                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                     <subviews>
                                                         <ikImageBrowserView autoresizesSubviews="NO" zoomValue="nan" animates="YES" id="nit-07-pvN" customClass="ImageBrowserView" customModule="PeachMetadata" customModuleProvider="target">
-                                                            <rect key="frame" x="0.0" y="0.0" width="561" height="535"/>
+                                                            <rect key="frame" x="0.0" y="0.0" width="574.5" height="551"/>
                                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                             <ikCellsStyle key="cellsStyleMask" shadowed="YES" outlined="YES" titled="YES" subtitled="YES"/>
                                                             <autoresizingMask key="contentResizingMask" heightSizable="YES"/>
@@ -548,7 +555,7 @@
                                                     <autoresizingMask key="autoresizingMask"/>
                                                 </scroller>
                                                 <scroller key="verticalScroller" verticalHuggingPriority="750" doubleValue="1" horizontal="NO" id="wfz-n6-wZx">
-                                                    <rect key="frame" x="449" y="1" width="16" height="423"/>
+                                                    <rect key="frame" x="450" y="1" width="15" height="423"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                 </scroller>
                                             </scrollView>
@@ -984,6 +991,7 @@
             </connections>
             <point key="canvasLocation" x="-100.5" y="1764"/>
         </window>
+        <viewController id="IAH-Kb-eYD"/>
     </objects>
     <resources>
         <image name="keyword" width="512" height="512"/>

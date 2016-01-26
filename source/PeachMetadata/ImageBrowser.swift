@@ -32,6 +32,14 @@ extension PeachWindowController
         mediaProvider.clear()
         mediaProvider.addFolder(folder)
 
+        for m in mediaProvider.mediaFiles {
+            if let rotation = m.rotation {
+                if rotation != 0 {
+                    Logger.error("\(m.name) is rotated \(rotation)")
+                }
+            }
+        }
+
         loadThumbnails()
     }
 
