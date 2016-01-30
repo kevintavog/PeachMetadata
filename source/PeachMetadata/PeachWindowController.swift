@@ -74,17 +74,38 @@ class PeachWindowController : NSWindowController, NSTableViewDataSource, WebFram
 
         dialog.canChooseFiles = false
         dialog.canChooseDirectories = true
+        if let path = getLastImportFolder() {
+            dialog.directoryURL = NSURL(fileURLWithPath: path, isDirectory: true)
+        }
         if 1 != dialog.runModal() || dialog.URLs.count < 1 {
             return
         }
 
+        Preferences.lastImportedFolder = dialog.URLs[0].path!
         let importMediaController = ImportMediaWindowsController(windowNibName: "ImportMediaWindow")
         if importMediaController.setImportFolder(dialog.URLs[0].path!) {
             let result = NSApplication.sharedApplication().runModalForWindow(importMediaController.window!)
             if result == 1 {
-                Logger.error("Select imported folder...")
+                 populateDirectoryView(rootDirectory!.folder)
+                Logger.error("Refresh folder list; select imported folder...")
             }
         }
+    }
+
+    func getLastImportFolder() -> String?
+    {
+        if Preferences.lastImportedFolder.characters.count > 0 {
+            var isFolder: ObjCBool = false
+            if NSFileManager.defaultManager().fileExistsAtPath(Preferences.lastImportedFolder, isDirectory:&isFolder) && isFolder {
+                return Preferences.lastImportedFolder
+            }
+
+            let parentPath = NSString(string: Preferences.lastImportedFolder).stringByDeletingLastPathComponent
+            if NSFileManager.defaultManager().fileExistsAtPath(parentPath, isDirectory:&isFolder) && isFolder {
+                return parentPath
+            }
+        }
+        return nil
     }
 
     @IBAction func clearLocations(sender: AnyObject)

@@ -84,6 +84,11 @@ class ImportMediaWindowsController : NSWindowController, NSTableViewDataSource
 
     @IBAction func importMedia(sender: AnyObject)
     {
+        if exportFolderName == exportFolderLabel.stringValue {
+            PeachWindowController.showWarning("The destination folder name must be different from the date.\r\r Currently: '\(exportFolderLabel.stringValue)'")
+            return
+        }
+
         // Confirm the folder name has been changed (isn't date only); allow to pass if OK
         // How to handle if destination folder already exists? Perhaps confirm that a merge is what's desired
         let picturesFolder = NSFileManager.defaultManager().URLsForDirectory(.PicturesDirectory, inDomains: .UserDomainMask).first!.path!
@@ -208,10 +213,14 @@ class ImportMediaWindowsController : NSWindowController, NSTableViewDataSource
             return false
         }
 
+        var hasVideos = false
         var unsupportedFiles = [String]()
         for original in originalFiles {
             let mediaType = SupportedMediaTypes.getType(original)
             if mediaType != .Unknown {
+                if mediaType == .Video {
+                    hasVideos = true
+                }
                 originalMediaData.append(FileMediaData.create(original, mediaType: mediaType))
             } else {
                 unsupportedFiles.append(original.lastPathComponent!)
@@ -235,18 +244,24 @@ class ImportMediaWindowsController : NSWindowController, NSTableViewDataSource
             return false
         }
 
-        if exportedMediaData.count == 0 {
+        if exportedMediaData.count == 0 && !hasVideos {
             PeachWindowController.showWarning("No exported files were found")
             return false
         }
 
         let dateFormatter = NSDateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd"
-        exportFolderName = dateFormatter.stringFromDate(exportedMediaData.first!.timestamp!) + " "
-
         let yearDateFormatter = NSDateFormatter()
         yearDateFormatter.dateFormat = "yyyy"
-        yearForMaster = yearDateFormatter.stringFromDate(exportedMediaData.first!.timestamp!)
+
+        if exportedMediaData.count > 0 {
+            exportFolderName = dateFormatter.stringFromDate(exportedMediaData.first!.timestamp!) + " "
+            yearForMaster = yearDateFormatter.stringFromDate(exportedMediaData.first!.timestamp!)
+        } else {
+            exportFolderName = dateFormatter.stringFromDate(originalMediaData.first!.timestamp!) + " "
+            yearForMaster = yearDateFormatter.stringFromDate(originalMediaData.first!.timestamp!)
+        }
+
 
         let importer = ImportLightroomExport(originalMediaData: originalMediaData, exportedMediaData: exportedMediaData)
         warnings = importer.findWarnings();

@@ -228,10 +228,11 @@ class ImportLightroomExport
 
     func archiveOriginals() throws
     {
-        importProgress?.setCurrentStep("Archiving originals")
+        // The script is failing because it can't find 'ping'
+//        importProgress?.setCurrentStep("Archiving originals")
 
-        let result = ProcessInvoker.run("/bin/bash", arguments: ["/users/goatboy/Tools/archiveOriginals.sh"])
-        addProcessResultDetail("archiveOriginals", processResult: result)
+//        let result = ProcessInvoker.run("/bin/bash", arguments: ["/Users/goatboy/Tools/archiveOriginals.sh"])
+//        addProcessResultDetail("archiveOriginals", processResult: result)
     }
 
     func removeImportFolders(importFolder: String) throws

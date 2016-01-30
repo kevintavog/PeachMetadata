@@ -74,8 +74,8 @@ class ImportProgressWindowsController : NSWindowController, ImportProgress
 
         Async.main {
             self.stepLabel.stringValue = "\(stepName)"
-            self.addDetailText("\(stepName):", addNewLine: self.detailTextView.string!.characters.count > 0)
         }
+        addDetailText("\(stepName):", addNewLine: self.detailTextView.string!.characters.count > 0)
     }
 
     func setStepDetail(detail: String)
