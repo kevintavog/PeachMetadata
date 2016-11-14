@@ -10,24 +10,24 @@ import RangicCore
 
 extension PeachWindowController
 {
-    static private let missingAttrs = [
+    static fileprivate let missingAttrs = [
         NSForegroundColorAttributeName : NSColor(deviceRed: 0.0, green: 0.7, blue: 0.7, alpha: 1.0),
-        NSFontAttributeName : NSFont.labelFontOfSize(14)
+        NSFontAttributeName : NSFont.labelFont(ofSize: 14)
 
     ]
-    static private let badDataAttrs = [
-        NSForegroundColorAttributeName : NSColor.orangeColor(),
-        NSFontAttributeName : NSFont.labelFontOfSize(14)
+    static fileprivate let badDataAttrs = [
+        NSForegroundColorAttributeName : NSColor.orange,
+        NSFontAttributeName : NSFont.labelFont(ofSize: 14)
     ]
 
 
-    @IBAction func updateThumbnailsize(sender: AnyObject)
+    @IBAction func updateThumbnailsize(_ sender: AnyObject)
     {
         Preferences.thumbnailZoom = thumbSizeSlider.floatValue
         imageBrowserView.setZoomValue(thumbSizeSlider.floatValue)
     }
 
-    func populateImageView(folder: String)
+    func populateImageView(_ folder: String)
     {
         mediaProvider.clear()
         mediaProvider.addFolder(folder)
@@ -35,7 +35,7 @@ extension PeachWindowController
         for m in mediaProvider.mediaFiles {
             if let rotation = m.rotation {
                 if rotation != 0 {
-                    Logger.error("\(m.name) is rotated \(rotation)")
+                    Logger.error("\(m.name!) is rotated \(rotation)")
                 }
             }
         }
@@ -104,12 +104,12 @@ extension PeachWindowController
     }
 
     // MARK: imageBrowserView data provider
-    override func numberOfItemsInImageBrowser(browser: IKImageBrowserView!) -> Int
+    override func numberOfItems(inImageBrowser browser: IKImageBrowserView!) -> Int
     {
         return filteredThumbnailItems.count
     }
 
-    override func imageBrowser(browser: IKImageBrowserView!, itemAtIndex index: Int) -> AnyObject!
+    override func imageBrowser(_ browser: IKImageBrowserView!, itemAt index: Int) -> Any!
     {
         return filteredThumbnailItems[index]
     }
@@ -124,7 +124,7 @@ extension PeachWindowController
     }
 
     // MARK: imageBrowserView Delegate
-    override func imageBrowserSelectionDidChange(browser: IKImageBrowserView!)
+    override func imageBrowserSelectionDidChange(_ browser: IKImageBrowserView!)
     {
         let selectedItems = selectedMediaItems()
 
@@ -155,7 +155,7 @@ extension PeachWindowController
         allKeywordsController.selectionChanged(selectedKeywords)
     }
 
-    func postSelectedItem(mediaData: MediaData)
+    func postSelectedItem(_ mediaData: MediaData)
     {
         let userInfo: [String: MediaData] = ["MediaData": mediaData]
         Notifications.postNotification(Notifications.Selection.MediaData, object: self, userInfo: userInfo)
@@ -166,76 +166,76 @@ extension PeachWindowController
         Notifications.postNotification(Notifications.Selection.MediaData, object: self, userInfo: nil)
     }
 
-    func setStatus(message: String)
+    func setStatus(_ message: String)
     {
         Logger.info("Status message changed: '\(message)'")
         statusLabel.stringValue = message
     }
 
-    func setStatusMediaNumber(fileNumber: Int)
+    func setStatusMediaNumber(_ fileNumber: Int)
     {
         statusFileLabel.stringValue  = String(fileNumber)
     }
 
-    func setStatusLocationInfo(count: Int, status: LocationStatus)
+    func setStatusLocationInfo(_ count: Int, status: LocationStatus)
     {
         let message = String(count)
         var imageName = "location"
-        if status == .SensitiveLocation {
+        if status == .sensitiveLocation {
             statusLocationLabel.attributedTitle = NSMutableAttributedString(string: message, attributes: PeachWindowController.badDataAttrs)
             imageName = "locationBad"
-        } else if status == .MissingLocation {
+        } else if status == .missingLocation {
             statusLocationLabel.attributedTitle = NSMutableAttributedString(string: message, attributes: PeachWindowController.missingAttrs)
             imageName = "locationMissing"
         } else {
             statusLocationLabel.title = message
         }
 
-        statusLocationLabel.image = NSImage(imageLiteral: imageName)
+        statusLocationLabel.image = NSImage(imageLiteralResourceName: imageName)
     }
 
-    func setStatusDateInfo(count: Int, status: DateStatus)
+    func setStatusDateInfo(_ count: Int, status: DateStatus)
     {
         let message = String(count)
         var imageName = "timestamp"
-        if status == .MismatchedDate {
+        if status == .mismatchedDate {
             statusDateLabel.attributedTitle = NSMutableAttributedString(string: message, attributes: PeachWindowController.badDataAttrs)
             imageName = "timestampBad"
         } else {
             statusDateLabel.title = message
         }
 
-        statusDateLabel.image = NSImage(imageLiteral: imageName)
+        statusDateLabel.image = NSImage(imageLiteralResourceName: imageName)
     }
 
-    func setStatusKeywordInfo(count: Int, status: KeywordStatus)
+    func setStatusKeywordInfo(_ count: Int, status: KeywordStatus)
     {
         let message = String(count)
         var imageName = "keyword"
-        if status == .NoKeyword {
+        if status == .noKeyword {
             statusKeywordLabel.attributedTitle = NSMutableAttributedString(string: message, attributes: PeachWindowController.missingAttrs)
             imageName = "keywordMissing"
         } else {
             statusKeywordLabel.title = message
         }
 
-        statusKeywordLabel.image = NSImage(imageLiteral: imageName)
+        statusKeywordLabel.image = NSImage(imageLiteralResourceName: imageName)
     }
 
-    func setSingleItemStatus(media: MediaData)
+    func setSingleItemStatus(_ media: MediaData)
     {
         var locationString = media.locationString()
         var keywordsString = media.keywordsString()
         if media.keywords == nil || media.keywords.count == 0 {
             keywordsString = "< no keywords >"
         } else {
-            keywordsString = media.keywords.joinWithSeparator(", ")
+            keywordsString = media.keywords.joined(separator: ", ")
         }
 
         if media.location != nil && media.location.hasPlacename() {
             locationString = media.location.placenameAsString(Preferences.placenameFilter)
         }
-        setStatus("\(media.name); \(locationString); \(keywordsString)")
+        setStatus(String("\(media.name!); \(locationString); \(keywordsString)"))
 
         if let location = media.location {
             if !location.hasPlacename() {
@@ -243,14 +243,14 @@ extension PeachWindowController
                 Async.background {
                     let placename = media.location.placenameAsString(Preferences.placenameFilter)
                     Async.main {
-                        self.setStatus("\(media.name); \(placename); \(keywordsString)")
+                        self.setStatus("\(media.name!); \(placename); \(keywordsString)")
                     }
                 }
             }
         }
     }
 
-    func setMultiItemStatus(mediaItems: [MediaData], filesMessage: String)
+    func setMultiItemStatus(_ mediaItems: [MediaData], filesMessage: String)
     {
         var folderKeywords = Set<String>()
         for media in mediaItems {
@@ -261,7 +261,7 @@ extension PeachWindowController
             }
         }
 
-        let keywordsString = folderKeywords.joinWithSeparator(", ")
+        let keywordsString = folderKeywords.joined(separator: ", ")
         setStatus("keywords: \(keywordsString)")
     }
 
@@ -281,19 +281,19 @@ extension PeachWindowController
         for media in mediaProvider.mediaFiles {
             if let location = media.location {
                 if SensitiveLocations.sharedInstance.isSensitive(location) {
-                    ++numberWithSensitiveLocation
+                    numberWithSensitiveLocation += 1
                 }
 
             } else {
-                ++numberMissingLocation
+                numberMissingLocation += 1
             }
 
             if media.keywords == nil {
-                ++numberMissingKeyword
+                numberMissingKeyword += 1
             }
 
             if media.doFileAndExifTimestampsMatch() == false {
-                ++numberWithMismatchedDate
+                numberWithMismatchedDate += 1
             }
         }
 
@@ -301,57 +301,57 @@ extension PeachWindowController
         setStatusMediaNumber(mediaCount)
 
         if numberWithSensitiveLocation > 0 {
-            setStatusLocationInfo(numberWithSensitiveLocation, status: .SensitiveLocation)
+            setStatusLocationInfo(numberWithSensitiveLocation, status: .sensitiveLocation)
         }
         else if numberMissingLocation > 0 {
-            setStatusLocationInfo(numberMissingLocation, status: .MissingLocation)
+            setStatusLocationInfo(numberMissingLocation, status: .missingLocation)
         } else {
-            setStatusLocationInfo(mediaCount, status: .GoodLocation)
+            setStatusLocationInfo(mediaCount, status: .goodLocation)
         }
 
         if numberWithMismatchedDate > 0 {
-            setStatusDateInfo(numberWithMismatchedDate, status: .MismatchedDate)
+            setStatusDateInfo(numberWithMismatchedDate, status: .mismatchedDate)
         } else {
-            setStatusDateInfo(mediaCount, status: .GoodDate)
+            setStatusDateInfo(mediaCount, status: .goodDate)
         }
 
         if numberMissingKeyword > 0 {
-            setStatusKeywordInfo(numberMissingKeyword, status: .NoKeyword)
+            setStatusKeywordInfo(numberMissingKeyword, status: .noKeyword)
         } else {
-            setStatusKeywordInfo(mediaCount, status: .HasKeyword)
+            setStatusKeywordInfo(mediaCount, status: .hasKeyword)
         }
     }
 }
 
-public class ThumbnailViewItem : NSObject
+open class ThumbnailViewItem : NSObject
 {
-    public let mediaData: MediaData
+    open let mediaData: MediaData
 
 
     init(mediaData: MediaData) {
         self.mediaData = mediaData
     }
 
-    public override func imageUID() -> String! {
+    open override func imageUID() -> String! {
         return mediaData.url.path
     }
 
-    public override func imageRepresentationType() -> String! {
+    open override func imageRepresentationType() -> String! {
         switch mediaData.type! {
-        case .Image:
+        case .image:
             return IKImageBrowserNSURLRepresentationType
-        case .Video:
+        case .video:
             return IKImageBrowserQTMoviePathRepresentationType
         default:
             return IKImageBrowserNSURLRepresentationType
         }
     }
 
-    public override func imageRepresentation() -> AnyObject! {
+    open override func imageRepresentation() -> Any! {
         switch mediaData.type! {
-        case .Image:
+        case .image:
             return mediaData.url
-        case .Video:
+        case .video:
             return mediaData.url
         default:
             return mediaData.url
@@ -361,19 +361,19 @@ public class ThumbnailViewItem : NSObject
 
 public enum LocationStatus
 {
-    case MissingLocation
-    case SensitiveLocation
-    case GoodLocation
+    case missingLocation
+    case sensitiveLocation
+    case goodLocation
 }
 
 public enum DateStatus
 {
-    case GoodDate
-    case MismatchedDate
+    case goodDate
+    case mismatchedDate
 }
 
 public enum KeywordStatus
 {
-    case NoKeyword
-    case HasKeyword
+    case noKeyword
+    case hasKeyword
 }

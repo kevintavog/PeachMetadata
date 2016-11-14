@@ -4,20 +4,20 @@
 
 import RangicCore
 
-public enum ExifToolError : ErrorType {
-    case NotAFile(path: String)
-    case UpdateFailed(error: String)
+public enum ExifToolError : Error {
+    case notAFile(path: String)
+    case updateFailed(error: String)
 }
 
-public class ExifToolRunner
+open class ExifToolRunner
 {
-    static public func clearFileLocations(imageFilePaths: [String], videoFilePaths: [String]) throws
+    static open func clearFileLocations(_ imageFilePaths: [String], videoFilePaths: [String]) throws
     {
         try checkFiles(imageFilePaths)
         try checkFiles(videoFilePaths)
 
         if imageFilePaths.count > 0 {
-            try runExifTool(
+            let _ = try runExifTool(
                 [ "-P", "-fast", "-q", "-overwrite_original",
                     "-exif:gpslatitude=",
                     "-exif:gpslatituderef=",
@@ -27,7 +27,7 @@ public class ExifToolRunner
         }
 
         if videoFilePaths.count > 0 {
-            try runExifTool(
+            let _ = try runExifTool(
                 [ "-P", "-fast", "-q", "-overwrite_original",
                     "-xmp:gpslatitude=",
                     "-xmp:gpslongitude="]
@@ -35,7 +35,7 @@ public class ExifToolRunner
         }
     }
 
-    static public func updateFileLocations(imageFilePaths: [String], videoFilePaths: [String], location: Location) throws
+    static open func updateFileLocations(_ imageFilePaths: [String], videoFilePaths: [String], location: Location) throws
     {
         try checkFiles(imageFilePaths)
         try checkFiles(videoFilePaths)
@@ -46,7 +46,7 @@ public class ExifToolRunner
             let absLat = abs(location.latitude)
             let absLon = abs(location.longitude)
 
-            try runExifTool(
+            let _ = try runExifTool(
                 [ "-P", "-fast", "-q", "-overwrite_original",
                 "-exif:gpslatitude=\(absLat)",
                 "-exif:gpslatituderef=\(latRef)",
@@ -67,7 +67,7 @@ public class ExifToolRunner
             let lonMinutesAndSeconds = (absLong - Double(lonDegrees)) * 60.0
 
 
-            try runExifTool(
+            let _ = try runExifTool(
                 [ "-P", "-fast", "-q", "-overwrite_original",
                     "-xmp:gpslatitude=\(latDegrees),\(latMinutesAndSeconds)\(latRef)",
                     "-xmp:gpslongitude=\(lonDegrees),\(lonMinutesAndSeconds)\(lonRef)"]
@@ -75,7 +75,7 @@ public class ExifToolRunner
         }
     }
 
-    static public func updateKeywords(filePaths: [String], addedKeywords: [String], removedKeywords: [String]) throws -> Bool
+    static open func updateKeywords(_ filePaths: [String], addedKeywords: [String], removedKeywords: [String]) throws -> Bool
     {
         if addedKeywords.count == 0 && removedKeywords.count == 0 {
             return false
@@ -91,7 +91,7 @@ public class ExifToolRunner
             keywordCommands.append("-XMP:Subject-=\(s)")
         }
 
-        try runExifTool(
+        let _ = try runExifTool(
             [ "-P", "-overwrite_original"]
                 + keywordCommands
                 + filePaths)
@@ -99,19 +99,26 @@ public class ExifToolRunner
         return true
     }
 
-    static public func setMetadataDates(videoFilePaths: [String], newDate: NSDate) throws
+    static open func setMetadataDates(_ imageFilePaths: [String], videoFilePaths: [String], newDate: NSDate) throws
     {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy:MM:dd HH:mm:ss"
+        let localDateString = dateFormatter.string(from: newDate as Date)
+
+        if imageFilePaths.count > 0 {
+            let _ = try runExifTool(
+                ["-overwrite_original",
+                    "-AllDates='\(localDateString)'"]
+                    + imageFilePaths)
+        }
+
         // Some dates in Canon videos aren't updatable via exiftool (due to Canon silliness). Bummer
         // http://u88.n24.queensu.ca/exiftool/forum/index.php?topic=6563.0
         if videoFilePaths.count > 0 {
+            dateFormatter.timeZone = NSTimeZone(name: "UTC") as TimeZone!
+            let utcDateString = dateFormatter.string(from: newDate as Date)
 
-            let dateFormatter = NSDateFormatter()
-            dateFormatter.dateFormat = "yyyy:MM:dd HH:mm:ss"
-            let localDateString = dateFormatter.stringFromDate(newDate)
-            dateFormatter.timeZone = NSTimeZone(name: "UTC")
-            let utcDateString = dateFormatter.stringFromDate(newDate)
-
-            try runExifTool(
+            let _ = try runExifTool(
                 ["-overwrite_original",
                      "-AllDates='\(utcDateString)'",
                      "-quicktime:TrackCreateDate='\(utcDateString)'",
@@ -119,6 +126,7 @@ public class ExifToolRunner
                      "-quicktime:TrackModifyDate='\(utcDateString)'",
                      "-quicktime:MediaCreateDate='\(utcDateString)'",
                      "-quicktime:MediaModifyDate='\(utcDateString)'",
+                     "-quicktime:ContentCreateDate='\(utcDateString)'",
                      "-ExifIFD:CreateDate='\(localDateString)'",
                      "-ExifIFD:DateTimeOriginal='\(localDateString)'",
                      "-IFD0:ModifyDate='\(localDateString)'"]
@@ -126,24 +134,24 @@ public class ExifToolRunner
         }
     }
 
-    static public var exifToolPath: String { return "/usr/local/bin/exiftool" }
+    static open var exifToolPath: String { return "/usr/local/bin/exiftool" }
 
-    static private func checkFiles(filePaths: [String]) throws
+    static fileprivate func checkFiles(_ filePaths: [String]) throws
     {
         for file in filePaths {
-            if !NSFileManager.defaultManager().fileExistsAtPath(file) {
-                throw ExifToolError.NotAFile(path: file)
+            if !FileManager.default.fileExists(atPath: file) {
+                throw ExifToolError.notAFile(path: file)
             }
         }
     }
 
-    static private func runExifTool(arguments: [String]) throws -> String
+    static fileprivate func runExifTool(_ arguments: [String]) throws -> String
     {
         let process = ProcessInvoker.run(exifToolPath, arguments: arguments)
         if process.exitCode == 0 {
             return process.output
         }
 
-        throw ExifToolError.UpdateFailed(error: "exiftool failed: \(process.exitCode); error: '\(process.error)'")
+        throw ExifToolError.updateFailed(error: "exiftool failed: \(process.exitCode); error: '\(process.error)'")
     }
 }

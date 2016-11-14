@@ -23,7 +23,7 @@ class ImportProgressWindowsController : NSWindowController, ImportProgress
     var isRunningImport = false
 
 
-    func start(importFolder: String, destinationFolder: String, originalMediaData: [MediaData], exportedMediaData: [MediaData])
+    func start(_ importFolder: String, destinationFolder: String, originalMediaData: [MediaData], exportedMediaData: [MediaData])
     {
         self.importFolder = importFolder
         self.destinationFolder = destinationFolder
@@ -46,16 +46,16 @@ class ImportProgressWindowsController : NSWindowController, ImportProgress
             }
         }
 
-        NSApplication.sharedApplication().runModalForWindow(window!)
+        NSApplication.shared().runModal(for: window!)
     }
 
-    @IBAction func onCancel(sender: AnyObject)
+    @IBAction func onCancel(_ sender: AnyObject)
     {
         if isRunningImport {
             Logger.warn("Import canceled")
         }
         close()
-        NSApplication.sharedApplication().stopModalWithCode(isRunningImport ? 0 : 1)
+        NSApplication.shared().stopModal(withCode: isRunningImport ? 0 : 1)
     }
 
     func doImport()
@@ -68,7 +68,7 @@ class ImportProgressWindowsController : NSWindowController, ImportProgress
         }
     }
 
-    func setCurrentStep(stepName: String)
+    func setCurrentStep(_ stepName: String)
     {
         Logger.info("Import step: \(stepName)")
 
@@ -78,13 +78,13 @@ class ImportProgressWindowsController : NSWindowController, ImportProgress
         addDetailText("\(stepName):", addNewLine: self.detailTextView.string!.characters.count > 0)
     }
 
-    func setStepDetail(detail: String)
+    func setStepDetail(_ detail: String)
     {
         Logger.info(" --> \(detail)")
         addDetailText("\(detail)", addNewLine: true)
     }
 
-    func addDetailText(text: String, addNewLine: Bool)
+    func addDetailText(_ text: String, addNewLine: Bool)
     {
         Async.main {
             if addNewLine {

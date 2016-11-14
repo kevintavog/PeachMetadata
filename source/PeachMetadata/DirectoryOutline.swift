@@ -7,79 +7,79 @@ import RangicCore
 
 extension PeachWindowController
 {
-    @IBAction func openFolder(sender: AnyObject)
+    @IBAction func openFolder(_ sender: AnyObject)
     {
         let dialog = NSOpenPanel()
 
         dialog.canChooseFiles = false
         dialog.canChooseDirectories = true
-        if 1 != dialog.runModal() || dialog.URLs.count < 1 {
+        if 1 != dialog.runModal() || dialog.urls.count < 1 {
             return
         }
 
-        NSDocumentController.sharedDocumentController().noteNewRecentDocumentURL(dialog.URLs[0])
+        NSDocumentController.shared().noteNewRecentDocumentURL(dialog.urls[0])
 
-        let folderName = dialog.URLs[0].path!
+        let folderName = dialog.urls[0].path
         Preferences.lastOpenedFolder = folderName
         populateDirectoryView(folderName)
     }
 
-    func populateDirectoryView(folderName: String)
+    func populateDirectoryView(_ folderName: String)
     {
         rootDirectory = DirectoryTree(parent: nil, folder: folderName)
         directoryView.reloadData()
     }
 
-    func selectDirectoryViewRow(folderName: String)
+    func selectDirectoryViewRow(_ folderName: String)
     {
         var bestRow = -1
         for row in 0..<directoryView.numberOfRows {
-            let dt = directoryView.itemAtRow(row) as! DirectoryTree
+            let dt = directoryView.item(atRow: row) as! DirectoryTree
             if dt.folder == folderName {
                 bestRow = row
                 break
             }
 
-            if folderName.lowercaseString.hasPrefix(dt.folder.lowercaseString) {
+            if folderName.lowercased().hasPrefix(dt.folder.lowercased()) {
                 bestRow = row
             }
         }
 
         if bestRow >= 0 {
-            directoryView.selectRowIndexes(NSIndexSet(index: bestRow), byExtendingSelection: false)
+            directoryView.selectRowIndexes(IndexSet(integer: bestRow), byExtendingSelection: false)
         }
     }
 
-    func outlineViewSelectionDidChange(notification: NSNotification)
+    func outlineViewSelectionDidChange(_ notification: Notification)
     {
-        let selectedItem = toTree(directoryView.itemAtRow(directoryView.selectedRow))
+        let selectedItem = toTree(directoryView.item(atRow: directoryView.selectedRow) as AnyObject?)
         Logger.info("Folder selection changed: \(selectedItem.folder)")
         populateImageView(selectedItem.folder)
         Preferences.lastSelectedFolder = selectedItem.folder
     }
 
-    func outlineView(outlineView: NSOutlineView, numberOfChildrenOfItem item: AnyObject?) -> Int
+    func outlineView(_ outlineView: NSOutlineView, numberOfChildrenOfItem item: AnyObject?) -> Int
     {
         if rootDirectory == nil { return 0 }
         return toTree(item).subFolders.count
     }
 
-    func outlineView(outlineView: NSOutlineView, isItemExpandable item: AnyObject) -> Bool
+    func outlineView(_ outlineView: NSOutlineView, isItemExpandable item: AnyObject) -> Bool
     {
         return toTree(item).subFolders.count > 0
     }
 
-    func outlineView(outlineView: NSOutlineView, child index: Int, ofItem item: AnyObject?) -> AnyObject
+    func outlineView(_ outlineView: NSOutlineView, child index: Int, ofItem item: AnyObject?) -> AnyObject
     {
         return toTree(item).subFolders[index]
     }
 
-    func outlineView(outlineView: NSOutlineView, objectValueForTableColumn tableColumn: NSTableColumn?, byItem item: AnyObject?) -> AnyObject?
+    func outlineView(_ outlineView: NSOutlineView, objectValueForTableColumn tableColumn: NSTableColumn?, byItem item: AnyObject?) -> AnyObject?
     {
-        return toTree(item).relativePath
+        return toTree(item).relativePath as AnyObject?
     }
 
-    func toTree(item: AnyObject?) -> DirectoryTree
+    func toTree(_ item: AnyObject?) -> DirectoryTree
     {
         if let dirTree = item as! DirectoryTree? {
             return dirTree
@@ -93,7 +93,7 @@ class DirectoryTree : NSObject
 {
     let folder: String
     let relativePath: String
-    private var _subFolders: [DirectoryTree]?
+    fileprivate var _subFolders: [DirectoryTree]?
 
 
     init(parent: DirectoryTree!, folder: String)
@@ -114,16 +114,16 @@ class DirectoryTree : NSObject
         return _subFolders!
     }
 
-    private func populateChildren()
+    fileprivate func populateChildren()
     {
         var folderEntries = [DirectoryTree]()
 
-        if NSFileManager.defaultManager().fileExistsAtPath(folder) {
+        if FileManager.default.fileExists(atPath: folder) {
             if let files = getFiles(folder) {
                 for f in files {
                     var isFolder: ObjCBool = false
-                    if NSFileManager.defaultManager().fileExistsAtPath(f.path!, isDirectory:&isFolder) && isFolder {
-                        folderEntries.append(DirectoryTree(parent: self, folder: f.path!))
+                    if FileManager.default.fileExists(atPath: f.path, isDirectory:&isFolder) && isFolder.boolValue {
+                        folderEntries.append(DirectoryTree(parent: self, folder: f.path))
                     }
                 }
             }
@@ -132,13 +132,13 @@ class DirectoryTree : NSObject
         _subFolders = folderEntries
     }
 
-    private func getFiles(folderName: String) -> [NSURL]?
+    fileprivate func getFiles(_ folderName: String) -> [URL]?
     {
         do {
-            return try NSFileManager.defaultManager().contentsOfDirectoryAtURL(
-                NSURL(fileURLWithPath: folderName),
+            return try FileManager.default.contentsOfDirectory(
+                at: URL(fileURLWithPath: folderName),
                 includingPropertiesForKeys: nil,
-                options:NSDirectoryEnumerationOptions.SkipsHiddenFiles)
+                options:FileManager.DirectoryEnumerationOptions.skipsHiddenFiles)
         }
         catch let error {
             Logger.error("Failed getting files in \(folderName): \(error)")

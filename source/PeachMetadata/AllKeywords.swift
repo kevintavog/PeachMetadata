@@ -4,6 +4,7 @@
 
 import Foundation
 import RangicCore
+import SwiftyJSON
 
 class AllKeywords
 {
@@ -15,16 +16,16 @@ class AllKeywords
         return _Singleton.instance
     }
 
-    private(set) var keywords = [String]()
+    fileprivate(set) var keywords = [String]()
 
 
-    private var fullKeywordFilename: String { return Preferences.preferencesFolder.stringByAppendingPath("rangic.PeachMetadata.keywords") }
+    fileprivate var fullKeywordFilename: String { return Preferences.preferencesFolder.stringByAppendingPath("rangic.PeachMetadata.keywords") }
 
 
-    private init()
+    fileprivate init()
     {
-        if let data = NSData(contentsOfFile: fullKeywordFilename) {
-            let json = JSON(data:NSData(data: data))
+        if let data = try? Data(contentsOf: URL(fileURLWithPath: fullKeywordFilename)) {
+            let json = JSON(data:data)
 
             var rawKeywordList = [String]()
             for (_,subjson):(String,JSON) in json {
@@ -35,8 +36,8 @@ class AllKeywords
         }
     }
 
-    private func updateKeywords(rawList: [String])
+    fileprivate func updateKeywords(_ rawList: [String])
     {
-        keywords = rawList.sort()
+        keywords = rawList.sorted()
     }
 }

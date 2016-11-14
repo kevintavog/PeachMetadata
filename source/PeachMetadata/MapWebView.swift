@@ -3,73 +3,75 @@
 //
 
 import WebKit
+import SwiftyJSON
 
 import RangicCore
 
-public class MapWebView : WebView
+open class MapWebView : WebView
 {
-    private var dropCallback: ((location: Location, filePaths: [String]) -> ())?
+    fileprivate var dropCallback: ((_ location: Location, _ filePaths: [String]) -> ())?
 
 
-    func invokeMapScript(script: String) -> AnyObject?
+    func invokeMapScript(_ script: String) -> AnyObject?
     {
         Logger.info("Script: \(script)")
-        return windowScriptObject.evaluateWebScript(script)
+        return windowScriptObject.evaluateWebScript(script) as AnyObject?
     }
 
-    public func enableDragAndDrop(callback: (location: Location, filePaths: [String]) -> ())
+    open func enableDragAndDrop(_ callback: @escaping (_ location: Location, _ filePaths: [String]) -> ())
     {
         dropCallback = callback
     }
 
-    public override func draggingEntered(sender: NSDraggingInfo) -> NSDragOperation
+    open override func draggingEntered(_ sender: NSDraggingInfo) -> NSDragOperation
     {
         if dropCallback == nil {
-            return NSDragOperation.None
+            return NSDragOperation()
         }
 
         let list = filePaths(sender)
-        return list.count > 0 ? NSDragOperation.Copy : NSDragOperation.None
+        return list.count > 0 ? NSDragOperation.copy : NSDragOperation()
     }
 
-    public override func draggingUpdated(sender: NSDraggingInfo) -> NSDragOperation
+    open override func draggingUpdated(_ sender: NSDraggingInfo) -> NSDragOperation
     {
         if dropCallback == nil {
-            return NSDragOperation.None
+            return NSDragOperation()
         }
 
-        return NSDragOperation.Copy
+        return NSDragOperation.copy
     }
 
-    public override func performDragOperation(sender: NSDraggingInfo) -> Bool
+    open override func performDragOperation(_ sender: NSDraggingInfo) -> Bool
     {
         if dropCallback == nil {
             return false
         }
 
-        var mapPoint = convertPoint(NSPoint(x: sender.draggingLocation().x, y: sender.draggingLocation().y), fromView: nil)
+        var mapPoint = convert(NSPoint(x: sender.draggingLocation().x, y: sender.draggingLocation().y), from: nil)
         mapPoint.y = self.frame.height - mapPoint.y
         if let ret = invokeMapScript("pointToLatLng([\(mapPoint.x), \(mapPoint.y)])") {
-            let json = JSON(data:NSData(data: ret.dataUsingEncoding(NSUTF8StringEncoding)!))
+            let resultString = ret as! String
+            let json = JSON(data:Data(resultString.data(using: String.Encoding.utf8)!))
             let latitude = json["lat"].doubleValue
             let longitude = json["lng"].doubleValue
             let location = Location(latitude: latitude, longitude: longitude)
 
-            dropCallback!(location: location, filePaths: filePaths(sender))
+            dropCallback!(location, filePaths(sender))
             
             return true
         }
         return false
     }
 
-    func filePaths(dragInfo: NSDraggingInfo) -> [String]
+    func filePaths(_ dragInfo: NSDraggingInfo) -> [String]
     {
         var list = [String]()
         if ((dragInfo.draggingPasteboard().types?.contains(NSFilenamesPboardType)) != nil) {
-            if let dropData = dragInfo.draggingPasteboard().propertyListForType(NSFilenamesPboardType) as! NSArray? {
+            if let dropData = dragInfo.draggingPasteboard().propertyList(forType: NSFilenamesPboardType) as! NSArray? {
                 for data in dropData {
                     let path = data as! String
-                    if NSFileManager.defaultManager().fileExistsAtPath(path) {
+                    if FileManager.default.fileExists(atPath: path) {
                         list.append(path)
                     }
                 }

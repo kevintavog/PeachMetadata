@@ -4,9 +4,9 @@
 
 import RangicCore
 
-public class Notifications : CoreNotifications
+open class Notifications : CoreNotifications
 {
-    public class Selection
+    open class Selection
     {
         static let MediaData = "Selection.MediaData"
     }

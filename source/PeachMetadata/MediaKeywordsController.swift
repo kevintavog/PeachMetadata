@@ -29,40 +29,42 @@ class MediaKeywordsTableController : NSObject, NSTableViewDelegate, NSTableViewD
         tableView.reloadData()
     }
 
-    func selectionChanged(selectedItems: FilesAndKeywords)
+    func selectionChanged(_ selectedItems: FilesAndKeywords)
     {
         filesAndKeywords = selectedItems
         tableView.reloadData()
     }
 
-    func numberOfRowsInTableView(tableView: NSTableView) -> Int
+    func numberOfRows(in tableView: NSTableView) -> Int
     {
         let keywordCount = filesAndKeywords.uniqueKeywords.count;
         return keywordCount / tableView.numberOfColumns + ((keywordCount % tableView.numberOfColumns) == 0 ? 0 : 1)
     }
 
-    func tableView(tableView: NSTableView, objectValueForTableColumn tableColumn: NSTableColumn?, row: Int) -> AnyObject?
+    func tableView(_ tableView: NSTableView, objectValueFor tableColumn: NSTableColumn?, row: Int) -> Any?
     {
         if filesAndKeywords.uniqueKeywords.count == 0 {
             return nil
         }
 
-        let columnIndex = getColumnIndex(tableView, tableColumn: tableColumn!)
-        let cell = tableColumn?.dataCell as! NSButtonCell
-        let keywordIndex = (row * tableView.numberOfColumns) + columnIndex
-
-        if keywordIndex >= filesAndKeywords.uniqueKeywords.count {
-            cell.transparent = true
-        } else {
-            let keyword = filesAndKeywords.uniqueKeywords[keywordIndex]
-            cell.title = keyword
-            cell.transparent = false
-        }
-
-        return cell
+        return tableColumn?.dataCell
+        
+//        let columnIndex = getColumnIndex(tableView, tableColumn: tableColumn!)
+//        let cell = tableColumn?.dataCell as! NSButtonCell
+//        let keywordIndex = (row * tableView.numberOfColumns) + columnIndex
+//
+//        if keywordIndex >= filesAndKeywords.uniqueKeywords.count {
+//            cell.isTransparent = true
+//        } else {
+//            let keyword = filesAndKeywords.uniqueKeywords[keywordIndex]
+//            cell.title = keyword
+//            cell.isTransparent = false
+//        }
+//
+//        return cell
     }
 
-    func getColumnIndex(tableView: NSTableView, tableColumn: NSTableColumn) -> Int
+    func getColumnIndex(_ tableView: NSTableView, tableColumn: NSTableColumn) -> Int
     {
         for index in 0 ..< tableView.numberOfColumns {
             if tableView.tableColumns[index] == tableColumn {

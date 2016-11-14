@@ -8,17 +8,17 @@ import RangicCore
 
 class ImportMediaWindowsController : NSWindowController, NSTableViewDataSource
 {
-    static private let missingAttrs = [
+    static fileprivate let missingAttrs = [
         NSForegroundColorAttributeName : NSColor(deviceRed: 0.0, green: 0.7, blue: 0.7, alpha: 1.0),
-        NSFontAttributeName : NSFont.labelFontOfSize(14)
+        NSFontAttributeName : NSFont.labelFont(ofSize: 14)
 
     ]
-    static private let badDataAttrs = [
-        NSForegroundColorAttributeName : NSColor.orangeColor(),
-        NSFontAttributeName : NSFont.labelFontOfSize(14)
+    static fileprivate let badDataAttrs = [
+        NSForegroundColorAttributeName : NSColor.orange,
+        NSFontAttributeName : NSFont.labelFont(ofSize: 14)
     ]
 
-    static private func applyAttributes(text: String, attributes: [String:AnyObject]) -> NSAttributedString
+    static fileprivate func applyAttributes(_ text: String, attributes: [String:AnyObject]) -> NSAttributedString
     {
         let fullRange = NSRange(location: 0, length: text.characters.count)
         let attributeString = NSMutableAttributedString(string: text)
@@ -30,15 +30,15 @@ class ImportMediaWindowsController : NSWindowController, NSTableViewDataSource
 
     @IBOutlet var progressController: ImportProgressWindowsController!
 
-    private let OriginalTableTag = 1
-    private let ExportedTableTag = 2
-    private let WarningsTableTag = 3
+    fileprivate let OriginalTableTag = 1
+    fileprivate let ExportedTableTag = 2
+    fileprivate let WarningsTableTag = 3
 
-    private let FilenameColumnIdentifier = "Filename"
-    private let TimestampColumnIdentifier = "Timestamp"
-    private let TimestampStatusColumnIdentifier = "TimestampStatus"
-    private let LocationColumnIdentifier = "Location"
-    private let LocationStatusColumnIdentifier = "LocationStatus"
+    fileprivate let FilenameColumnIdentifier = "Filename"
+    fileprivate let TimestampColumnIdentifier = "Timestamp"
+    fileprivate let TimestampStatusColumnIdentifier = "TimestampStatus"
+    fileprivate let LocationColumnIdentifier = "Location"
+    fileprivate let LocationStatusColumnIdentifier = "LocationStatus"
 
 
 
@@ -47,8 +47,8 @@ class ImportMediaWindowsController : NSWindowController, NSTableViewDataSource
     @IBOutlet weak var importTable: NSTableView!
     @IBOutlet weak var exportTable: NSTableView!
 
-    private var firstDidBecomeKey = true
-    private var importFolderName: String?
+    fileprivate var firstDidBecomeKey = true
+    fileprivate var importFolderName: String?
     var exportFolderName: String?
     var yearForMaster: String?
     var originalMediaData = [MediaData]()
@@ -57,7 +57,7 @@ class ImportMediaWindowsController : NSWindowController, NSTableViewDataSource
 
 
     // Must be called to setup data - returns false if the import is not supported
-    func setImportFolder(path: String) -> Bool
+    func setImportFolder(_ path: String) -> Bool
     {
         Logger.info("importMedia from \(path)")
         if loadFileData(path) {
@@ -74,7 +74,7 @@ class ImportMediaWindowsController : NSWindowController, NSTableViewDataSource
         exportFolderLabel.stringValue = exportFolderName!
     }
 
-    func windowDidBecomeKey(notification: NSNotification)
+    func windowDidBecomeKey(_ notification: Notification)
     {
         if firstDidBecomeKey {
             exportFolderLabel.currentEditor()?.moveToEndOfLine(self)
@@ -82,7 +82,7 @@ class ImportMediaWindowsController : NSWindowController, NSTableViewDataSource
         }
     }
 
-    @IBAction func importMedia(sender: AnyObject)
+    @IBAction func importMedia(_ sender: AnyObject)
     {
         if exportFolderName == exportFolderLabel.stringValue {
             PeachWindowController.showWarning("The destination folder name must be different from the date.\r\r Currently: '\(exportFolderLabel.stringValue)'")
@@ -91,8 +91,8 @@ class ImportMediaWindowsController : NSWindowController, NSTableViewDataSource
 
         // Confirm the folder name has been changed (isn't date only); allow to pass if OK
         // How to handle if destination folder already exists? Perhaps confirm that a merge is what's desired
-        let picturesFolder = NSFileManager.defaultManager().URLsForDirectory(.PicturesDirectory, inDomains: .UserDomainMask).first!.path!
-        let folder = NSString.pathWithComponents([picturesFolder, "Master", yearForMaster!, exportFolderLabel.stringValue])
+        let picturesFolder = FileManager.default.urls(for: .picturesDirectory, in: .userDomainMask).first!.path
+        let folder = NSString.path(withComponents: [picturesFolder, "Master", yearForMaster!, exportFolderLabel.stringValue])
 
         if !warnings.isEmpty {
             if !PeachWindowController.askQuestion("Do you want to import with \(warnings.count) warning(s)?") {
@@ -103,17 +103,17 @@ class ImportMediaWindowsController : NSWindowController, NSTableViewDataSource
         close()
         progressController.start(importFolderName!, destinationFolder: folder, originalMediaData: originalMediaData, exportedMediaData: exportedMediaData)
 
-        NSApplication.sharedApplication().stopModalWithCode(1)
+        NSApplication.shared().stopModal(withCode: 1)
     }
 
-    @IBAction func cancel(sender: AnyObject)
+    @IBAction func cancel(_ sender: AnyObject)
     {
         close()
-        NSApplication.sharedApplication().stopModalWithCode(0)
+        NSApplication.shared().stopModal(withCode: 0)
     }
 
 
-    func numberOfRowsInTableView(tableView: NSTableView) -> Int
+    func numberOfRows(in tableView: NSTableView) -> Int
     {
         switch tableView.tag {
         case OriginalTableTag:
@@ -128,9 +128,9 @@ class ImportMediaWindowsController : NSWindowController, NSTableViewDataSource
         }
     }
 
-    func tableView(tableView: NSTableView, viewForTableColumn tableColumn: NSTableColumn?, row: Int) -> NSView?
+    private func tableView(_ tableView: NSTableView, viewForTableColumn tableColumn: NSTableColumn?, row: Int) -> NSView?
     {
-        let cell = tableView.makeViewWithIdentifier(tableColumn!.identifier, owner: self) as! NSTableCellView
+        let cell = tableView.make(withIdentifier: tableColumn!.identifier, owner: self) as! NSTableCellView
 
         var media: MediaData!
         switch tableView.tag {
@@ -164,7 +164,7 @@ class ImportMediaWindowsController : NSWindowController, NSTableViewDataSource
                 if data.doFileAndExifTimestampsMatch() {
                     cell.imageView?.image = nil
                 } else {
-                    cell.imageView?.image = NSImage(imageLiteral: "timestampBad")
+                    cell.imageView?.image = NSImage(imageLiteralResourceName: "timestampBad")
                 }
 
             case LocationColumnIdentifier:
@@ -178,9 +178,9 @@ class ImportMediaWindowsController : NSWindowController, NSTableViewDataSource
 
             case LocationStatusColumnIdentifier:
                 if missingLocation {
-                    cell.imageView?.image = NSImage(imageLiteral: "locationMissing")
+                    cell.imageView?.image = NSImage(imageLiteralResourceName: "locationMissing")
                 } else if sensitiveLocation {
-                    cell.imageView?.image = NSImage(imageLiteral: "locationBad")
+                    cell.imageView?.image = NSImage(imageLiteralResourceName: "locationBad")
                 } else {
                     cell.imageView?.image = nil
                 }
@@ -193,7 +193,7 @@ class ImportMediaWindowsController : NSWindowController, NSTableViewDataSource
         return cell;
     }
 
-    func loadFileData(path: String) -> Bool
+    func loadFileData(_ path: String) -> Bool
     {
         // Get subfolders - must have ONLY 'Exported'
         let (folders, originalFiles) = getFoldersAndFiles(path)
@@ -207,7 +207,7 @@ class ImportMediaWindowsController : NSWindowController, NSTableViewDataSource
             return false
         }
 
-        let (exportedFolders, exportedFiles) = getFoldersAndFiles(folders.first!.path!)
+        let (exportedFolders, exportedFiles) = getFoldersAndFiles(folders.first!.path)
         if exportedFolders.count != 0 {
             PeachWindowController.showWarning("The 'Exported' has at least one subfolder - but shouldn't have any")
             return false
@@ -217,30 +217,30 @@ class ImportMediaWindowsController : NSWindowController, NSTableViewDataSource
         var unsupportedFiles = [String]()
         for original in originalFiles {
             let mediaType = SupportedMediaTypes.getType(original)
-            if mediaType != .Unknown {
-                if mediaType == .Video {
+            if mediaType != .unknown {
+                if mediaType == .video {
                     hasVideos = true
                 }
                 originalMediaData.append(FileMediaData.create(original, mediaType: mediaType))
             } else {
-                unsupportedFiles.append(original.lastPathComponent!)
+                unsupportedFiles.append(original.lastPathComponent)
             }
         }
         for exported in exportedFiles {
             let mediaType = SupportedMediaTypes.getType(exported)
-            if mediaType != .Unknown {
+            if mediaType != .unknown {
                 let mediaData = FileMediaData.create(exported, mediaType: mediaType)
                 exportedMediaData.append(mediaData)
                 if !mediaData.doFileAndExifTimestampsMatch() {
-                    mediaData.setFileDateToExifDate()
+                    let _ = mediaData.setFileDateToExifDate()
                 }
             } else {
-                unsupportedFiles.append(exported.lastPathComponent!)
+                unsupportedFiles.append(exported.lastPathComponent)
             }
         }
 
         if unsupportedFiles.count != 0 {
-            PeachWindowController.showWarning("Found unsupported files: \(unsupportedFiles.joinWithSeparator(", "))")
+            PeachWindowController.showWarning("Found unsupported files: \(unsupportedFiles.joined(separator: ", "))")
             return false
         }
 
@@ -249,17 +249,17 @@ class ImportMediaWindowsController : NSWindowController, NSTableViewDataSource
             return false
         }
 
-        let dateFormatter = NSDateFormatter()
+        let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd"
-        let yearDateFormatter = NSDateFormatter()
+        let yearDateFormatter = DateFormatter()
         yearDateFormatter.dateFormat = "yyyy"
 
         if exportedMediaData.count > 0 {
-            exportFolderName = dateFormatter.stringFromDate(exportedMediaData.first!.timestamp!) + " "
-            yearForMaster = yearDateFormatter.stringFromDate(exportedMediaData.first!.timestamp!)
+            exportFolderName = dateFormatter.string(from: exportedMediaData.first!.timestamp!) + " "
+            yearForMaster = yearDateFormatter.string(from: exportedMediaData.first!.timestamp!)
         } else {
-            exportFolderName = dateFormatter.stringFromDate(originalMediaData.first!.timestamp!) + " "
-            yearForMaster = yearDateFormatter.stringFromDate(originalMediaData.first!.timestamp!)
+            exportFolderName = dateFormatter.string(from: originalMediaData.first!.timestamp!) + " "
+            yearForMaster = yearDateFormatter.string(from: originalMediaData.first!.timestamp!)
         }
 
 
@@ -270,15 +270,15 @@ class ImportMediaWindowsController : NSWindowController, NSTableViewDataSource
     }
 
     // Return the folders and files from a given path
-    func getFoldersAndFiles(path: String) -> (folders: [NSURL], files: [NSURL])
+    func getFoldersAndFiles(_ path: String) -> (folders: [URL], files: [URL])
     {
-        var folders = [NSURL]()
-        var files = [NSURL]()
+        var folders = [URL]()
+        var files = [URL]()
 
         if let allChildren = getFiles(path) {
             for child in allChildren {
                 var isFolder: ObjCBool = false
-                if NSFileManager.defaultManager().fileExistsAtPath(child.path!, isDirectory:&isFolder) && isFolder {
+                if FileManager.default.fileExists(atPath: child.path, isDirectory:&isFolder) && isFolder.boolValue {
                     folders.append(child)
                 } else {
                     files.append(child)
@@ -289,13 +289,13 @@ class ImportMediaWindowsController : NSWindowController, NSTableViewDataSource
         return (folders, files)
     }
 
-    private func getFiles(folderName: String) -> [NSURL]?
+    fileprivate func getFiles(_ folderName: String) -> [URL]?
     {
         do {
-            return try NSFileManager.defaultManager().contentsOfDirectoryAtURL(
-                NSURL(fileURLWithPath: folderName),
+            return try FileManager.default.contentsOfDirectory(
+                at: URL(fileURLWithPath: folderName),
                 includingPropertiesForKeys: nil,
-                options:NSDirectoryEnumerationOptions.SkipsHiddenFiles)
+                options:FileManager.DirectoryEnumerationOptions.skipsHiddenFiles)
         }
         catch let error {
             Logger.error("Failed getting files in \(folderName): \(error)")

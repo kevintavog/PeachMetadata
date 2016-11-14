@@ -34,41 +34,42 @@ class AllKeywordsTableViewController : NSObject, NSTableViewDelegate, NSTableVie
         tableView.reloadData()
     }
 
-    func selectionChanged(selectedItems: FilesAndKeywords)
+    func selectionChanged(_ selectedItems: FilesAndKeywords)
     {
         filesAndKeywords = selectedItems
         tableView.reloadData()
     }
 
-    func numberOfRowsInTableView(tableView: NSTableView) -> Int
+    func numberOfRows(in tableView: NSTableView) -> Int
     {
         let keywordCount = AllKeywords.sharedInstance.keywords.count;
         return keywordCount / tableView.numberOfColumns + ((keywordCount % tableView.numberOfColumns) == 0 ? 0 : 1)
     }
 
-    func tableView(tableView: NSTableView, objectValueForTableColumn tableColumn: NSTableColumn?, row: Int) -> AnyObject?
+    func tableView(_ tableView: NSTableView, objectValueFor tableColumn: NSTableColumn?, row: Int) -> Any?
     {
         if AllKeywords.sharedInstance.keywords.count == 0 {
             return nil
         }
 
-        let columnIndex = getColumnIndex(tableView, tableColumn: tableColumn!)
-        let cell = tableColumn?.dataCell as! NSButtonCell
-        let keywordIndex = (row * tableView.numberOfColumns) + columnIndex
-
-        if keywordIndex >= AllKeywords.sharedInstance.keywords.count {
-            cell.transparent = true
-        } else {
-            let keyword = AllKeywords.sharedInstance.keywords[keywordIndex]
-            cell.title = keyword
-            cell.transparent = false
-            cell.state = filesAndKeywords.uniqueKeywords.contains(keyword) ? NSOnState : NSOffState
-        }
-
-        return cell
+        return tableColumn?.dataCell
+//        let columnIndex = getColumnIndex(tableView, tableColumn: tableColumn!)
+//        let cell = tableColumn?.dataCell as! NSButtonCell
+//        let keywordIndex = (row * tableView.numberOfColumns) + columnIndex
+//
+//        if keywordIndex >= AllKeywords.sharedInstance.keywords.count {
+//            cell.isTransparent = true
+//        } else {
+//            let keyword = AllKeywords.sharedInstance.keywords[keywordIndex]
+//            cell.title = keyword
+//            cell.isTransparent = false
+//            cell.state = filesAndKeywords.uniqueKeywords.contains(keyword) ? NSOnState : NSOffState
+//        }
+//
+//        return cell
     }
 
-    func getColumnIndex(tableView: NSTableView, tableColumn: NSTableColumn) -> Int
+    func getColumnIndex(_ tableView: NSTableView, tableColumn: NSTableColumn) -> Int
     {
         for index in 0 ..< tableView.numberOfColumns {
             if tableView.tableColumns[index] == tableColumn {

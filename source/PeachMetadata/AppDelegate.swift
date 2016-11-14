@@ -13,7 +13,7 @@ class AppDelegate: NSObject, NSApplicationDelegate
     @IBOutlet weak var peachWindowController: PeachWindowController!
 
 
-    private var hasInitialized = false
+    fileprivate var hasInitialized = false
 
 
     override init()
@@ -21,9 +21,9 @@ class AppDelegate: NSObject, NSApplicationDelegate
         super.init()
 
         #if DEBUG
-            defaultDebugLevel = DDLogLevel.Verbose
+            defaultDebugLevel = DDLogLevel.verbose
         #else
-            defaultDebugLevel = DDLogLevel.Info
+            defaultDebugLevel = DDLogLevel.info
         #endif
         Logger.configure()
 
@@ -33,12 +33,12 @@ class AppDelegate: NSObject, NSApplicationDelegate
         SupportedMediaTypes.includeRawImages = true
     }
 
-    func applicationDidFinishLaunching(aNotification: NSNotification)
+    func applicationDidFinishLaunching(_ aNotification: Notification)
     {
         hasInitialized = true
     }
 
-    func application(sender: NSApplication, openFile filename: String) -> Bool
+    func application(_ sender: NSApplication, openFile filename: String) -> Bool
     {
         if !hasInitialized {
             Logger.warn("Opening folder before init? \(filename)")

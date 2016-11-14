@@ -3,6 +3,7 @@
 //
 
 import RangicCore
+import SwiftyJSON
 
 class SensitiveLocations
 {
@@ -17,10 +18,10 @@ class SensitiveLocations
         return _Singleton.instance
     }
 
-    private(set) var locations = [Location]()
+    fileprivate(set) var locations = [Location]()
 
 
-    func isSensitive(location: Location) -> Bool
+    func isSensitive(_ location: Location) -> Bool
     {
         for loc in locations {
             if loc.metersFrom(location) < SensitiveDistanceInMeters {
@@ -30,7 +31,7 @@ class SensitiveLocations
         return false
     }
 
-    func add(location: Location)
+    func add(_ location: Location)
     {
         for loc in locations {
             if loc.metersFrom(location) <= SensitiveDistanceInMeters {
@@ -42,18 +43,18 @@ class SensitiveLocations
         save()
     }
 
-    func remove(location: Location)
+    func remove(_ location: Location)
     {
         for loc in locations {
             if loc.metersFrom(location) <= SensitiveDistanceInMeters {
-                locations.removeAtIndex(locations.indexOf({ $0 === loc })!)
+                locations.remove(at: locations.index(where: { $0 === loc })!)
                 save()
                 return
             }
         }
     }
     
-    private func save()
+    fileprivate func save()
     {
         var asDictionary = [Dictionary<String, AnyObject>]()
         for loc in locations {
@@ -63,26 +64,26 @@ class SensitiveLocations
         do {
             let json = JSON(asDictionary)
             let jsonString: String = json.rawString()!
-            try jsonString.writeToFile(fullLocationFilename, atomically: false, encoding: NSUTF8StringEncoding)
+            try jsonString.write(toFile: fullLocationFilename, atomically: false, encoding: String.Encoding.utf8)
         } catch let error {
             Logger.error("Unable to save locations: \(error)")
         }
     }
 
-    private func locationToDictionary(location: Location) -> Dictionary<String, AnyObject>
+    fileprivate func locationToDictionary(_ location: Location) -> Dictionary<String, AnyObject>
     {
         return [
-            "latitude" : location.latitude,
-            "longitude" : location.longitude]
+            "latitude" : location.latitude as AnyObject,
+            "longitude" : location.longitude as AnyObject]
     }
 
-    private var fullLocationFilename: String { return Preferences.preferencesFolder.stringByAppendingPath("rangic.PeachMetadata.sensitive.locations") }
+    fileprivate var fullLocationFilename: String { return Preferences.preferencesFolder.stringByAppendingPath("rangic.PeachMetadata.sensitive.locations") }
 
 
-    private init()
+    fileprivate init()
     {
         if let data = NSData(contentsOfFile: fullLocationFilename) {
-            let json = JSON(data:NSData(data: data))
+            let json = JSON(data:NSData(data: data as Data) as Data)
 
             var rawLocationList = [Location]()
             for (_,subjson):(String,JSON) in json {
@@ -99,7 +100,7 @@ class SensitiveLocations
         }
     }
 
-    private func updateLocations(rawList: [Location])
+    fileprivate func updateLocations(_ rawList: [Location])
     {
         locations = rawList
     }

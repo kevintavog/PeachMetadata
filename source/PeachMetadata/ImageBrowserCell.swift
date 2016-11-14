@@ -5,41 +5,41 @@
 import Quartz
 import RangicCore
 
-public class ImageBrowserCell : IKImageBrowserCell
+open class ImageBrowserCell : IKImageBrowserCell
 {
-    static private var lineHeight: CGFloat?
-    static private let textAttrs = [NSForegroundColorAttributeName : NSColor.whiteColor(), NSFontAttributeName : NSFont.labelFontOfSize(14)]
+    static fileprivate var lineHeight: CGFloat?
+    static fileprivate let textAttrs = [NSForegroundColorAttributeName : NSColor.white, NSFontAttributeName : NSFont.labelFont(ofSize: 14)]
 
-    static private let badDateAttrs = [
-        NSForegroundColorAttributeName : NSColor.orangeColor(),
-        NSFontAttributeName : NSFont.labelFontOfSize(14)
+    static fileprivate let badDateAttrs = [
+        NSForegroundColorAttributeName : NSColor.orange,
+        NSFontAttributeName : NSFont.labelFont(ofSize: 14)
     ]
 
-    static private let missingKeywordAttrs = [
-        NSForegroundColorAttributeName : NSColor.cyanColor(),
-        NSFontAttributeName : NSFont.labelFontOfSize(14)
+    static fileprivate let missingKeywordAttrs = [
+        NSForegroundColorAttributeName : NSColor.cyan,
+        NSFontAttributeName : NSFont.labelFont(ofSize: 14)
     ]
 
-    static private let missingLocationAttrs = [
-        NSForegroundColorAttributeName : NSColor.cyanColor(),
-        NSFontAttributeName : NSFont.labelFontOfSize(14)
+    static fileprivate let missingLocationAttrs = [
+        NSForegroundColorAttributeName : NSColor.cyan,
+        NSFontAttributeName : NSFont.labelFont(ofSize: 14)
     ]
-    static private let sensitiveLocationAttrs = [
-        NSForegroundColorAttributeName : NSColor.orangeColor(),
-        NSFontAttributeName : NSFont.labelFontOfSize(14)
+    static fileprivate let sensitiveLocationAttrs = [
+        NSForegroundColorAttributeName : NSColor.orange,
+        NSFontAttributeName : NSFont.labelFont(ofSize: 14)
     ]
 
 
     // MARK: layer for type
-    public override func layerForType(type: String!) -> CALayer!
+    open override func layer(forType type: String!) -> CALayer!
     {
-        switch (type)
+        switch (type!)
         {
         case IKImageBrowserCellBackgroundLayer:
             if cellState() != IKImageStateReady { return nil }
 
             let layer = CALayer()
-            layer.frame = CGRectMake(0, 0, frame().width, frame().height)
+            layer.frame = CGRect(x: 0, y: 0, width: frame().width, height: frame().height)
 
             let mediaBackgroundLayer = CALayer()
             mediaBackgroundLayer.frame = layer.frame
@@ -47,9 +47,9 @@ public class ImageBrowserCell : IKImageBrowserCell
             let strokeComponents: [CGFloat] = [0.2, 0.2, 0.2, 0.5]
             let colorSpace = CGColorSpaceCreateDeviceRGB()
 
-            mediaBackgroundLayer.backgroundColor = NSColor.darkGrayColor().CGColor
+            mediaBackgroundLayer.backgroundColor = NSColor.darkGray.cgColor
 
-            let borderColor = CGColorCreate(colorSpace, strokeComponents)
+            let borderColor = CGColor(colorSpace: colorSpace, components: strokeComponents)
             mediaBackgroundLayer.borderColor = borderColor
 
             mediaBackgroundLayer.borderWidth = 1
@@ -64,26 +64,58 @@ public class ImageBrowserCell : IKImageBrowserCell
         case IKImageBrowserCellForegroundLayer:
             if cellState() != IKImageStateReady { return nil }
 
-            let layer = CALayer()
-            layer.frame = CGRectMake(0, 0, frame().width, frame().height)
-            layer.delegate = self
-            layer.setNeedsDisplay()
 
-            return layer;
+            let outerLayer = CALayer()
+            outerLayer.contentsScale = (self.imageBrowserView().window?.backingScaleFactor)!
+            outerLayer.frame = CGRect(x: 0, y: 0, width: frame().width, height: frame().height)
+
+            let item = representedItem() as! ThumbnailViewItem
+
+            let nameLayer = self.createTextLayer(outerLayer: outerLayer, lineNumber: 0)
+            nameLayer.string = item.mediaData.name
+
+            let timestampLayer = self.createTextLayer(outerLayer: outerLayer, lineNumber: 1)
+            if !item.mediaData.doFileAndExifTimestampsMatch() {
+                timestampLayer.foregroundColor = NSColor.yellow.cgColor
+            }
+            timestampLayer.string = item.mediaData.formattedTime()
+
+            let keywordsLayer = self.createTextLayer(outerLayer: outerLayer, lineNumber: 2)
+            if item.mediaData.keywordsString().characters.count > 0 {
+                keywordsLayer.string = item.mediaData.keywordsString()
+            } else {
+                keywordsLayer.string = "🏷"
+            }
+
+            let locationLayer = self.createTextLayer(outerLayer: outerLayer, lineNumber: 3)
+            if let location = item.mediaData.location {
+                if SensitiveLocations.sharedInstance.isSensitive(location) {
+                    locationLayer.string = location.toDecimalDegrees(true)
+                    locationLayer.foregroundColor = NSColor.orange.cgColor
+                } else {
+                    locationLayer.string = location.toDecimalDegrees(true)
+                }
+            } else {
+                locationLayer.string = "⚑"
+            }
+            
+
+            outerLayer.setNeedsDisplay()
+            return outerLayer;
 
 
         case IKImageBrowserCellSelectionLayer:
             let layer = CALayer()
-            layer.frame = CGRectMake(0, 0, frame().width, frame().height)
+            layer.frame = CGRect(x: 0, y: 0, width: frame().width, height: frame().height)
 
             let fillComponents: [CGFloat] = [0.9, 0.9, 0.9, 0.3]
             let strokeComponents: [CGFloat] = [0.9, 0.9, 0.9, 0.8]
 
             let colorSpace = CGColorSpaceCreateDeviceRGB()
-            var color = CGColorCreate(colorSpace, fillComponents)
+            var color = CGColor(colorSpace: colorSpace, components: fillComponents)
             layer.backgroundColor = color
 
-            color = CGColorCreate(colorSpace, strokeComponents)
+            color = CGColor(colorSpace: colorSpace, components: strokeComponents)
             layer.borderColor = color
 
             layer.borderWidth = 1.0
@@ -93,71 +125,27 @@ public class ImageBrowserCell : IKImageBrowserCell
 
 
         default:
-            return super.layerForType(type)
+            return super.layer(forType: type)
         }
     }
 
-
-    // MARK: drawLayer
-    override public func drawLayer(layer: CALayer, inContext ctx: CGContext)
+    func createTextLayer(outerLayer: CALayer, lineNumber: Int) -> CATextLayer
     {
-        NSGraphicsContext.saveGraphicsState()
+        let lineHeight = Int(0.5 + ImageBrowserCell.getLineHeight())
+        let xOffset = 4
+        let lineOffset = 2
 
-        let gc = NSGraphicsContext(CGContext:ctx, flipped:false)
-        NSGraphicsContext.setCurrentContext(gc)
+        let layer = CATextLayer()
+        outerLayer.addSublayer(layer)
+        layer.contentsScale = (self.imageBrowserView().window?.backingScaleFactor)!
+        layer.frame = CGRect(x: xOffset, y: lineOffset + lineNumber * lineHeight, width: Int(frame().width) - 2 * xOffset, height: lineHeight)
+        layer.fontSize = 14
 
-        let lineHeight = 0.5 + ImageBrowserCell.getLineHeight()
-
-        let item = representedItem() as! ThumbnailViewItem
-
-        drawString(item.mediaData.name, x: 4, y: 2, attributes: ImageBrowserCell.textAttrs)
-        var y = lineHeight
-        if item.mediaData.doFileAndExifTimestampsMatch() {
-            drawString(item.mediaData.formattedTime(), x: 4, y: y, attributes: ImageBrowserCell.textAttrs)
-        }
-        else {
-            drawString(item.mediaData.formattedTime(), x: 4, y: y, attributes: ImageBrowserCell.badDateAttrs)
-        }
-
-        y = lineHeight * 2
-        if item.mediaData.keywordsString().characters.count > 0 {
-            drawString(item.mediaData.keywordsString(), x: 4, y: y, attributes: ImageBrowserCell.textAttrs)
-        } else {
-            drawString(" < >", x: 4, y: y, attributes: ImageBrowserCell.missingKeywordAttrs)
-        }
-
-        y = lineHeight * 3
-        if let location = item.mediaData.location {
-            if SensitiveLocations.sharedInstance.isSensitive(location) {
-                drawString(location.toDecimalDegrees(true), x: 4, y: y, attributes: ImageBrowserCell.sensitiveLocationAttrs)
-            } else {
-                drawString(location.toDecimalDegrees(true), x: 4, y: y, attributes: ImageBrowserCell.textAttrs)
-            }
-        } else {
-            drawString(" ##", x: 4, y: y, attributes: ImageBrowserCell.missingLocationAttrs)
-        }
-
-        NSGraphicsContext.restoreGraphicsState()
-    }
-
-    private func drawString(str: String, x: CGFloat, y: CGFloat, attributes: [String:AnyObject]) -> NSRect
-    {
-        let attrStr = NSMutableAttributedString(string: str, attributes: attributes)
-        let bounds = CTLineGetBoundsWithOptions(CTLineCreateWithAttributedString(attrStr), CTLineBoundsOptions.UseHangingPunctuation)
-
-        var updatedX = x
-        if x < 0 {
-            updatedX = bounds.width + x
-        }
-
-        let rect = NSRect(x: updatedX, y: y, width: bounds.width, height: bounds.height - bounds.origin.y)
-        attrStr.drawInRect(rect)
-
-        return rect
+        return layer
     }
 
     // MARK: Frame sizes
-    public override func imageFrame() -> NSRect
+    open override func imageFrame() -> NSRect
     {
         let superImageFrame = super.imageFrame()
         if superImageFrame.size.height == 0 || superImageFrame.size.width == 0 { return NSZeroRect }
@@ -200,7 +188,7 @@ public class ImageBrowserCell : IKImageBrowserCell
         return imageRect
     }
 
-    public override func imageContainerFrame() -> NSRect
+    open override func imageContainerFrame() -> NSRect
     {
         let portraitAdjustment: CGFloat = 9
         let videoAdjustment: CGFloat = 9
@@ -216,14 +204,14 @@ public class ImageBrowserCell : IKImageBrowserCell
             }
         }
 
-        if mediaData?.type == SupportedMediaTypes.MediaType.Video {
+        if mediaData?.type == SupportedMediaTypes.MediaType.video {
             imageFrame = NSRect(x: imageFrame.origin.x, y: imageFrame.origin.y + videoAdjustment, width: imageFrame.width, height: imageFrame.height - videoAdjustment)
         }
 
         return imageFrame
     }
 
-    public override func titleFrame() -> NSRect
+    open override func titleFrame() -> NSRect
     {
         let titleRect = super.titleFrame()
         let containerRect = frame()
@@ -238,17 +226,17 @@ public class ImageBrowserCell : IKImageBrowserCell
         return rect
     }
 
-    public override func selectionFrame() -> NSRect
+    open override func selectionFrame() -> NSRect
     {
         return NSInsetRect(super.frame(), -3, -3)
     }
     
     // MARK: line height helper
-    static private func getLineHeight() -> CGFloat
+    static fileprivate func getLineHeight() -> CGFloat
     {
         if lineHeight == nil {
             let attrStr = NSMutableAttributedString(string: "Mj", attributes: textAttrs)
-            lineHeight = CTLineGetBoundsWithOptions(CTLineCreateWithAttributedString(attrStr), CTLineBoundsOptions.UseHangingPunctuation).height
+            lineHeight = CTLineGetBoundsWithOptions(CTLineCreateWithAttributedString(attrStr), CTLineBoundsOptions.useHangingPunctuation).height
         }
         return lineHeight!
     }

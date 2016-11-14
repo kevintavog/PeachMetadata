@@ -4,13 +4,13 @@
 
 import RangicCore
 
-public class FilesAndKeywords
+open class FilesAndKeywords
 {
-    private let mediaItems: [MediaData]
-    public private(set) var uniqueKeywords: [String]
-    private let originalKeywords: [String]
-    private var addedKeywords = Set<String>()
-    private var removedKeywords = Set<String>()
+    fileprivate let mediaItems: [MediaData]
+    open fileprivate(set) var uniqueKeywords: [String]
+    fileprivate let originalKeywords: [String]
+    fileprivate var addedKeywords = Set<String>()
+    fileprivate var removedKeywords = Set<String>()
 
 
     public init()
@@ -33,34 +33,34 @@ public class FilesAndKeywords
             }
         }
 
-        uniqueKeywords = unique.map({$0}).sort()
+        uniqueKeywords = unique.map({$0}).sorted()
         originalKeywords = uniqueKeywords
     }
 
-    public func addKeyword(keyword: String)
+    open func addKeyword(_ keyword: String)
     {
         if !uniqueKeywords.contains(keyword) {
             addedKeywords.insert(keyword)
             removedKeywords.remove(keyword)
             uniqueKeywords.append(keyword)
-            uniqueKeywords = uniqueKeywords.sort()
+            uniqueKeywords = uniqueKeywords.sorted()
         }
     }
 
-    public func removeKeyword(keyword: String)
+    open func removeKeyword(_ keyword: String)
     {
-        if let index = uniqueKeywords.indexOf(keyword) {
+        if let index = uniqueKeywords.index(of: keyword) {
             addedKeywords.remove(keyword)
             removedKeywords.insert(keyword)
-            uniqueKeywords.removeAtIndex(index)
+            uniqueKeywords.remove(at: index)
         }
     }
 
-    public func save() throws -> Bool
+    open func save() throws -> Bool
     {
         var filePaths = [String]()
         for m in mediaItems {
-            filePaths.append(m.url!.path!)
+            filePaths.append(m.url!.path)
         }
 
         let ret = try ExifToolRunner.updateKeywords(filePaths, addedKeywords: addedKeywords.map({$0}), removedKeywords: removedKeywords.map({$0}))

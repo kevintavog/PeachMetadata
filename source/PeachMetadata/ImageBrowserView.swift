@@ -4,9 +4,9 @@
 
 import Quartz
 
-public class ImageBrowserView : IKImageBrowserView
+open class ImageBrowserView : IKImageBrowserView
 {
-    public override func newCellForRepresentedItem(item: AnyObject!) -> IKImageBrowserCell!
+    open override func newCell(forRepresentedItem item: Any!) -> IKImageBrowserCell!
     {
         return ImageBrowserCell()
     }

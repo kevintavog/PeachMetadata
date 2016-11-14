@@ -11,60 +11,60 @@ class DateAdjustmentWindowController : NSWindowController
     @IBOutlet weak var fileDateLabel: NSTextField!
     @IBOutlet weak var metadataDateLabel: NSTextField!
 
-    private var fileDate: NSDate!
-    private var metadataDate: NSDate!
-    let dateFormatter = NSDateFormatter()
+    fileprivate var fileDate: Date!
+    fileprivate var metadataDate: Date!
+    let dateFormatter = DateFormatter()
 
 
-    func newDate() -> NSDate?
+    func newDate() -> Date?
     {
-        return dateFormatter.dateFromString(newDateField.stringValue)
+        return dateFormatter.date(from: newDateField.stringValue)
     }
 
     override func awakeFromNib()
     {
         dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
 
-        fileDateLabel.stringValue = dateFormatter.stringFromDate(fileDate)
-        metadataDateLabel.stringValue = dateFormatter.stringFromDate(metadataDate)
+        fileDateLabel.stringValue = dateFormatter.string(from: fileDate)
+        metadataDateLabel.stringValue = dateFormatter.string(from: metadataDate)
     }
 
-    func setDateValues(fileDate: NSDate, metadataDate: NSDate)
+    func setDateValues(_ fileDate: Date, metadataDate: Date)
     {
         self.fileDate = fileDate
         self.metadataDate = metadataDate
     }
 
-    @IBAction func adjustDates(sender: AnyObject)
+    @IBAction func adjustDates(_ sender: AnyObject)
     {
-        let date = dateFormatter.dateFromString(newDateField.stringValue)
+        let date = dateFormatter.date(from: newDateField.stringValue)
         if date == nil {
             let alert = NSAlert()
             alert.messageText = "Invalid date format: '\(newDateField.stringValue)'; must match '\(dateFormatter.dateFormat)'"
-            alert.alertStyle = NSAlertStyle.WarningAlertStyle
-            alert.addButtonWithTitle("Close")
+            alert.alertStyle = NSAlertStyle.warning
+            alert.addButton(withTitle: "Close")
             alert.runModal()
             return
         }
 
         close()
-        NSApplication.sharedApplication().stopModalWithCode(1)
+        NSApplication.shared().stopModal(withCode: 1)
     }
 
-    @IBAction func cancel(sender: AnyObject)
+    @IBAction func cancel(_ sender: AnyObject)
     {
         newDateField.stringValue = ""
         close()
-        NSApplication.sharedApplication().stopModalWithCode(0)
+        NSApplication.shared().stopModal(withCode: 0)
     }
 
-    @IBAction func useFileDate(sender: AnyObject)
+    @IBAction func useFileDate(_ sender: AnyObject)
     {
-        newDateField.stringValue = dateFormatter.stringFromDate(fileDate)
+        newDateField.stringValue = dateFormatter.string(from: fileDate)
     }
 
-    @IBAction func useMetadataDate(sender: AnyObject)
+    @IBAction func useMetadataDate(_ sender: AnyObject)
     {
-        newDateField.stringValue = dateFormatter.stringFromDate(metadataDate)
+        newDateField.stringValue = dateFormatter.string(from: metadataDate)
     }
 }

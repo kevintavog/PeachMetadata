@@ -6,24 +6,24 @@ import RangicCore
 
 class Preferences : BasePreferences
 {
-    static private let BaseLocationLookupKey = "BaseLocationLookup"
-    static private let ThumbnailZoomKey = "ThumbnailZoom"
-    static private let PlacenameLevelKey = "PlacenameLevel"
-    static private let LastOpenedFolderKey = "LastOpenedFolder"
-    static private let LastSelectedFolderKey = "LastSelectedFolder"
-    static private let LastImportedFolderKey = "LastImportedFolder"
+    static fileprivate let BaseLocationLookupKey = "BaseLocationLookup"
+    static fileprivate let ThumbnailZoomKey = "ThumbnailZoom"
+    static fileprivate let PlacenameLevelKey = "PlacenameLevel"
+    static fileprivate let LastOpenedFolderKey = "LastOpenedFolder"
+    static fileprivate let LastSelectedFolderKey = "LastSelectedFolder"
+    static fileprivate let LastImportedFolderKey = "LastImportedFolder"
 
 
     enum PlacenameLevel: Int
     {
-        case Short = 1, Medium = 2, Long = 3
+        case short = 1, medium = 2, long = 3
     }
 
 
     static func setMissingDefaults()
     {
         setDefaultValue("http://geo.local:2000", key: BaseLocationLookupKey)
-        setDefaultValue(PlacenameLevel.Medium.rawValue, key: PlacenameLevelKey)
+        setDefaultValue(PlacenameLevel.medium.rawValue, key: PlacenameLevelKey)
         setDefaultValue(Float(0.43), key: ThumbnailZoomKey)
     }
 
@@ -42,12 +42,12 @@ class Preferences : BasePreferences
     static var placenameFilter: PlaceNameFilter
     {
         switch placenameLevel {
-        case .Short:
-            return .Standard
-        case .Medium:
-            return .Detailed
-        case .Long:
-            return .Minimal
+        case .short:
+            return .standard
+        case .medium:
+            return .detailed
+        case .long:
+            return .minimal
         }
     }
     
@@ -77,6 +77,6 @@ class Preferences : BasePreferences
 
     static var preferencesFolder: String
     {
-        return NSFileManager.defaultManager().URLsForDirectory(.LibraryDirectory, inDomains: .UserDomainMask)[0].path!.stringByAppendingPath("Preferences")
+        return FileManager.default.urls(for: .libraryDirectory, in: .userDomainMask)[0].path.stringByAppendingPath("Preferences")
     }
 }

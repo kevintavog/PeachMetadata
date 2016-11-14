@@ -9,32 +9,49 @@ import RangicCore
 
 extension PeachWindowController
 {
-    func webView(sender: WebView!, contextMenuItemsForElement element: [NSObject : AnyObject]!, defaultMenuItems: [AnyObject]!) -> [AnyObject]!
+    func webView(_ sender: WebView!, contextMenuItemsForElement element: [AnyHashable: Any]!, defaultMenuItems: [Any]!) -> [Any]!
     {
         return nil
     }
 
     func clearAllMarkers()
     {
-        mapView.invokeMapScript("removeAllMarkers()")
+        let _ = mapView.invokeMapScript("removeAllMarkers()")
     }
 
-    @IBAction func viewNormalMap(sender: AnyObject)
+    @IBAction func viewNormalMap(_ sender: AnyObject)
     {
-        mapView.invokeMapScript("setMapLayer()")
+        let _ = mapView.invokeMapScript("setMapLayer()")
     }
 
-    @IBAction func viewSatelliteMap(sender: AnyObject)
+    @IBAction func viewSatelliteMap(_ sender: AnyObject)
     {
-        mapView.invokeMapScript("setSatelliteLayer()")
+        let _ = mapView.invokeMapScript("setSatelliteLayer()")
     }
 
-    @IBAction func viewDarkMap(sender: AnyObject)
+    @IBAction func viewDarkMap(_ sender: AnyObject)
     {
-        mapView.invokeMapScript("setDarkLayer()")
+        let _ = mapView.invokeMapScript("setDarkLayer()")
     }
 
-    @IBAction func showImagesOnMap(sender: AnyObject)
+    @IBAction func followSelectionOnMap(_ sender: AnyObject)
+    {
+        followSelectionOnMap = !followSelectionOnMap
+    }
+
+    func mapViewMediaSelected(_ notification: Notification)
+    {
+        if followSelectionOnMap {
+            if let userInfo = notification.userInfo as? Dictionary<String,MediaData> {
+                if let mediaData = userInfo["MediaData"] {
+                    clearAllMarkers()
+                    showMediaOnMap([mediaData])
+                }
+            }
+        }
+    }
+
+    @IBAction func showImagesOnMap(_ sender: AnyObject)
     {
         Logger.info("Show images on map")
         clearAllMarkers()
@@ -43,15 +60,20 @@ extension PeachWindowController
             mediaItems = mediaProvider.mediaFiles
         }
 
+        showMediaOnMap(mediaItems)
+    }
+    
+    func showMediaOnMap(_ mediaItems: [MediaData])
+    {
         var minLat = 90.0
         var maxLat = -90.0
         var minLon = 180.0
         var maxLon = -180.0
-        var hasLocations = false
 
+        var numberLocations = 0
         for m in mediaItems {
             if let location = m.location {
-                hasLocations = true
+                numberLocations += 1
                 minLat = min(minLat, location.latitude)
                 maxLat = max(maxLat, location.latitude)
                 minLon = min(minLon, location.longitude)
@@ -59,39 +81,46 @@ extension PeachWindowController
             }
         }
 
-        if !hasLocations {
+        if numberLocations == 0 {
             return
         }
+        else if numberLocations == 1 {
+            // Don't completely zoom in for a single image
+            minLat -= 0.0015
+            maxLat += 0.0015
+            minLon -= 0.0015
+            maxLon += 0.0015
+        }
 
-        mapView.invokeMapScript("fitToBounds([[\(minLat), \(minLon)],[\(maxLat), \(maxLon)]])")
+        let _ = mapView.invokeMapScript("fitToBounds([[\(minLat), \(minLon)],[\(maxLat), \(maxLon)]])")
 
         for m in mediaItems {
             if let location = m.location {
-                let tooltip = "\(m.name)\\n\(m.keywordsString())"
-                mapView.invokeMapScript("addMarker(\"\(m.url!.path!)\", '\(getId(m))', [\(location.latitude), \(location.longitude)], \"\(tooltip)\")")
+                let tooltip = "\(m.name!)\\n\(m.keywordsString())"
+                let _ = mapView.invokeMapScript("addMarker(\"\(m.url!.path)\", '\(getId(m))', [\(location.latitude), \(location.longitude)], \"\(tooltip)\")")
             }
         }
     }
 
-    func webView(sender: WebView!, didFinishLoadForFrame frame: WebFrame!)
+    func webView(_ sender: WebView!, didFinishLoadFor frame: WebFrame!)
     {
         let lat = 47.6220
         let lon = -122.335
-        mapView.invokeMapScript("setCenter([\(lat), \(lon)], 12)")
+        let _ = mapView.invokeMapScript("setCenter([\(lat), \(lon)], 12)")
         setSensitiveLocationsOnMap()
     }
 
-    func webView(webView: WebView!, didClearWindowObject windowObject: WebScriptObject!, forFrame frame: WebFrame!)
+    func webView(_ webView: WebView!, didClearWindowObject windowObject: WebScriptObject!, for frame: WebFrame!)
     {
         mapView.windowScriptObject.setValue(self, forKey: "MapThis")
     }
 
     // A marker on the map was clicked - select the associated media item
-    func markerClicked(path: String)
+    func markerClicked(_ path: String)
     {
-        for (index,m) in mediaProvider.mediaFiles.enumerate() {
-            if m.url!.path! == path {
-                imageBrowserView.setSelectionIndexes(NSIndexSet(index: index), byExtendingSelection: false)
+        for (index,m) in mediaProvider.mediaFiles.enumerated() {
+            if m.url!.path == path {
+                imageBrowserView.setSelectionIndexes(NSIndexSet(index: index) as IndexSet!, byExtendingSelection: false)
                 imageBrowserView.scrollIndexToVisible(index)
                 break
             }
@@ -99,11 +128,11 @@ extension PeachWindowController
     }
 
     // The map was clicked, show the full placename
-    func mapClicked(lat: Double, lon: Double)
+    func mapClicked(_ lat: Double, lon: Double)
     {
         Logger.info("mapClicked: \(lat), \(lon)")
         let location = Location(latitude: lat, longitude: lon)
-        let locationJsonStr = location.toDms().stringByReplacingOccurrencesOfString("\"", withString: "\\\"")
+        let locationJsonStr = location.toDms().replacingOccurrences(of: "\"", with: "\\\"")
 
         let setSensitiveLocationMessage =
             "<br><br>"
@@ -111,22 +140,22 @@ extension PeachWindowController
             + "Toggle sensitive location" +
             "</a>"
         let message = "Looking up \(locationJsonStr)" + setSensitiveLocationMessage
-        mapView.invokeMapScript("setPopup([\(lat), \(lon)], \"\(message)\")")
+        let _ = mapView.invokeMapScript("setPopup([\(lat), \(lon)], \"\(message)\")")
 
         Async.background {
-            let placename = location.placenameAsString(.None)
+            let placename = location.placenameAsString(.none)
             Async.main {
                 self.mapView.invokeMapScript("setPopup([\(lat), \(lon)], \"\(placename+setSensitiveLocationMessage)\")")
             }
         }
     }
 
-    func logMessage(message: String)
+    func logMessage(_ message: String)
     {
         Logger.info("js log: \(message)")
     }
 
-    func toggleSensitiveLocation(lat: Double, lon: Double)
+    func toggleSensitiveLocation(_ lat: Double, lon: Double)
     {
         Logger.info("toggleSensitiveLocation: \(lat), \(lon)")
 
@@ -143,14 +172,14 @@ extension PeachWindowController
 
     func setSensitiveLocationsOnMap()
     {
-        mapView.invokeMapScript("removeAllSensitiveLocations()")
+        let _ = mapView.invokeMapScript("removeAllSensitiveLocations()")
 
         for loc in SensitiveLocations.sharedInstance.locations {
-            mapView.invokeMapScript("addSensitiveLocation([\(loc.latitude), \(loc.longitude)], \(Int(SensitiveLocations.sharedInstance.SensitiveDistanceInMeters)))")
+            let _ = mapView.invokeMapScript("addSensitiveLocation([\(loc.latitude), \(loc.longitude)], \(Int(SensitiveLocations.sharedInstance.SensitiveDistanceInMeters)))")
         }
     }
 
-    func updateMarker(id: String, lat: Double, lon: Double)
+    func updateMarker(_ id: String, lat: Double, lon: Double)
     {
         Logger.info("updateMarker [\(id)] to \(lat), \(lon)")
         for mediaData in mediaProvider.mediaFiles {
@@ -164,22 +193,22 @@ extension PeachWindowController
         Logger.info("Unable to find media associated with marker '\(id)', nothing updated")
     }
 
-    override class func webScriptNameForSelector(sel: Selector) -> String?
+    override class func webScriptName(for sel: Selector) -> String?
     {
         switch sel {
-        case "logMessage:":
+        case #selector(PeachWindowController.logMessage(_:)):
             return "logMessage"
 
-        case "mapClicked:lon:":
+        case #selector(PeachWindowController.mapClicked(_:lon:)):
             return "mapClicked"
 
-        case "markerClicked:":
+        case #selector(PeachWindowController.markerClicked(_:)):
             return "markerClicked"
 
-        case "updateMarker:lat:lon:":
+        case #selector(PeachWindowController.updateMarker(_:lat:lon:)):
             return "updateMarker"
 
-        case "toggleSensitiveLocation:lon:":
+        case #selector(PeachWindowController.toggleSensitiveLocation(_:lon:)):
             return "toggleSensitiveLocation"
 
         default:
@@ -187,12 +216,12 @@ extension PeachWindowController
         }
     }
 
-    override class func isSelectorExcludedFromWebScript(sel: Selector) -> Bool
+    override class func isSelectorExcluded(fromWebScript sel: Selector) -> Bool
     {
         return false
     }
 
-    func clearLocations(mediaItems: [MediaData])
+    func clearLocations(_ mediaItems: [MediaData])
     {
         setStatus("Clearing locations from \(mediaItems.count) file(s)")
         let (imagePathList, videoPathList) = separateVideoList(mediaItems)
@@ -221,7 +250,7 @@ extension PeachWindowController
     }
 
     // Callback invoked from MapWebView
-    func updateLocations(location: Location, filePaths: [String])
+    func updateLocations(_ location: Location, filePaths: [String])
     {
         var updateList = [String]()
         var skipList = [String]()
@@ -243,13 +272,13 @@ extension PeachWindowController
 
         if skipList.count > 0 {
             Async.main {
-                self.setStatus("Some files were not updated due to existing locations: \(skipList.joinWithSeparator(", "))")
-                PeachWindowController.showWarning("Some files were not updated due to existing locations: \(skipList.joinWithSeparator(", "))")
+                self.setStatus("Some files were not updated due to existing locations: \(skipList.joined(separator: ", "))")
+                PeachWindowController.showWarning("Some files were not updated due to existing locations: \(skipList.joined(separator: ", "))")
             }
         }
     }
 
-    func setFileLocation(filePaths: [String], location: Location, updateStatusText: Bool)
+    func setFileLocation(_ filePaths: [String], location: Location, updateStatusText: Bool)
     {
         if filePaths.count < 1 {
             Logger.warn("no files to update, no locations being updated")
@@ -288,7 +317,7 @@ extension PeachWindowController
         }
     }
 
-    func separateVideoList(filePaths: [String]) -> (imagePathList:[String], videoPathList:[String])
+    func separateVideoList(_ filePaths: [String]) -> (imagePathList:[String], videoPathList:[String])
     {
         var imagePathList = [String]()
         var videoPathList = [String]()
@@ -297,9 +326,9 @@ extension PeachWindowController
             if let mediaData = mediaProvider.itemFromFilePath(path) {
                 if let mediaType = mediaData.type {
                     switch mediaType {
-                    case SupportedMediaTypes.MediaType.Image:
+                    case SupportedMediaTypes.MediaType.image:
                         imagePathList.append(path)
-                    case SupportedMediaTypes.MediaType.Video:
+                    case SupportedMediaTypes.MediaType.video:
                         videoPathList.append(path)
                     default:
                         Logger.warn("Ignoring unknown file type: \(path)")
@@ -311,7 +340,7 @@ extension PeachWindowController
         return (imagePathList, videoPathList)
     }
 
-    func separateVideoList(mediaItems: [MediaData]) -> (imagePathList:[String], videoPathList:[String])
+    func separateVideoList(_ mediaItems: [MediaData]) -> (imagePathList:[String], videoPathList:[String])
     {
         var imagePathList = [String]()
         var videoPathList = [String]()
@@ -319,10 +348,10 @@ extension PeachWindowController
         for mediaData in mediaItems {
             if let mediaType = mediaData.type {
                 switch mediaType {
-                case SupportedMediaTypes.MediaType.Image:
-                    imagePathList.append(mediaData.url.path!)
-                case SupportedMediaTypes.MediaType.Video:
-                    videoPathList.append(mediaData.url.path!)
+                case SupportedMediaTypes.MediaType.image:
+                    imagePathList.append(mediaData.url.path)
+                case SupportedMediaTypes.MediaType.video:
+                    videoPathList.append(mediaData.url.path)
                 default:
                     Logger.warn("Ignoring unknown file type: \(mediaData.url.path)")
                 }
@@ -332,7 +361,7 @@ extension PeachWindowController
         return (imagePathList, videoPathList)
     }
 
-    func getId(mediaData: MediaData) -> Int
+    func getId(_ mediaData: MediaData) -> Int
     {
         return mediaData.url!.hashValue
     }
