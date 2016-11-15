@@ -17,9 +17,8 @@ class AllKeywordsTableViewController : NSObject, NSTableViewDelegate, NSTableVie
         filesAndKeywords = FilesAndKeywords()
     }
 
-    func keywordToggled()
+    func keywordToggled(index: Int)
     {
-        let index = tableView.tableColumns.count * tableView.clickedRow + tableView.clickedColumn
         let keyword = AllKeywords.sharedInstance.keywords[index]
 
         if filesAndKeywords.uniqueKeywords.contains(keyword) {
@@ -34,8 +33,29 @@ class AllKeywordsTableViewController : NSObject, NSTableViewDelegate, NSTableVie
         tableView.reloadData()
     }
 
+    func updateColumns()
+    {
+        let columnWidth = self.calculateMaxColumnWidth()
+        let tableWidth = tableView.bounds.width
+        let columnCount = max(1, Int(tableWidth) / columnWidth)
+Logger.debug("table: \(tableWidth) -- column: \(columnWidth) -- #columns: \(columnCount) -- current: \(tableView.numberOfColumns)")
+
+        if (columnCount < tableView.numberOfColumns) {
+            while (columnCount < tableView.numberOfColumns) {
+                tableView.removeTableColumn(tableView.tableColumns.last!)
+                Logger.debug("removed column, now \(tableView.numberOfColumns), \(tableView.tableColumns.count)")
+            }
+        } else if (columnCount > tableView.numberOfColumns) {
+            while (columnCount > tableView.numberOfColumns) {
+                tableView.addTableColumn(NSTableColumn())
+                Logger.debug("added column, now \(tableView.numberOfColumns), \(tableView.tableColumns.count)")
+            }
+        }
+    }
+    
     func selectionChanged(_ selectedItems: FilesAndKeywords)
     {
+//        updateColumns()
         filesAndKeywords = selectedItems
         tableView.reloadData()
     }
@@ -46,29 +66,40 @@ class AllKeywordsTableViewController : NSObject, NSTableViewDelegate, NSTableVie
         return keywordCount / tableView.numberOfColumns + ((keywordCount % tableView.numberOfColumns) == 0 ? 0 : 1)
     }
 
-    func tableView(_ tableView: NSTableView, objectValueFor tableColumn: NSTableColumn?, row: Int) -> Any?
+    func tableView(_ tableView: NSTableView, viewFor tableColumn: NSTableColumn?, row: Int) -> NSView?
     {
         if AllKeywords.sharedInstance.keywords.count == 0 {
             return nil
         }
 
-        return tableColumn?.dataCell
-//        let columnIndex = getColumnIndex(tableView, tableColumn: tableColumn!)
-//        let cell = tableColumn?.dataCell as! NSButtonCell
-//        let keywordIndex = (row * tableView.numberOfColumns) + columnIndex
-//
-//        if keywordIndex >= AllKeywords.sharedInstance.keywords.count {
-//            cell.isTransparent = true
-//        } else {
-//            let keyword = AllKeywords.sharedInstance.keywords[keywordIndex]
-//            cell.title = keyword
-//            cell.isTransparent = false
-//            cell.state = filesAndKeywords.uniqueKeywords.contains(keyword) ? NSOnState : NSOffState
-//        }
-//
-//        return cell
-    }
+        var columnView:NSButton? = tableView.make(withIdentifier: "allKeywordsView", owner: tableView) as! NSButton?
+        if (columnView == nil)
+        {
+            let control = NSButton(frame: NSRect(x: 0, y: 0, width: 100, height: 100))
+            control.identifier = "allKeywordsView"
+            
+            control.setButtonType(NSButtonType.onOff)
+            control.bezelStyle = NSBezelStyle.rounded
+            control.action = #selector(PeachWindowController.allKeywordClick(_:))
+            
+            columnView = control
+        }
 
+        let columnIndex = getColumnIndex(tableView, tableColumn: tableColumn!)
+        let keywordIndex = (row * tableView.numberOfColumns) + columnIndex
+        columnView?.tag = keywordIndex
+        if keywordIndex >= AllKeywords.sharedInstance.keywords.count {
+            columnView?.isTransparent = true
+        } else {
+            let keyword = AllKeywords.sharedInstance.keywords[keywordIndex]
+            columnView?.title = keyword
+            columnView?.isTransparent = false
+            columnView?.state = filesAndKeywords.uniqueKeywords.contains(keyword) ? NSOnState : NSOffState
+        }
+
+        return columnView
+    }
+    
     func getColumnIndex(_ tableView: NSTableView, tableColumn: NSTableColumn) -> Int
     {
         for index in 0 ..< tableView.numberOfColumns {
@@ -79,19 +110,19 @@ class AllKeywordsTableViewController : NSObject, NSTableViewDelegate, NSTableVie
 
         return -1
     }
+    
+    func calculateMaxColumnWidth() -> Int
+    {
+        var maxWidth = 0
+        for row in 0 ..< tableView.numberOfRows {
+            for column in 0 ..< tableView.numberOfColumns {
+                if let view = tableView.view(atColumn: column, row: row, makeIfNecessary: false) {
+                    let width = view.fittingSize.width
+                    maxWidth = max(Int(width), maxWidth)
+                }
+            }
+        }
 
-/// OR try: http://stackoverflow.com/questions/18858208/autoresize-nstableviews-columns-to-fit-content ?
-//      that may use a deprecated api
-//    func getMaxCellWidth(tableView: NSTableView) -> Float
-//    {
-//        var maxWidth: Float = 0
-//        for column in 0..<tableView.numberOfColumns {
-//            for row in 0..<tableView.numberOfRows {
-//                let columnView = tableView.viewAtColumn(column, row: row, makeIfNecessary: true)
-//                Logger.info("columnView for \(row),\(column) is \(columnView)")
-//                let cellWidth = tableView.cell
-//            }
-//        }
-//        return maxWidth
-//    }
+        return maxWidth
+    }
 }

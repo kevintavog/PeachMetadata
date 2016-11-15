@@ -17,9 +17,8 @@ class MediaKeywordsTableController : NSObject, NSTableViewDelegate, NSTableViewD
         filesAndKeywords = FilesAndKeywords()
     }
 
-    func keywordToggled()
+    func keywordToggled(index: Int)
     {
-        let index = tableView.tableColumns.count * tableView.clickedRow + tableView.clickedColumn
         let keyword = filesAndKeywords.uniqueKeywords[index]
         filesAndKeywords.removeKeyword(keyword)
     }
@@ -39,6 +38,39 @@ class MediaKeywordsTableController : NSObject, NSTableViewDelegate, NSTableViewD
     {
         let keywordCount = filesAndKeywords.uniqueKeywords.count;
         return keywordCount / tableView.numberOfColumns + ((keywordCount % tableView.numberOfColumns) == 0 ? 0 : 1)
+    }
+
+    func tableView(_ tableView: NSTableView, viewFor tableColumn: NSTableColumn?, row: Int) -> NSView?
+    {
+        if filesAndKeywords.uniqueKeywords.count == 0 {
+            return nil
+        }
+        var columnView:NSButton? = tableView.make(withIdentifier: "keywordView", owner: tableView) as! NSButton?
+        if (columnView == nil)
+        {
+            let control = NSButton(frame: NSRect(x: 0, y: 0, width: 100, height: 100))
+            control.identifier = "keywordView"
+            
+            control.setButtonType(NSButtonType.onOff)
+            control.bezelStyle = NSBezelStyle.rounded
+            control.action = #selector(PeachWindowController.mediaItemKeywordClick(_:))
+            
+            columnView = control
+        }
+        
+        let columnIndex = getColumnIndex(tableView, tableColumn: tableColumn!)
+        let keywordIndex = (row * tableView.numberOfColumns) + columnIndex
+        columnView?.tag = keywordIndex
+        if keywordIndex >= filesAndKeywords.uniqueKeywords.count {
+            columnView?.isTransparent = true
+        } else {
+            let keyword = filesAndKeywords.uniqueKeywords[keywordIndex]
+            columnView?.title = keyword
+            columnView?.isTransparent = false
+            columnView?.state = filesAndKeywords.uniqueKeywords.contains(keyword) ? NSOnState : NSOffState
+        }
+        
+        return columnView
     }
 
     func tableView(_ tableView: NSTableView, objectValueFor tableColumn: NSTableColumn?, row: Int) -> Any?

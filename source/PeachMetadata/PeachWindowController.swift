@@ -222,14 +222,16 @@ class PeachWindowController : NSWindowController, NSTableViewDataSource, WebFram
 
     @IBAction func allKeywordClick(_ sender: AnyObject)
     {
-        allKeywordsController.keywordToggled()
+        let button = sender as! NSButton
+        allKeywordsController.keywordToggled(index: button.tag)
         allKeywordsController.updateTable()
         mediaKeywordsController.updateTable()
     }
 
     @IBAction func mediaItemKeywordClick(_ sender: AnyObject)
     {
-        mediaKeywordsController.keywordToggled()
+        let button = sender as! NSButton
+        mediaKeywordsController.keywordToggled(index: button.tag)
         mediaKeywordsController.updateTable()
         allKeywordsController.updateTable()
     }
