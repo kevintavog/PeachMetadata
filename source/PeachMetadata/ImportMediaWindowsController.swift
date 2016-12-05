@@ -128,10 +128,10 @@ class ImportMediaWindowsController : NSWindowController, NSTableViewDataSource
         }
     }
 
-    private func tableView(_ tableView: NSTableView, viewForTableColumn tableColumn: NSTableColumn?, row: Int) -> NSView?
+    @nonobjc public func tableView(_ tableView: NSTableView, viewForTableColumn tableColumn: NSTableColumn?, row: Int) -> NSView?
     {
         let cell = tableView.make(withIdentifier: tableColumn!.identifier, owner: self) as! NSTableCellView
-
+        
         var media: MediaData!
         switch tableView.tag {
         case OriginalTableTag:

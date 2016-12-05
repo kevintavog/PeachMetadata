@@ -22,7 +22,7 @@ class Preferences : BasePreferences
 
     static func setMissingDefaults()
     {
-        setDefaultValue("http://geo.local:2000", key: BaseLocationLookupKey)
+        setDefaultValue("http://yuba.local:2000", key: BaseLocationLookupKey)
         setDefaultValue(PlacenameLevel.medium.rawValue, key: PlacenameLevelKey)
         setDefaultValue(Float(0.43), key: ThumbnailZoomKey)
     }
