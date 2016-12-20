@@ -57,7 +57,10 @@ extension PeachWindowController
         clearAllMarkers()
         var mediaItems = selectedMediaItems()
         if mediaItems.count == 0 {
-            mediaItems = mediaProvider.mediaFiles
+            mediaItems = [MediaData]()
+            for (_, m) in mediaProvider.enumerated() {
+                mediaItems.append(m)
+            }
         }
 
         showMediaOnMap(mediaItems)
@@ -118,7 +121,7 @@ extension PeachWindowController
     // A marker on the map was clicked - select the associated media item
     func markerClicked(_ path: String)
     {
-        for (index,m) in mediaProvider.mediaFiles.enumerated() {
+        for (index,m) in mediaProvider.enumerated() {
             if m.url!.path == path {
                 imageBrowserView.setSelectionIndexes(NSIndexSet(index: index) as IndexSet!, byExtendingSelection: false)
                 imageBrowserView.scrollIndexToVisible(index)
@@ -182,9 +185,9 @@ extension PeachWindowController
     func updateMarker(_ id: String, lat: Double, lon: Double)
     {
         Logger.info("updateMarker [\(id)] to \(lat), \(lon)")
-        for mediaData in mediaProvider.mediaFiles {
-            if String(getId(mediaData)) == id {
-                let filePaths = [(mediaData.url?.path)!]
+        for (_, m) in mediaProvider.enumerated() {
+            if String(getId(m)) == id {
+                let filePaths = [(m.url?.path)!]
                 updateLocations(Location(latitude: lat, longitude: lon), filePaths: filePaths)
                 return
             }

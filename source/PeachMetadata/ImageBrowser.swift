@@ -32,7 +32,7 @@ extension PeachWindowController
         mediaProvider.clear()
         mediaProvider.addFolder(folder)
 
-        for m in mediaProvider.mediaFiles {
+        for (_, m) in mediaProvider.enumerated() {
             if let rotation = m.rotation {
                 if rotation != 0 {
                     Logger.error("\(m.name!) is rotated \(rotation)")
@@ -52,7 +52,7 @@ extension PeachWindowController
     func loadThumbnails()
     {
         thumbnailItems = [ThumbnailViewItem]()
-        for m in mediaProvider.mediaFiles {
+        for (_, m) in mediaProvider.enumerated() {
             thumbnailItems.append(ThumbnailViewItem(mediaData: m))
         }
 
@@ -118,7 +118,7 @@ extension PeachWindowController
     {
         var mediaItems = [MediaData]()
         for index in imageBrowserView.selectionIndexes() {
-            mediaItems.append(mediaProvider.mediaFiles[index])
+            mediaItems.append(mediaProvider.getMedia(index)!)
         }
         return mediaItems
     }
@@ -267,7 +267,12 @@ extension PeachWindowController
 
     func setFolderStatus()
     {
-        setMultiItemStatus(mediaProvider.mediaFiles, filesMessage: "files")
+        var mediaFiles = [MediaData]()
+        for (_, m) in mediaProvider.enumerated() {
+            mediaFiles.append(m)
+        }
+
+        setMultiItemStatus(mediaFiles, filesMessage: "files")
         setStatusMediaInfo()
     }
 
@@ -278,7 +283,7 @@ extension PeachWindowController
         var numberWithMismatchedDate = 0
         var numberMissingKeyword = 0
 
-        for media in mediaProvider.mediaFiles {
+        for (_, media) in mediaProvider.enumerated() {
             if let location = media.location {
                 if SensitiveLocations.sharedInstance.isSensitive(location) {
                     numberWithSensitiveLocation += 1
@@ -297,7 +302,7 @@ extension PeachWindowController
             }
         }
 
-        let mediaCount = mediaProvider.mediaFiles.count
+        let mediaCount = mediaProvider.mediaCount
         setStatusMediaNumber(mediaCount)
 
         if numberWithSensitiveLocation > 0 {

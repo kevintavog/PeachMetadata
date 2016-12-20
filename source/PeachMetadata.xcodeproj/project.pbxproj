@@ -17,6 +17,8 @@
 		444AD6651C431CFB002979B0 /* FilesAndKeywords.swift in Sources */ = {isa = PBXBuildFile; fileRef = 444AD6641C431CFB002979B0 /* FilesAndKeywords.swift */; };
 		444C358C1BE2CA9C002BEC2B /* AllKeywordsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 444C358B1BE2CA9C002BEC2B /* AllKeywordsController.swift */; };
 		445187E41C2C94CD008B2DE6 /* MapWebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 445187E31C2C94CD008B2DE6 /* MapWebView.swift */; };
+		445345061E08BDA000D0BC18 /* RangicCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 44B8FD2D1BDF05560090CF76 /* RangicCore.framework */; };
+		445345071E08BDA000D0BC18 /* RangicCore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 44B8FD2D1BDF05560090CF76 /* RangicCore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4463CD091C30820700B6C01D /* FileInformationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4463CD081C30820700B6C01D /* FileInformationController.swift */; };
 		4463CD0D1C30825500B6C01D /* Notifications.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4463CD0C1C30825500B6C01D /* Notifications.swift */; };
 		4463CD101C3241B700B6C01D /* DateAdjustmentWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4463CD0F1C3241B700B6C01D /* DateAdjustmentWindowController.swift */; };
@@ -48,6 +50,13 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		445345081E08BDA000D0BC18 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 44B8FD281BDF05550090CF76 /* RangicCore.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 44F41FF71BA7175E00ADBB85;
+			remoteInfo = RangicCore;
+		};
 		44B8FD2C1BDF05560090CF76 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 44B8FD281BDF05550090CF76 /* RangicCore.xcodeproj */;
@@ -69,6 +78,7 @@
 				44B8FD251BDF05400090CF76 /* CocoaLumberjack.framework in Embed Frameworks */,
 				44B8FD231BDF05400090CF76 /* Async.framework in Embed Frameworks */,
 				44BF1D091BE083AA00514392 /* SwiftyJSON.framework in Embed Frameworks */,
+				445345071E08BDA000D0BC18 /* RangicCore.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -124,6 +134,7 @@
 				44B8FD261BDF05400090CF76 /* CocoaLumberjackSwift.framework in Frameworks */,
 				44B8FD241BDF05400090CF76 /* CocoaLumberjack.framework in Frameworks */,
 				44BF1D081BE083AA00514392 /* SwiftyJSON.framework in Frameworks */,
+				445345061E08BDA000D0BC18 /* RangicCore.framework in Frameworks */,
 				44B8FD201BDF05400090CF76 /* Alamofire.framework in Frameworks */,
 				44E387911BD989BE00CDEF1C /* Quartz.framework in Frameworks */,
 			);
@@ -261,6 +272,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				445345091E08BDA000D0BC18 /* PBXTargetDependency */,
 			);
 			name = PeachMetadata;
 			productName = PeachMetadata;
@@ -362,6 +374,14 @@
 		};
 /* End PBXSourcesBuildPhase section */
 
+/* Begin PBXTargetDependency section */
+		445345091E08BDA000D0BC18 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = RangicCore;
+			targetProxy = 445345081E08BDA000D0BC18 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
 /* Begin PBXVariantGroup section */
 		44E387871BD9818000CDEF1C /* MainMenu.xib */ = {
 			isa = PBXVariantGroup;
@@ -412,7 +432,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				MACOSX_DEPLOYMENT_TARGET = 10.12;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = macosx;
@@ -452,7 +472,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				MACOSX_DEPLOYMENT_TARGET = 10.12;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = macosx;
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
@@ -462,6 +482,7 @@
 		44E3878E1BD9818000CDEF1C /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -481,6 +502,7 @@
 		44E3878F1BD9818000CDEF1C /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = (

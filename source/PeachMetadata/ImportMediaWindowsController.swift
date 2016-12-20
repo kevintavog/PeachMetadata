@@ -128,10 +128,11 @@ class ImportMediaWindowsController : NSWindowController, NSTableViewDataSource
         }
     }
 
-    @nonobjc public func tableView(_ tableView: NSTableView, viewForTableColumn tableColumn: NSTableColumn?, row: Int) -> NSView?
+    // If @nonobjc is added here, per the warning, then nothing shows up in the tables...
+    public func tableView(_ tableView: NSTableView, viewForTableColumn tableColumn: NSTableColumn?, row: Int) -> NSView?
     {
         let cell = tableView.make(withIdentifier: tableColumn!.identifier, owner: self) as! NSTableCellView
-        
+
         var media: MediaData!
         switch tableView.tag {
         case OriginalTableTag:
