@@ -204,7 +204,7 @@ class ImportMediaWindowsController : NSWindowController, NSTableViewDataSource
         }
 
         if folders.first!.lastPathComponent != "Exported" {
-            PeachWindowController.showWarning("Import requires a folder named 'Exported'; found '\(folders.first)'")
+            PeachWindowController.showWarning("Import requires a folder named 'Exported'; found '\(String(describing: folders.first))'")
             return false
         }
 
