@@ -29,6 +29,11 @@
                 <outlet property="imageBrowserView" destination="nit-07-pvN" id="lXt-ca-CDy"/>
                 <outlet property="mapView" destination="Pe3-yg-kIT" id="4ex-CE-vsW"/>
                 <outlet property="mediaKeywordsTableView" destination="oZv-FH-BWg" id="aIY-Nj-V8p"/>
+                <outlet property="menuDarkMap" destination="F91-NL-1VW" id="ksg-Rc-JDt"/>
+                <outlet property="menuFollowSelectionOnMap" destination="5Jz-nn-ET9" id="hgP-ym-y5j"/>
+                <outlet property="menuNormalMap" destination="en4-FU-XW8" id="i7g-KP-Peo"/>
+                <outlet property="menuSatelliteMap" destination="fro-1z-lJI" id="HvO-Iq-gsE"/>
+                <outlet property="menuShowImagesOnMap" destination="vcn-Sk-SFZ" id="5h2-dL-KZl"/>
                 <outlet property="statusDateLabel" destination="yUb-bg-5gZ" id="AxE-zq-cn7"/>
                 <outlet property="statusFileLabel" destination="ipg-PZ-8uF" id="0cP-Ss-ZiC"/>
                 <outlet property="statusKeywordLabel" destination="ku6-3K-DU8" id="cBr-0H-hpv"/>

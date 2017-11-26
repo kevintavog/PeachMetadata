@@ -21,22 +21,32 @@ extension PeachWindowController
 
     @IBAction func viewNormalMap(_ sender: AnyObject)
     {
+        menuNormalMap?.state = .on
+        menuDarkMap?.state = .off
+        menuSatelliteMap?.state = .off
         let _ = mapView.invokeMapScript("setMapLayer()")
     }
 
     @IBAction func viewSatelliteMap(_ sender: AnyObject)
     {
+        menuNormalMap?.state = .off
+        menuDarkMap?.state = .off
+        menuSatelliteMap?.state = .on
         let _ = mapView.invokeMapScript("setSatelliteLayer()")
     }
 
     @IBAction func viewDarkMap(_ sender: AnyObject)
     {
+        menuNormalMap?.state = .off
+        menuDarkMap?.state = .on
+        menuSatelliteMap?.state = .off
         let _ = mapView.invokeMapScript("setDarkLayer()")
     }
 
     @IBAction func followSelectionOnMap(_ sender: AnyObject)
     {
         followSelectionOnMap = !followSelectionOnMap
+        menuFollowSelectionOnMap?.state = followSelectionOnMap ? .on : .off
     }
 
     @objc

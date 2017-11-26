@@ -25,7 +25,15 @@ class PeachWindowController : NSWindowController, NSTableViewDataSource, WebFram
     @IBOutlet weak var statusDateLabel: NSButton!
     @IBOutlet weak var statusKeywordLabel: NSButton!
 
-    
+
+    // So menu check marks can be toggled
+    @IBOutlet weak var menuFollowSelectionOnMap: NSMenuItem!
+    @IBOutlet weak var menuSatelliteMap: NSMenuItem!
+    @IBOutlet weak var menuDarkMap: NSMenuItem!
+    @IBOutlet weak var menuNormalMap: NSMenuItem!
+    @IBOutlet weak var menuShowImagesOnMap: NSMenuItem!
+
+
     var mediaProvider = MediaProvider()
     var thumbnailItems = [ThumbnailViewItem]()
     var filteredThumbnailItems = [ThumbnailViewItem]()
@@ -34,7 +42,6 @@ class PeachWindowController : NSWindowController, NSTableViewDataSource, WebFram
     var mediaKeywordsController: MediaKeywordsTableController!
     var selectedKeywords = FilesAndKeywords()
     var followSelectionOnMap = true
-
 
     override func awakeFromNib()
     {
@@ -67,6 +74,9 @@ class PeachWindowController : NSWindowController, NSTableViewDataSource, WebFram
         mapView.mainFrame.load(URLRequest(url: URL(fileURLWithPath: Bundle.main.path(forResource: "map", ofType: "html")!)))
         mapView.frameLoadDelegate = self
         mapView.enableDragAndDrop(updateLocations)
+
+        menuNormalMap?.state = .on
+        menuFollowSelectionOnMap?.state = followSelectionOnMap ? .on : .off
 
         Notifications.addObserver(self, selector: #selector(PeachWindowController.mapViewMediaSelected(_:)), name: Notifications.Selection.MediaData, object: nil)
     }
