@@ -9,6 +9,10 @@ import RangicCore
 
 open class MapWebView : WebView
 {
+    // In Swift 4, 'NSPasteboard.PasteboardType.fileURL' is available, but seems to be OSX 10.13 only - use this as a workaround
+    let FilenamesPboardType = NSPasteboard.PasteboardType("NSFilenamesPboardType")
+
+    
     fileprivate var dropCallback: ((_ location: Location, _ filePaths: [String]) -> ())?
 
     func invokeMapScript(_ script: String) -> AnyObject?
@@ -67,19 +71,15 @@ open class MapWebView : WebView
     func filePaths(_ dragInfo: NSDraggingInfo) -> [String]
     {
         var list = [String]()
-        if #available(OSX 10.13, *) {
-            if ((dragInfo.draggingPasteboard().types?.contains(NSPasteboard.PasteboardType.fileURL)) != nil) {
-                if let dropData = dragInfo.draggingPasteboard().propertyList(forType: NSPasteboard.PasteboardType.fileURL) as! NSArray? {
-                    for data in dropData {
-                        let path = data as! String
-                        if FileManager.default.fileExists(atPath: path) {
-                            list.append(path)
-                        }
+        if ((dragInfo.draggingPasteboard().types?.contains(FilenamesPboardType)) != nil) {
+            if let dropData = dragInfo.draggingPasteboard().propertyList(forType: FilenamesPboardType) as! NSArray? {
+                for data in dropData {
+                    let path = data as! String
+                    if FileManager.default.fileExists(atPath: path) {
+                        list.append(path)
                     }
                 }
             }
-        } else {
-            print("drag / drop not supported on this version of MacOS..")
         }
 
         return list
