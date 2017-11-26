@@ -28,9 +28,8 @@ class AppDelegate: NSObject, NSApplicationDelegate
         Logger.configure()
 
         Preferences.setMissingDefaults()
-Logger.info("Placename lookups disabled...")
-//        OpenMapLookupProvider.BaseLocationLookup = Preferences.baseLocationLookup
-//        Logger.info("Placename lookups via \(OpenMapLookupProvider.BaseLocationLookup)")
+        ReverseNameLookupProvider.set(host: Preferences.baseLocationLookup)
+        Logger.info("Placename lookups via \(Preferences.baseLocationLookup)")
         SupportedMediaTypes.includeRawImages = true
     }
 
