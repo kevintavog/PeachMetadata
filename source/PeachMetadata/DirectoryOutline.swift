@@ -20,13 +20,14 @@ extension PeachWindowController
         NSDocumentController.shared.noteNewRecentDocumentURL(dialog.urls[0])
 
         let folderName = dialog.urls[0].path
-        Preferences.lastOpenedFolder = folderName
         populateDirectoryView(folderName)
     }
 
     func populateDirectoryView(_ folderName: String)
     {
+        Preferences.lastOpenedFolder = folderName
         rootDirectory = DirectoryTree(parent: nil, folder: folderName)
+        directoryView.deselectAll(nil)
         directoryView.reloadData()
     }
 
@@ -47,13 +48,13 @@ extension PeachWindowController
 
         if bestRow >= 0 {
             directoryView.selectRowIndexes(IndexSet(integer: bestRow), byExtendingSelection: false)
+            directoryView.scrollRowToVisible(bestRow)
         }
     }
 
     func outlineViewSelectionDidChange(_ notification: Notification)
     {
         let selectedItem = toTree(directoryView.item(atRow: directoryView.selectedRow) as AnyObject?)
-        Logger.info("Folder selection changed: \(selectedItem.folder)")
         populateImageView(selectedItem.folder)
         Preferences.lastSelectedFolder = selectedItem.folder
     }
