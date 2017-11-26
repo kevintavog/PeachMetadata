@@ -37,7 +37,7 @@ class FileInformationController : NSViewController
 
 
     // MARK: Notification handlers
-    func fileSelected(_ notification: Notification)
+    @objc func fileSelected(_ notification: Notification)
     {
         currentMediaData = nil
         if let userInfo = notification.userInfo as? Dictionary<String,MediaData> {
@@ -51,7 +51,7 @@ class FileInformationController : NSViewController
         }
     }
 
-    func detailsUpdated(_ notification: Notification)
+    @objc func detailsUpdated(_ notification: Notification)
     {
         if let notObject = notification.object as! MediaData? {
             if notObject === currentMediaData {
@@ -73,11 +73,13 @@ class FileInformationController : NSViewController
     }
 
     // MARK: table view data
+    @objc
     func numberOfRowsInTableView(_ tv: NSTableView) -> Int
     {
         return currentMediaData == nil ? 0 : (currentMediaData?.details.count)!
     }
 
+    @objc
     func tableView(_ tv: NSTableView, objectValueForTableColumn: NSTableColumn?, row: Int) -> String
     {
         let detail = currentMediaData?.details[row]

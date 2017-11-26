@@ -39,6 +39,7 @@ extension PeachWindowController
         followSelectionOnMap = !followSelectionOnMap
     }
 
+    @objc
     func mapViewMediaSelected(_ notification: Notification)
     {
         if followSelectionOnMap {
@@ -109,6 +110,7 @@ extension PeachWindowController
     {
         let lat = 47.6220
         let lon = -122.335
+        let _ = mapView.invokeMapScript("console = { log: function(msg) { MapThis.logMessage(msg); } }")
         let _ = mapView.invokeMapScript("setCenter([\(lat), \(lon)], 12)")
         setSensitiveLocationsOnMap()
     }
@@ -119,7 +121,7 @@ extension PeachWindowController
     }
 
     // A marker on the map was clicked - select the associated media item
-    func markerClicked(_ path: String)
+    @objc func markerClicked(_ path: String)
     {
         for (index,m) in mediaProvider.enumerated() {
             if m.url!.path == path {
@@ -131,7 +133,7 @@ extension PeachWindowController
     }
 
     // The map was clicked, show the full placename
-    func mapClicked(_ lat: Double, lon: Double)
+    @objc func mapClicked(_ lat: Double, lon: Double)
     {
         Logger.info("mapClicked: \(lat), \(lon)")
         let location = Location(latitude: lat, longitude: lon)
@@ -153,12 +155,12 @@ extension PeachWindowController
         }
     }
 
-    func logMessage(_ message: String)
+    @objc func logMessage(_ message: String)
     {
         Logger.info("js log: \(message)")
     }
 
-    func toggleSensitiveLocation(_ lat: Double, lon: Double)
+    @objc func toggleSensitiveLocation(_ lat: Double, lon: Double)
     {
         Logger.info("toggleSensitiveLocation: \(lat), \(lon)")
 
@@ -182,7 +184,7 @@ extension PeachWindowController
         }
     }
 
-    func updateMarker(_ id: String, lat: Double, lon: Double)
+    @objc func updateMarker(_ id: String, lat: Double, lon: Double)
     {
         Logger.info("updateMarker [\(id)] to \(lat), \(lon)")
         for (_, m) in mediaProvider.enumerated() {
@@ -223,6 +225,34 @@ extension PeachWindowController
     {
         return false
     }
+
+    func fixBadExif(_ mediaItems: [MediaData])
+    {
+        setStatus("Fixing bad EXIF for \(mediaItems.count) file(s)")
+        let (imagePathList, videoPathList) = separateVideoList(mediaItems)
+        
+        Async.background {
+            do {
+                try ExifToolRunner.fixBadExif(imagePathList + videoPathList)
+                
+                for mediaData in mediaItems {
+                    mediaData.reload()
+                }
+                
+                Async.main {
+                    self.reloadExistingMedia()
+                    self.setStatus("Finished fixing bad EXIF for \(mediaItems.count) file(s)")
+                }
+            } catch let error {
+                Async.main {
+                    self.reloadExistingMedia()
+                    self.setStatus("Fixing bad EXIF failed: \(error)")
+                    PeachWindowController.showWarning("Fixing bad EXIF  failed: \(error)")
+                }
+            }
+        }
+    }
+    
 
     func clearLocations(_ mediaItems: [MediaData])
     {

@@ -75,6 +75,19 @@ open class ExifToolRunner
         }
     }
 
+    static open func fixBadExif(_ filePaths: [String]) throws
+    {
+        let _ = try runExifTool(
+            [ "-all=",
+              "-tagsfromfile",
+              "@",
+              "-all:all",
+              "-unsafe",
+              "-icc_profile",
+              "-m"]
+            + filePaths)
+    }
+    
     static open func updateKeywords(_ filePaths: [String], addedKeywords: [String], removedKeywords: [String]) throws -> Bool
     {
         if addedKeywords.count == 0 && removedKeywords.count == 0 {

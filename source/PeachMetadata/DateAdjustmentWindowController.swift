@@ -41,21 +41,21 @@ class DateAdjustmentWindowController : NSWindowController
         if date == nil {
             let alert = NSAlert()
             alert.messageText = "Invalid date format: '\(newDateField.stringValue)'; must match '\(dateFormatter.dateFormat)'"
-            alert.alertStyle = NSAlertStyle.warning
+            alert.alertStyle = NSAlert.Style.warning
             alert.addButton(withTitle: "Close")
             alert.runModal()
             return
         }
 
         close()
-        NSApplication.shared().stopModal(withCode: 1)
+        NSApplication.shared.stopModal(withCode: NSApplication.ModalResponse(rawValue: 1))
     }
 
     @IBAction func cancel(_ sender: AnyObject)
     {
         newDateField.stringValue = ""
         close()
-        NSApplication.shared().stopModal(withCode: 0)
+        NSApplication.shared.stopModal(withCode: NSApplication.ModalResponse(rawValue: 0))
     }
 
     @IBAction func useFileDate(_ sender: AnyObject)

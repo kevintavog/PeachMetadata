@@ -11,13 +11,13 @@ import RangicCore
 extension PeachWindowController
 {
     static fileprivate let missingAttrs = [
-        NSForegroundColorAttributeName : NSColor(deviceRed: 0.0, green: 0.7, blue: 0.7, alpha: 1.0),
-        NSFontAttributeName : NSFont.labelFont(ofSize: 14)
+        NSAttributedStringKey.foregroundColor : NSColor(deviceRed: 0.0, green: 0.7, blue: 0.7, alpha: 1.0),
+        NSAttributedStringKey.font : NSFont.labelFont(ofSize: 14)
 
     ]
     static fileprivate let badDataAttrs = [
-        NSForegroundColorAttributeName : NSColor.orange,
-        NSFontAttributeName : NSFont.labelFont(ofSize: 14)
+        NSAttributedStringKey.foregroundColor : NSColor.orange,
+        NSAttributedStringKey.font : NSFont.labelFont(ofSize: 14)
     ]
 
 
@@ -32,13 +32,13 @@ extension PeachWindowController
         mediaProvider.clear()
         mediaProvider.addFolder(folder)
 
-        for (_, m) in mediaProvider.enumerated() {
-            if let rotation = m.rotation {
-                if rotation != 0 {
-                    Logger.error("\(m.name!) is rotated \(rotation)")
-                }
-            }
-        }
+//        for (_, m) in mediaProvider.enumerated() {
+//            if let rotation = m.rotation {
+//                if rotation != 0 {
+//                    Logger.error("\(m.name!) is rotated \(rotation)")
+//                }
+//            }
+//        }
 
         loadThumbnails()
     }
@@ -62,7 +62,7 @@ extension PeachWindowController
 
     func isFilterActive() -> Bool
     {
-        return statusLocationLabel.state != 0 || statusDateLabel.state != 0 || statusKeywordLabel.state != 0
+        return statusLocationLabel.state != .off || statusDateLabel.state != .off || statusKeywordLabel.state != .off
     }
 
     func filterItems()
@@ -73,7 +73,7 @@ extension PeachWindowController
             filteredThumbnailItems.removeAll()
             for thumb in thumbnailItems {
 
-                if statusLocationLabel.state != 0 {
+                if statusLocationLabel.state != .off {
                     if let location = thumb.mediaData.location {
                         if SensitiveLocations.sharedInstance.isSensitive(location) {
                             filteredThumbnailItems.append(thumb)
@@ -85,14 +85,14 @@ extension PeachWindowController
                     }
                 }
 
-                if statusDateLabel.state != 0 {
+                if statusDateLabel.state != .off {
                     if thumb.mediaData.doFileAndExifTimestampsMatch() == false {
                         filteredThumbnailItems.append(thumb)
                         continue
                     }
                 }
 
-                if statusKeywordLabel.state != 0 {
+                if statusKeywordLabel.state != .off {
                     if thumb.mediaData.keywords == nil || thumb.mediaData.keywords?.count == 0 {
                         filteredThumbnailItems.append(thumb)
                     }

@@ -13,11 +13,11 @@ extension PeachWindowController
 
         dialog.canChooseFiles = false
         dialog.canChooseDirectories = true
-        if 1 != dialog.runModal() || dialog.urls.count < 1 {
+        if 1 != dialog.runModal().rawValue || dialog.urls.count < 1 {
             return
         }
 
-        NSDocumentController.shared().noteNewRecentDocumentURL(dialog.urls[0])
+        NSDocumentController.shared.noteNewRecentDocumentURL(dialog.urls[0])
 
         let folderName = dialog.urls[0].path
         Preferences.lastOpenedFolder = folderName

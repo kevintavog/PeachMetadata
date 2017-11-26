@@ -40,18 +40,18 @@ class PeachWindowController : NSWindowController, NSTableViewDataSource, WebFram
     {
         imageBrowserView.setValue(NSColor.darkGray, forKey: IKImageBrowserBackgroundColorKey)
         let newAttrs = NSMutableDictionary(dictionary: imageBrowserView.value(forKey: IKImageBrowserCellsTitleAttributesKey) as! [String:Any])
-        newAttrs.setValue(NSColor.white, forKey: NSForegroundColorAttributeName)
+        newAttrs.setValue(NSColor.white, forKey: NSAttributedStringKey.foregroundColor.rawValue)
         imageBrowserView.setValue(newAttrs, forKey: IKImageBrowserCellsTitleAttributesKey)
 
         thumbSizeSlider.floatValue = Preferences.thumbnailZoom
         imageBrowserView.setZoomValue(Preferences.thumbnailZoom)
         setFolderStatus()
 
-        if Preferences.lastOpenedFolder.characters.count > 0 {
+        if Preferences.lastOpenedFolder.count > 0 {
             populateDirectoryView(Preferences.lastOpenedFolder)
         }
 
-        if Preferences.lastSelectedFolder.characters.count > 0 {
+        if Preferences.lastSelectedFolder.count > 0 {
             selectDirectoryViewRow(Preferences.lastSelectedFolder)
         }
 
@@ -80,15 +80,15 @@ class PeachWindowController : NSWindowController, NSTableViewDataSource, WebFram
         if let path = getLastImportFolder() {
             dialog.directoryURL = URL(fileURLWithPath: path, isDirectory: true)
         }
-        if 1 != dialog.runModal() || dialog.urls.count < 1 {
+        if 1 != dialog.runModal().rawValue || dialog.urls.count < 1 {
             return
         }
 
         Preferences.lastImportedFolder = dialog.urls[0].path
-        let importMediaController = ImportMediaWindowsController(windowNibName: "ImportMediaWindow")
+        let importMediaController = ImportMediaWindowsController(windowNibName: NSNib.Name(rawValue: "ImportMediaWindow"))
         if importMediaController.setImportFolder(dialog.urls[0].path) {
-            let result = NSApplication.shared().runModal(for: importMediaController.window!)
-            if result == 1 {
+            let result = NSApplication.shared.runModal(for: importMediaController.window!)
+            if result.rawValue == 1 {
                  populateDirectoryView(rootDirectory!.folder)
                 Logger.error("Refresh folder list; select imported folder...")
             }
@@ -97,7 +97,7 @@ class PeachWindowController : NSWindowController, NSTableViewDataSource, WebFram
 
     func getLastImportFolder() -> String?
     {
-        if Preferences.lastImportedFolder.characters.count > 0 {
+        if Preferences.lastImportedFolder.count > 0 {
             var isFolder: ObjCBool = false
             if FileManager.default.fileExists(atPath: Preferences.lastImportedFolder, isDirectory:&isFolder) && isFolder.boolValue {
                 return Preferences.lastImportedFolder
@@ -123,8 +123,12 @@ class PeachWindowController : NSWindowController, NSTableViewDataSource, WebFram
 
     @IBAction func fixBadExif(_ sender: AnyObject)
     {
-        Logger.info("fixBadExif")
-        PeachWindowController.showWarning("Not implemented")
+        let mediaItems = selectedMediaItems()
+        if mediaItems.count < 1 {
+            return
+        }
+
+        fixBadExif(mediaItems)
     }
     
     @IBAction func viewFile(_ sender: AnyObject)
@@ -136,7 +140,7 @@ class PeachWindowController : NSWindowController, NSTableViewDataSource, WebFram
             return
         }
 
-        if NSWorkspace.shared().open(mediaItems.first!.url!) == false {
+        if NSWorkspace.shared.open(mediaItems.first!.url!) == false {
             PeachWindowController.showWarning("Failed opening file: '\(mediaItems.first!.url!.path)'")
         }
     }
@@ -167,11 +171,11 @@ class PeachWindowController : NSWindowController, NSTableViewDataSource, WebFram
         }
 
         let firstMediaData = mediaItems.first!
-        let dateAdjustmentController = DateAdjustmentWindowController(windowNibName: "DateAdjustmentWindow")
+        let dateAdjustmentController = DateAdjustmentWindowController(windowNibName: NSNib.Name(rawValue: "DateAdjustmentWindow"))
         dateAdjustmentController.setDateValues(firstMediaData.fileTimestamp, metadataDate: firstMediaData.timestamp)
-        let result = NSApplication.shared().runModal(for: dateAdjustmentController.window!)
+        let result = NSApplication.shared.runModal(for: dateAdjustmentController.window!)
 
-        if result == 1 {
+        if result.rawValue == 1 {
             Async.background {
                 do {
                     if let newDate = dateAdjustmentController.newDate() {
@@ -241,7 +245,7 @@ class PeachWindowController : NSWindowController, NSTableViewDataSource, WebFram
         Logger.error(message)
         let alert = NSAlert()
         alert.messageText = message
-        alert.alertStyle = NSAlertStyle.warning
+        alert.alertStyle = NSAlert.Style.warning
         alert.addButton(withTitle: "Close")
         alert.runModal()
     }
@@ -251,9 +255,9 @@ class PeachWindowController : NSWindowController, NSTableViewDataSource, WebFram
         Logger.warn(message)
         let alert = NSAlert()
         alert.messageText = message
-        alert.alertStyle = NSAlertStyle.warning
+        alert.alertStyle = NSAlert.Style.warning
         alert.addButton(withTitle: "Yes")
         alert.addButton(withTitle: "No")
-        return alert.runModal() == NSAlertFirstButtonReturn
+        return alert.runModal() == NSApplication.ModalResponse.alertFirstButtonReturn
     }
 }

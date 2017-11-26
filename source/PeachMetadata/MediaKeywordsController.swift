@@ -45,14 +45,14 @@ class MediaKeywordsTableController : NSObject, NSTableViewDelegate, NSTableViewD
         if filesAndKeywords.uniqueKeywords.count == 0 {
             return nil
         }
-        var columnView:NSButton? = tableView.make(withIdentifier: "keywordView", owner: tableView) as! NSButton?
+        var columnView:NSButton? = tableView.makeView(withIdentifier: NSUserInterfaceItemIdentifier(rawValue: "keywordView"), owner: tableView) as! NSButton?
         if (columnView == nil)
         {
             let control = NSButton(frame: NSRect(x: 0, y: 0, width: 100, height: 100))
-            control.identifier = "keywordView"
+            control.identifier = NSUserInterfaceItemIdentifier(rawValue: "keywordView")
             
-            control.setButtonType(NSButtonType.onOff)
-            control.bezelStyle = NSBezelStyle.rounded
+            control.setButtonType(NSButton.ButtonType.onOff)
+            control.bezelStyle = NSButton.BezelStyle.rounded
             control.action = #selector(PeachWindowController.mediaItemKeywordClick(_:))
             
             columnView = control
@@ -67,7 +67,7 @@ class MediaKeywordsTableController : NSObject, NSTableViewDelegate, NSTableViewD
             let keyword = filesAndKeywords.uniqueKeywords[keywordIndex]
             columnView?.title = keyword
             columnView?.isTransparent = false
-            columnView?.state = filesAndKeywords.uniqueKeywords.contains(keyword) ? NSOnState : NSOffState
+            columnView?.state = filesAndKeywords.uniqueKeywords.contains(keyword) ? .on : .off
         }
         
         return columnView

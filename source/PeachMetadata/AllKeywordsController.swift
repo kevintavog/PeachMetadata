@@ -72,14 +72,14 @@ Logger.debug("table: \(tableWidth) -- column: \(columnWidth) -- #columns: \(colu
             return nil
         }
 
-        var columnView:NSButton? = tableView.make(withIdentifier: "allKeywordsView", owner: tableView) as! NSButton?
+        var columnView:NSButton? = tableView.makeView(withIdentifier: NSUserInterfaceItemIdentifier(rawValue: "allKeywordsView"), owner: tableView) as! NSButton?
         if (columnView == nil)
         {
             let control = NSButton(frame: NSRect(x: 0, y: 0, width: 100, height: 100))
-            control.identifier = "allKeywordsView"
+            control.identifier = NSUserInterfaceItemIdentifier(rawValue: "allKeywordsView")
             
-            control.setButtonType(NSButtonType.onOff)
-            control.bezelStyle = NSBezelStyle.rounded
+            control.setButtonType(NSButton.ButtonType.onOff)
+            control.bezelStyle = NSButton.BezelStyle.rounded
             control.action = #selector(PeachWindowController.allKeywordClick(_:))
             
             columnView = control
@@ -94,7 +94,7 @@ Logger.debug("table: \(tableWidth) -- column: \(columnWidth) -- #columns: \(colu
             let keyword = AllKeywords.sharedInstance.keywords[keywordIndex]
             columnView?.title = keyword
             columnView?.isTransparent = false
-            columnView?.state = filesAndKeywords.uniqueKeywords.contains(keyword) ? NSOnState : NSOffState
+            columnView?.state = filesAndKeywords.uniqueKeywords.contains(keyword) ? .on : .off
         }
 
         return columnView

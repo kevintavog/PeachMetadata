@@ -83,17 +83,17 @@ class SensitiveLocations
     fileprivate init()
     {
         if let data = NSData(contentsOfFile: fullLocationFilename) {
-            let json = JSON(data:NSData(data: data as Data) as Data)
+            if let json = try? JSON(data:NSData(data: data as Data) as Data) {
+                var rawLocationList = [Location]()
+                for (_,subjson):(String,JSON) in json {
+                    let latitude = subjson["latitude"].doubleValue
+                    let longitude = subjson["longitude"].doubleValue
 
-            var rawLocationList = [Location]()
-            for (_,subjson):(String,JSON) in json {
-                let latitude = subjson["latitude"].doubleValue
-                let longitude = subjson["longitude"].doubleValue
+                    rawLocationList.append(Location(latitude: latitude, longitude: longitude))
+                }
 
-                rawLocationList.append(Location(latitude: latitude, longitude: longitude))
+                updateLocations(rawLocationList)
             }
-
-            updateLocations(rawLocationList)
         } else {
             // Save an empty file to the proper location - it can be edited by hand, if needed
             save()

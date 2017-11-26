@@ -11,7 +11,6 @@ open class MapWebView : WebView
 {
     fileprivate var dropCallback: ((_ location: Location, _ filePaths: [String]) -> ())?
 
-
     func invokeMapScript(_ script: String) -> AnyObject?
     {
         Logger.info("Script: \(script)")
@@ -52,14 +51,15 @@ open class MapWebView : WebView
         mapPoint.y = self.frame.height - mapPoint.y
         if let ret = invokeMapScript("pointToLatLng([\(mapPoint.x), \(mapPoint.y)])") {
             let resultString = ret as! String
-            let json = JSON(data:Data(resultString.data(using: String.Encoding.utf8)!))
-            let latitude = json["lat"].doubleValue
-            let longitude = json["lng"].doubleValue
-            let location = Location(latitude: latitude, longitude: longitude)
+            if let json = try? JSON(data:Data(resultString.data(using: String.Encoding.utf8)!)) {
+                let latitude = json["lat"].doubleValue
+                let longitude = json["lng"].doubleValue
+                let location = Location(latitude: latitude, longitude: longitude)
 
-            dropCallback!(location, filePaths(sender))
-            
-            return true
+                dropCallback!(location, filePaths(sender))
+                
+                return true
+            }
         }
         return false
     }
@@ -67,15 +67,19 @@ open class MapWebView : WebView
     func filePaths(_ dragInfo: NSDraggingInfo) -> [String]
     {
         var list = [String]()
-        if ((dragInfo.draggingPasteboard().types?.contains(NSFilenamesPboardType)) != nil) {
-            if let dropData = dragInfo.draggingPasteboard().propertyList(forType: NSFilenamesPboardType) as! NSArray? {
-                for data in dropData {
-                    let path = data as! String
-                    if FileManager.default.fileExists(atPath: path) {
-                        list.append(path)
+        if #available(OSX 10.13, *) {
+            if ((dragInfo.draggingPasteboard().types?.contains(NSPasteboard.PasteboardType.fileURL)) != nil) {
+                if let dropData = dragInfo.draggingPasteboard().propertyList(forType: NSPasteboard.PasteboardType.fileURL) as! NSArray? {
+                    for data in dropData {
+                        let path = data as! String
+                        if FileManager.default.fileExists(atPath: path) {
+                            list.append(path)
+                        }
                     }
                 }
             }
+        } else {
+            print("drag / drop not supported on this version of MacOS..")
         }
 
         return list

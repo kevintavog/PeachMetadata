@@ -46,7 +46,7 @@ class ImportProgressWindowsController : NSWindowController, ImportProgress
             }
         }
 
-        NSApplication.shared().runModal(for: window!)
+        NSApplication.shared.runModal(for: window!)
     }
 
     @IBAction func onCancel(_ sender: AnyObject)
@@ -55,7 +55,7 @@ class ImportProgressWindowsController : NSWindowController, ImportProgress
             Logger.warn("Import canceled")
         }
         close()
-        NSApplication.shared().stopModal(withCode: isRunningImport ? 0 : 1)
+        NSApplication.shared.stopModal(withCode: NSApplication.ModalResponse(rawValue: isRunningImport ? 0 : 1))
     }
 
     func doImport()
@@ -75,7 +75,7 @@ class ImportProgressWindowsController : NSWindowController, ImportProgress
         Async.main {
             self.stepLabel.stringValue = "\(stepName)"
         }
-        addDetailText("\(stepName):", addNewLine: self.detailTextView.string!.characters.count > 0)
+        addDetailText("\(stepName):", addNewLine: self.detailTextView.string.count > 0)
     }
 
     func setStepDetail(_ detail: String)
@@ -88,9 +88,9 @@ class ImportProgressWindowsController : NSWindowController, ImportProgress
     {
         Async.main {
             if addNewLine {
-                self.detailTextView.string! += "\n\(text)"
+                self.detailTextView.string += "\n\(text)"
             } else {
-                self.detailTextView.string! += "\(text)"
+                self.detailTextView.string += "\(text)"
             }
 
             self.detailTextView.scrollToEndOfDocument(self)

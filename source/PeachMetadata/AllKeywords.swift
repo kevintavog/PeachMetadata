@@ -25,14 +25,14 @@ class AllKeywords
     fileprivate init()
     {
         if let data = try? Data(contentsOf: URL(fileURLWithPath: fullKeywordFilename)) {
-            let json = JSON(data:data)
+            if let json = try? JSON(data:data) {
+                var rawKeywordList = [String]()
+                for (_,subjson):(String,JSON) in json {
+                    rawKeywordList.append(subjson.string!)
+                }
 
-            var rawKeywordList = [String]()
-            for (_,subjson):(String,JSON) in json {
-                rawKeywordList.append(subjson.string!)
+                updateKeywords(rawKeywordList)
             }
-
-            updateKeywords(rawKeywordList)
         }
     }
 

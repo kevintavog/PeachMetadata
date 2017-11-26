@@ -8,25 +8,25 @@ import RangicCore
 open class ImageBrowserCell : IKImageBrowserCell
 {
     static fileprivate var lineHeight: CGFloat?
-    static fileprivate let textAttrs = [NSForegroundColorAttributeName : NSColor.white, NSFontAttributeName : NSFont.labelFont(ofSize: 14)]
+    static fileprivate let textAttrs = [NSAttributedStringKey.foregroundColor : NSColor.white, NSAttributedStringKey.font : NSFont.labelFont(ofSize: 14)]
 
     static fileprivate let badDateAttrs = [
-        NSForegroundColorAttributeName : NSColor.orange,
-        NSFontAttributeName : NSFont.labelFont(ofSize: 14)
+        NSAttributedStringKey.foregroundColor : NSColor.orange,
+        NSAttributedStringKey.font : NSFont.labelFont(ofSize: 14)
     ]
 
     static fileprivate let missingKeywordAttrs = [
-        NSForegroundColorAttributeName : NSColor.cyan,
-        NSFontAttributeName : NSFont.labelFont(ofSize: 14)
+        NSAttributedStringKey.foregroundColor : NSColor.cyan,
+        NSAttributedStringKey.font : NSFont.labelFont(ofSize: 14)
     ]
 
     static fileprivate let missingLocationAttrs = [
-        NSForegroundColorAttributeName : NSColor.cyan,
-        NSFontAttributeName : NSFont.labelFont(ofSize: 14)
+        NSAttributedStringKey.foregroundColor : NSColor.cyan,
+        NSAttributedStringKey.font : NSFont.labelFont(ofSize: 14)
     ]
     static fileprivate let sensitiveLocationAttrs = [
-        NSForegroundColorAttributeName : NSColor.orange,
-        NSFontAttributeName : NSFont.labelFont(ofSize: 14)
+        NSAttributedStringKey.foregroundColor : NSColor.orange,
+        NSAttributedStringKey.font : NSFont.labelFont(ofSize: 14)
     ]
 
 
@@ -81,7 +81,7 @@ open class ImageBrowserCell : IKImageBrowserCell
             timestampLayer.string = item.mediaData.formattedTime()
 
             let keywordsLayer = self.createTextLayer(outerLayer: outerLayer, lineNumber: 2)
-            if item.mediaData.keywordsString().characters.count > 0 {
+            if item.mediaData.keywordsString().count > 0 {
                 keywordsLayer.string = item.mediaData.keywordsString()
             } else {
                 keywordsLayer.string = "🏷"

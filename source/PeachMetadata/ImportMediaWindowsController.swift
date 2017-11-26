@@ -9,18 +9,18 @@ import RangicCore
 class ImportMediaWindowsController : NSWindowController, NSTableViewDataSource
 {
     static fileprivate let missingAttrs = [
-        NSForegroundColorAttributeName : NSColor(deviceRed: 0.0, green: 0.7, blue: 0.7, alpha: 1.0),
-        NSFontAttributeName : NSFont.labelFont(ofSize: 14)
+        NSAttributedStringKey.foregroundColor : NSColor(deviceRed: 0.0, green: 0.7, blue: 0.7, alpha: 1.0),
+        NSAttributedStringKey.font : NSFont.labelFont(ofSize: 14)
 
     ]
     static fileprivate let badDataAttrs = [
-        NSForegroundColorAttributeName : NSColor.orange,
-        NSFontAttributeName : NSFont.labelFont(ofSize: 14)
+        NSAttributedStringKey.foregroundColor : NSColor.orange,
+        NSAttributedStringKey.font : NSFont.labelFont(ofSize: 14)
     ]
 
-    static fileprivate func applyAttributes(_ text: String, attributes: [String:AnyObject]) -> NSAttributedString
+    static fileprivate func applyAttributes(_ text: String, attributes: [NSAttributedStringKey:AnyObject]) -> NSAttributedString
     {
-        let fullRange = NSRange(location: 0, length: text.characters.count)
+        let fullRange = NSRange(location: 0, length: text.count)
         let attributeString = NSMutableAttributedString(string: text)
         for attr in attributes {
             attributeString.addAttribute(attr.0, value: attr.1, range: fullRange)
@@ -103,13 +103,13 @@ class ImportMediaWindowsController : NSWindowController, NSTableViewDataSource
         close()
         progressController.start(importFolderName!, destinationFolder: folder, originalMediaData: originalMediaData, exportedMediaData: exportedMediaData)
 
-        NSApplication.shared().stopModal(withCode: 1)
+        NSApplication.shared.stopModal(withCode: NSApplication.ModalResponse(rawValue: 1))
     }
 
     @IBAction func cancel(_ sender: AnyObject)
     {
         close()
-        NSApplication.shared().stopModal(withCode: 0)
+        NSApplication.shared.stopModal(withCode: NSApplication.ModalResponse(rawValue: 0))
     }
 
 
@@ -131,7 +131,7 @@ class ImportMediaWindowsController : NSWindowController, NSTableViewDataSource
     // If @nonobjc is added here, per the warning, then nothing shows up in the tables...
     public func tableView(_ tableView: NSTableView, viewForTableColumn tableColumn: NSTableColumn?, row: Int) -> NSView?
     {
-        let cell = tableView.make(withIdentifier: tableColumn!.identifier, owner: self) as! NSTableCellView
+        let cell = tableView.makeView(withIdentifier: tableColumn!.identifier, owner: self) as! NSTableCellView
 
         var media: MediaData!
         switch tableView.tag {
@@ -150,7 +150,7 @@ class ImportMediaWindowsController : NSWindowController, NSTableViewDataSource
             let missingLocation = data.location == nil
             let sensitiveLocation = !missingLocation && SensitiveLocations.sharedInstance.isSensitive(data.location!)
 
-            switch tableColumn!.identifier {
+            switch tableColumn!.identifier.rawValue {
             case FilenameColumnIdentifier:
                 cell.textField?.stringValue = data.name
 
