@@ -559,6 +559,7 @@
                                                             <connections>
                                                                 <outlet property="dataSource" destination="Qry-nx-iZR" id="KXj-bA-XvG"/>
                                                                 <outlet property="delegate" destination="Qry-nx-iZR" id="qwI-t2-eVh"/>
+                                                                <outlet property="menu" destination="b5c-bY-XNI" id="IJE-yO-hKl"/>
                                                             </connections>
                                                         </ikImageBrowserView>
                                                     </subviews>
@@ -1062,6 +1063,57 @@
             <point key="canvasLocation" x="-100.5" y="1764"/>
         </window>
         <viewController id="IAH-Kb-eYD"/>
+        <menu title="Context" identifier="OutlineItemContextMenu" id="b5c-bY-XNI">
+            <items>
+                <menuItem title="Show in Apple Maps" id="4iz-vA-ruV">
+                    <modifierMask key="keyEquivalentModifierMask"/>
+                    <connections>
+                        <action selector="showInAppleMaps:" target="Qry-nx-iZR" id="2IG-Mh-bdI"/>
+                    </connections>
+                </menuItem>
+                <menuItem title="Show in Google Maps" id="IEP-WO-hfr">
+                    <modifierMask key="keyEquivalentModifierMask"/>
+                    <connections>
+                        <action selector="showInGoogleMaps:" target="Qry-nx-iZR" id="J35-cs-yku"/>
+                    </connections>
+                </menuItem>
+                <menuItem title="Show in OpenStreetMap" id="msQ-eI-9cO">
+                    <modifierMask key="keyEquivalentModifierMask"/>
+                    <connections>
+                        <action selector="showInOpenStreetMap:" target="Qry-nx-iZR" id="7oj-ub-48x"/>
+                    </connections>
+                </menuItem>
+                <menuItem isSeparatorItem="YES" id="Ll4-Ns-O5r"/>
+                <menuItem title="Show in Street View" id="RpK-Yl-1wB">
+                    <modifierMask key="keyEquivalentModifierMask"/>
+                    <connections>
+                        <action selector="showInStreetView:" target="Qry-nx-iZR" id="Ezf-q9-X96"/>
+                    </connections>
+                </menuItem>
+                <menuItem isSeparatorItem="YES" id="CbH-vS-9MY"/>
+                <menuItem title="Copy lat/lon" id="cf7-yz-TRf">
+                    <modifierMask key="keyEquivalentModifierMask"/>
+                    <connections>
+                        <action selector="copyLatLon:" target="Qry-nx-iZR" id="dgs-eF-tg3"/>
+                    </connections>
+                </menuItem>
+                <menuItem isSeparatorItem="YES" id="5QD-gX-LUu"/>
+                <menuItem title="Paste lat/lon" id="BG6-Rh-tTU">
+                    <modifierMask key="keyEquivalentModifierMask"/>
+                    <connections>
+                        <action selector="pasteLatLon:" target="Qry-nx-iZR" id="2Wv-2y-96G"/>
+                    </connections>
+                </menuItem>
+                <menuItem isSeparatorItem="YES" id="KXf-YL-6TF"/>
+                <menuItem title="Clear location" id="G5C-aJ-vS6">
+                    <modifierMask key="keyEquivalentModifierMask"/>
+                    <connections>
+                        <action selector="clearLocations:" target="Qry-nx-iZR" id="tpY-Vu-4qm"/>
+                    </connections>
+                </menuItem>
+            </items>
+            <point key="canvasLocation" x="449" y="-263"/>
+        </menu>
     </objects>
     <resources>
         <image name="keyword" width="512" height="512"/>

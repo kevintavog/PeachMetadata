@@ -62,7 +62,6 @@ class PeachWindowController : NSWindowController, NSTableViewDataSource, WebFram
             selectDirectoryViewRow(Preferences.lastSelectedFolder)
         }
 
-
         allKeywordsController = AllKeywordsTableViewController(tableView: allKeywordsTableView)
         allKeywordsTableView.delegate = allKeywordsController
         allKeywordsTableView.dataSource = allKeywordsController
@@ -155,6 +154,101 @@ class PeachWindowController : NSWindowController, NSTableViewDataSource, WebFram
         }
     }
 
+    @IBAction func copyLatLon(_ sender: Any) {
+        visitFirstSelectedItem( { (item: MediaData) -> () in
+            NSPasteboard.general.clearContents()
+            NSPasteboard.general.setString("\(item.location.latitude),\(item.location.longitude)", forType: NSPasteboard.PasteboardType.string)
+        })
+    }
+
+    @IBAction func pasteLatLon(_ sender: Any) {
+        // Ensure lat,lon on clipboard
+        var clipboardText: String? = nil
+        for item in NSPasteboard.general.pasteboardItems! {
+            if let str = item.string(forType: NSPasteboard.PasteboardType(rawValue: "public.utf8-plain-text")) {
+                clipboardText = str
+                break
+            }
+        }
+
+        if clipboardText == nil {
+            PeachWindowController.showWarning("Can't find any text on the clipboard")
+            return
+        }
+
+        // Expect two doubles, separated by a comma
+        let locationTokens = clipboardText!.split(separator: ",")
+        if locationTokens.count != 2 {
+            PeachWindowController.showWarning("Can't find '<lat>,<lon>' in\n '\(clipboardText!)'\nPerhaps the comma is missing.")
+            return
+        }
+
+        guard let lat = Double(locationTokens[0].trimmingCharacters(in: .whitespaces)), let lon = Double(locationTokens[1].trimmingCharacters(in: .whitespaces)) else {
+            PeachWindowController.showWarning("Can't parse out '<lat>,<lon>' from\n '\(clipboardText!)'")
+            return
+        }
+
+
+        // visit all selected items, apply lat/lon - but don't overwrite
+        let mediaItems = selectedMediaItems()
+        if mediaItems.count < 1 {
+            PeachWindowController.showWarning("No items selected, nothing to paste the location to")
+            return
+        }
+
+        var filePaths = [String]()
+        for item in mediaItems {
+            filePaths.append(item.url!.path)
+        }
+        updateLocations(Location(latitude: lat, longitude: lon), filePaths: filePaths)
+    }
+
+    @IBAction func showInAppleMaps(_ sender: Any) {
+        launchLocationUrl( { (item: MediaData) -> (String) in
+            return "http://maps.apple.com/?ll=\(item.location.latitude),\(item.location.longitude)"
+        })
+    }
+    
+    @IBAction func showInGoogleMaps(_ sender: Any) {
+        launchLocationUrl( { (item: MediaData) -> (String) in
+            return "http://maps.google.com/maps?q=\(item.location.latitude),\(item.location.longitude)"
+        })
+    }
+
+    @IBAction func showInOpenStreetMap(_ sender: Any) {
+        launchLocationUrl( { (item: MediaData) -> (String) in
+            return "http://www.openstreetmap.org/?&mlat=\(item.location.latitude)&mlon=\(item.location.longitude)#map=18/\(item.location.latitude)/\(item.location.longitude)"
+        })
+    }
+
+    @IBAction func showInStreetView(_ sender: Any) {
+        launchLocationUrl( { (item: MediaData) -> (String) in
+            return "http://maps.google.com/maps?q=&layer=c&cbll=\(item.location.latitude),\(item.location.longitude)&cbp=11,0,0,0,0"
+        })
+    }
+
+    func visitFirstSelectedItem(_ visit: @escaping ( _ mediaItem: MediaData ) -> ()) {
+        let mediaItems = selectedMediaItems()
+        if mediaItems.count != 1 {
+            Logger.info("Only 1 file can be opened, there are \(mediaItems.count) selected")
+            return
+        }
+
+        if mediaItems.first?.location != nil {
+            visit(mediaItems.first!)
+        } else {
+            PeachWindowController.showWarning("This item has no location info:\n \(mediaItems.first!.url!.path)")
+        }
+    }
+
+    func launchLocationUrl(_ getUrl: @escaping ( _ mediaItem: MediaData ) -> (String)) {
+        visitFirstSelectedItem( { (item: MediaData) -> () in
+            let url = getUrl(item)
+            Logger.info("Launching \(url)")
+            NSWorkspace.shared.open(URL(string: url)!)
+        })
+    }
+    
     @IBAction func showDetails(_ sender: AnyObject)
     {
         Logger.info("showDetails")
