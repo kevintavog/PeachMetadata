@@ -18,9 +18,13 @@
         var lat = 47.62201666666667;
         var lon = -122.335685;
 
-        var mapLayer = MQ.mapLayer(), map;
+        var mapLayer = MQ.mapLayer(); //, map;
         var darkLayer = MQ.darkLayer();
-        var satelliteLayer = MQ.satelliteLayer();
+        var satelliteLayer = MQ.hybridLayer();
+        var openStreetMapLayer = L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                                             maxZoom: 19,
+                                             attribution: '&copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors'
+                                             })
 
         map = L.map('map', {
             layers: mapLayer,
@@ -43,6 +47,7 @@
         {
             map.removeLayer(darkLayer);
             map.removeLayer(satelliteLayer);
+            map.removeLayer(openStreetMapLayer);
             map.addLayer(mapLayer);
         }
 
@@ -50,6 +55,7 @@
         {
             map.removeLayer(mapLayer);
             map.removeLayer(darkLayer);
+            map.removeLayer(openStreetMapLayer);
             map.addLayer(satelliteLayer);
         }
 
@@ -57,7 +63,16 @@
         {
             map.removeLayer(mapLayer);
             map.removeLayer(satelliteLayer);
+            map.removeLayer(openStreetMapLayer);
             map.addLayer(darkLayer);
+        }
+
+        function setOpenStreetMapLayer()
+        {
+            map.removeLayer(mapLayer);
+            map.removeLayer(satelliteLayer);
+            map.removeLayer(darkLayer);
+            map.addLayer(openStreetMapLayer);
         }
 
 		function setCenter(location, zoom)

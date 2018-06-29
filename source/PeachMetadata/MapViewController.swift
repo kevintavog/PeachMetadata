@@ -19,11 +19,20 @@ extension PeachWindowController
         let _ = mapView.invokeMapScript("removeAllMarkers()")
     }
 
+    @IBAction func viewOpenStreetMap(_ sender: Any) {
+        menuNormalMap?.state = .off
+        menuDarkMap?.state = .off
+        menuSatelliteMap?.state = .off
+        menuOpenStreetMap?.state = .on
+        let _ = mapView.invokeMapScript("setOpenStreetMapLayer()")
+    }
+
     @IBAction func viewNormalMap(_ sender: AnyObject)
     {
         menuNormalMap?.state = .on
         menuDarkMap?.state = .off
         menuSatelliteMap?.state = .off
+        menuOpenStreetMap?.state = .off
         let _ = mapView.invokeMapScript("setMapLayer()")
     }
 
@@ -32,6 +41,7 @@ extension PeachWindowController
         menuNormalMap?.state = .off
         menuDarkMap?.state = .off
         menuSatelliteMap?.state = .on
+        menuOpenStreetMap?.state = .off
         let _ = mapView.invokeMapScript("setSatelliteLayer()")
     }
 
@@ -40,6 +50,7 @@ extension PeachWindowController
         menuNormalMap?.state = .off
         menuDarkMap?.state = .on
         menuSatelliteMap?.state = .off
+        menuOpenStreetMap?.state = .off
         let _ = mapView.invokeMapScript("setDarkLayer()")
     }
 
@@ -135,7 +146,7 @@ extension PeachWindowController
     {
         for (index,m) in mediaProvider.enumerated() {
             if m.url!.path == path {
-                imageBrowserView.setSelectionIndexes(NSIndexSet(index: index) as IndexSet!, byExtendingSelection: false)
+                imageBrowserView.setSelectionIndexes(NSIndexSet(index: index) as IndexSet?, byExtendingSelection: false)
                 imageBrowserView.scrollIndexToVisible(index)
                 break
             }

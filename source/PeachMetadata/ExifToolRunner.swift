@@ -128,7 +128,7 @@ open class ExifToolRunner
         // Some dates in Canon videos aren't updatable via exiftool (due to Canon silliness). Bummer
         // http://u88.n24.queensu.ca/exiftool/forum/index.php?topic=6563.0
         if videoFilePaths.count > 0 {
-            dateFormatter.timeZone = NSTimeZone(name: "UTC") as TimeZone!
+            dateFormatter.timeZone = NSTimeZone(name: "UTC") as TimeZone?
             let utcDateString = dateFormatter.string(from: newDate as Date)
 
             let _ = try runExifTool(

@@ -31,6 +31,7 @@ class PeachWindowController : NSWindowController, NSTableViewDataSource, WebFram
     @IBOutlet weak var menuSatelliteMap: NSMenuItem!
     @IBOutlet weak var menuDarkMap: NSMenuItem!
     @IBOutlet weak var menuNormalMap: NSMenuItem!
+    @IBOutlet weak var menuOpenStreetMap: NSMenuItem!
     @IBOutlet weak var menuShowImagesOnMap: NSMenuItem!
 
 
