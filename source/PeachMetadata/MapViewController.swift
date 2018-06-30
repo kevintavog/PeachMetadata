@@ -60,8 +60,7 @@ extension PeachWindowController
         menuFollowSelectionOnMap?.state = followSelectionOnMap ? .on : .off
     }
 
-    @objc
-    func mapViewMediaSelected(_ notification: Notification)
+    @objc func mapViewMediaSelected(_ notification: Notification)
     {
         if followSelectionOnMap {
             if let userInfo = notification.userInfo as? Dictionary<String,MediaData> {

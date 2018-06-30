@@ -136,10 +136,11 @@ class DirectoryTree : NSObject
     fileprivate func getFiles(_ folderName: String) -> [URL]?
     {
         do {
-            return try FileManager.default.contentsOfDirectory(
+            let list = try FileManager.default.contentsOfDirectory(
                 at: URL(fileURLWithPath: folderName),
                 includingPropertiesForKeys: nil,
                 options:FileManager.DirectoryEnumerationOptions.skipsHiddenFiles)
+            return list.sorted { $0.absoluteString < $1.absoluteString }
         }
         catch let error {
             Logger.error("Failed getting files in \(folderName): \(error)")

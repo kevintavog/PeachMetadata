@@ -7,7 +7,7 @@ import AppKit
 import RangicCore
 
 
-class FileInformationController : NSViewController
+class FileInformationController : NSViewController, NSTableViewDataSource, NSTableViewDelegate
 {
     @IBOutlet weak var tableView: NSTableView!
     @IBOutlet weak var panel: NSPanel!
@@ -73,14 +73,12 @@ class FileInformationController : NSViewController
     }
 
     // MARK: table view data
-    @objc
-    func numberOfRowsInTableView(_ tv: NSTableView) -> Int
+    func numberOfRows(in tv: NSTableView) -> Int
     {
         return currentMediaData == nil ? 0 : (currentMediaData?.details.count)!
     }
 
-    @objc
-    func tableView(_ tv: NSTableView, objectValueForTableColumn: NSTableColumn?, row: Int) -> String
+    func tableView(_ tv: NSTableView, objectValueFor objectValueForTableColumn: NSTableColumn?, row: Int) -> Any?
     {
         let detail = currentMediaData?.details[row]
         switch (objectValueForTableColumn!.dataCell as AnyObject).tag {
