@@ -11,7 +11,7 @@ public enum ExifToolError : Error {
 
 open class ExifToolRunner
 {
-    static open func clearFileLocations(_ imageFilePaths: [String], videoFilePaths: [String]) throws
+    static public func clearFileLocations(_ imageFilePaths: [String], videoFilePaths: [String]) throws
     {
         try checkFiles(imageFilePaths)
         try checkFiles(videoFilePaths)
@@ -35,7 +35,7 @@ open class ExifToolRunner
         }
     }
 
-    static open func updateFileLocations(_ imageFilePaths: [String], videoFilePaths: [String], location: Location) throws
+    static public func updateFileLocations(_ imageFilePaths: [String], videoFilePaths: [String], location: Location) throws
     {
         try checkFiles(imageFilePaths)
         try checkFiles(videoFilePaths)
@@ -75,7 +75,7 @@ open class ExifToolRunner
         }
     }
 
-    static open func fixBadExif(_ filePaths: [String]) throws
+    static public func fixBadExif(_ filePaths: [String]) throws
     {
         let _ = try runExifTool(
             [ "-all=",
@@ -88,7 +88,7 @@ open class ExifToolRunner
             + filePaths)
     }
     
-    static open func updateKeywords(_ filePaths: [String], addedKeywords: [String], removedKeywords: [String]) throws -> Bool
+    static public func updateKeywords(_ filePaths: [String], addedKeywords: [String], removedKeywords: [String]) throws -> Bool
     {
         if addedKeywords.count == 0 && removedKeywords.count == 0 {
             return false
@@ -112,7 +112,7 @@ open class ExifToolRunner
         return true
     }
 
-    static open func setMetadataDates(_ imageFilePaths: [String], videoFilePaths: [String], newDate: NSDate) throws
+    static public func setMetadataDates(_ imageFilePaths: [String], videoFilePaths: [String], newDate: NSDate) throws
     {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy:MM:dd HH:mm:ss"
@@ -135,19 +135,15 @@ open class ExifToolRunner
                 ["-overwrite_original",
                      "-AllDates='\(utcDateString)'",
                      "-quicktime:TrackCreateDate='\(utcDateString)'",
-                     "-quicktime:TrackCreateDate='\(utcDateString)'",
                      "-quicktime:TrackModifyDate='\(utcDateString)'",
                      "-quicktime:MediaCreateDate='\(utcDateString)'",
                      "-quicktime:MediaModifyDate='\(utcDateString)'",
-                     "-quicktime:ContentCreateDate='\(utcDateString)'",
-                     "-ExifIFD:CreateDate='\(localDateString)'",
-                     "-ExifIFD:DateTimeOriginal='\(localDateString)'",
-                     "-IFD0:ModifyDate='\(localDateString)'"]
+                     "-quicktime:ContentCreateDate='\(utcDateString)'"]
                      + videoFilePaths)
         }
     }
 
-    static open var exifToolPath: String { return "/usr/local/bin/exiftool" }
+    static public var exifToolPath: String { return "/usr/local/bin/exiftool" }
 
     static fileprivate func checkFiles(_ filePaths: [String]) throws
     {
