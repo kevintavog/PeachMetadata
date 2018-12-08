@@ -330,7 +330,7 @@ extension PeachWindowController
 
 open class ThumbnailViewItem : NSObject
 {
-    open let mediaData: MediaData
+    public let mediaData: MediaData
 
 
     init(mediaData: MediaData) {
